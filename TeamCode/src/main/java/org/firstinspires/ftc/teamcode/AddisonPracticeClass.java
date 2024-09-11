@@ -14,6 +14,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  *  I can help you out during robotics on Thursday, if your having trouble. Good luck :)
  *  ----!please read this!----
  */
+
 @TeleOp(name="Basic: Iterative OpMode", group="Iterative OpMode")
 public class AddisonPracticeClass extends OpMode{
 
@@ -42,15 +43,15 @@ public class AddisonPracticeClass extends OpMode{
 
     @Override
     public void loop() {
-double leftPower;
-double rightPower;
+double leftPower = 0;
+double rightPower = 0;
 
 //Tank Controls
 leftDrive.setPower(leftPower);
 rightDrive.setPower(rightPower);
 
 telemetry.addData("status", "Run Time: " + runtime.toString());
-telemetry.addData("Motors", "left (%.2f), right (%.2f)") leftPower, rightPower;
+telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
     }
     @Override
     public void stop() {
