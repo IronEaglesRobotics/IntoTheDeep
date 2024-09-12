@@ -1,10 +1,11 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
 /*
  *  ----!please read this!----
@@ -16,6 +17,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 @TeleOp(name="Basic: Iterative OpMode", group="Iterative OpMode")
+//@Disabled
 public class AddisonPracticeClass extends OpMode{
 
     private ElapsedTime runtime = new ElapsedTime();
@@ -52,11 +54,17 @@ public class AddisonPracticeClass extends OpMode{
     @Override
     public void loop() {
         //define motor powers
-double leftPower = 0;
-double rightPower = 0;
-//define controller binds
-double drive = -gamepad1.left_stick_y;
-double turn = gamepad1.right_stick_x;
+        double leftPower;
+        double rightPower;
+        //define binds
+        double drive = -gamepad1.left_stick_y;
+        double turn = gamepad1.right_stick_x;
+
+        leftPower = Range.clip(drive + turn, -1.0, 1.0);
+        rightPower = Range.clip(drive - turn, -1.0, 1.0);
+
+        drive = -gamepad1.left_stick_y;
+        turn = gamepad1.right_stick_x;
 //updating motor power
 lOne.setPower(leftPower);
 lTwo.setPower(leftPower);
