@@ -19,17 +19,23 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class AddisonPracticeClass extends OpMode{
 
     private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor leftDrive = null;
-    private DcMotor rightDrive = null;
+    private DcMotor lOne = null;
+    private DcMotor lTwo = null;
+    private DcMotor rOne = null;
+    private DcMotor rTwo = null;
 
     @Override
     public void init() {
         telemetry.addData("status", "just started bro");
-        leftDrive = hardwareMap.get(DcMotor.class, "left_drive");
-        rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
+        lOne = hardwareMap.get(DcMotor.class, "left_drive_one");
+        lTwo = hardwareMap.get(DcMotor.class, "left_drive_two");
+        rOne = hardwareMap.get(DcMotor.class, "right_drive_one");
+        rTwo = hardwareMap.get(DcMotor.class, "right_drive_two");
 
-        leftDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightDrive.setDirection(DcMotor.Direction.FORWARD);
+        lOne.setDirection(DcMotor.Direction.REVERSE);
+        lTwo.setDirection(DcMotor.Direction.REVERSE);
+        rOne.setDirection(DcMotor.Direction.FORWARD);
+        rTwo.setDirection(DcMotor.Direction.FORWARD);
 
         telemetry.addData("status", "Initialized");
     }
@@ -47,8 +53,10 @@ double leftPower = 0;
 double rightPower = 0;
 
 //Tank Controls
-leftDrive.setPower(leftPower);
-rightDrive.setPower(rightPower);
+lOne.setPower(leftPower);
+lTwo.setPower(leftPower);
+rOne.setPower(rightPower);
+rTwo.setPower(rightPower);
 
 telemetry.addData("status", "Run Time: " + runtime.toString());
 telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
