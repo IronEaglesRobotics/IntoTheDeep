@@ -26,38 +26,43 @@ public class AddisonPracticeClass extends OpMode{
 
     @Override
     public void init() {
+        //initial message out
         telemetry.addData("status", "just started bro");
+        //define motors
         lOne = hardwareMap.get(DcMotor.class, "left_drive_one");
         lTwo = hardwareMap.get(DcMotor.class, "left_drive_two");
         rOne = hardwareMap.get(DcMotor.class, "right_drive_one");
         rTwo = hardwareMap.get(DcMotor.class, "right_drive_two");
-
+        //define motor direction
         lOne.setDirection(DcMotor.Direction.REVERSE);
         lTwo.setDirection(DcMotor.Direction.REVERSE);
         rOne.setDirection(DcMotor.Direction.FORWARD);
         rTwo.setDirection(DcMotor.Direction.FORWARD);
-
+        //initialized message out
         telemetry.addData("status", "Initialized");
     }
 
     @Override
     public void init_loop() {
     }
-
+//ran when driver hits start
     @Override
     public void start() {runtime.reset();}
 
     @Override
     public void loop() {
+        //define motor powers
 double leftPower = 0;
 double rightPower = 0;
-
-//Tank Controls
+//define controller binds
+double drive = -gamepad1.left_stick_y;
+double turn = gamepad1.right_stick_x;
+//updating motor power
 lOne.setPower(leftPower);
 lTwo.setPower(leftPower);
 rOne.setPower(rightPower);
 rTwo.setPower(rightPower);
-
+//log data?
 telemetry.addData("status", "Run Time: " + runtime.toString());
 telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
     }
