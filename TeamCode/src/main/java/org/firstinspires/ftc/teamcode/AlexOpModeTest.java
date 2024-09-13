@@ -47,7 +47,7 @@ public class AlexOpModeTest extends OpMode
         flPow = (x + y + z)/max;
         frPow = (-x + y - z)/max;
         blPow = (-x + y + z)/max;
-        brPow = (x + y - z)/max; //
+        brPow = (x + y - z)/max;
 
         fl.setPower(flPow);
         fr.setPower(frPow);
