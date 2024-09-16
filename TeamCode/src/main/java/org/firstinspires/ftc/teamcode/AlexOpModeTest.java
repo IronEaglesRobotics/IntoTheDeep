@@ -18,15 +18,15 @@ public class AlexOpModeTest extends OpMode
     {
         telemetry.addData("Status", "init starting...");
 
-        fl = hardwareMap.get(DcMotor.class, "frontRightDrive");
-        fr = hardwareMap.get(DcMotor.class, "frontLeftDrive");
+        fl = hardwareMap.get(DcMotor.class, "frontLeftDrive");
+        fr = hardwareMap.get(DcMotor.class, "frontRightDrive");
         bl = hardwareMap.get(DcMotor.class, "backLeftDrive");
         br = hardwareMap.get(DcMotor.class, "backRightDrive");
 
-        fl.setDirection(DcMotor.Direction.REVERSE);
-        fr.setDirection(DcMotor.Direction.FORWARD);
-        bl.setDirection(DcMotor.Direction.REVERSE);
-        br.setDirection(DcMotor.Direction.FORWARD);
+        fl.setDirection(DcMotor.Direction.FORWARD);
+        fr.setDirection(DcMotor.Direction.REVERSE);
+        bl.setDirection(DcMotor.Direction.FORWARD);
+        br.setDirection(DcMotor.Direction.REVERSE);
 
         telemetry.addData("Status", "INIT DONE");
     }
@@ -53,5 +53,7 @@ public class AlexOpModeTest extends OpMode
         fr.setPower(frPow);
         bl.setPower(blPow);
         br.setPower(brPow);
+
+        telemetry.addData("Status", "Runtime: " + runtime.toString());
     }
 }
