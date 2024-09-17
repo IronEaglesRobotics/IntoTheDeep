@@ -55,5 +55,6 @@ public class AlexOpModeTest extends OpMode
         br.setPower(brPow);
 
         telemetry.addData("Status", "Runtime: " + runtime.toString());
+        telemetry.update();
     }
 }
