@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -18,10 +18,10 @@ public class AlexOpModeTest extends OpMode
     {
         telemetry.addData("Status", "init starting...");
 
-        fl = hardwareMap.get(DcMotor.class, "frontLeftDrive");
-        fr = hardwareMap.get(DcMotor.class, "frontRightDrive");
-        bl = hardwareMap.get(DcMotor.class, "backLeftDrive");
-        br = hardwareMap.get(DcMotor.class, "backRightDrive");
+        fl = hardwareMap.get(DcMotor.class, "frontLeft");
+        fr = hardwareMap.get(DcMotor.class, "frontRight");
+        bl = hardwareMap.get(DcMotor.class, "backLeft");
+        br = hardwareMap.get(DcMotor.class, "backRight");
 
         fl.setDirection(DcMotor.Direction.FORWARD);
         fr.setDirection(DcMotor.Direction.REVERSE);
@@ -38,16 +38,15 @@ public class AlexOpModeTest extends OpMode
     @Override
     public void loop()
     {
-        double flPow, frPow, blPow, brPow;
         double x = gamepad1.left_stick_x;
         double y = -gamepad1.left_stick_y;
         double z = gamepad1.right_stick_x;
         double max = Math.max(Math.abs(y)+Math.abs(x)+Math.abs(z),1);
 
-        flPow = (x + y + z)/max;
-        frPow = (-x + y - z)/max;
-        blPow = (-x + y + z)/max;
-        brPow = (x + y - z)/max;
+        double flPow = (x + y + z)/max;
+        double frPow = (-x + y - z)/max;
+        double blPow = (-x + y + z)/max;
+        double brPow = (x + y - z)/max;
 
         fl.setPower(flPow);
         fr.setPower(frPow);
