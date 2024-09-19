@@ -56,6 +56,7 @@ import com.qualcomm.robotcore.util.Range;
  *
  */
 @TeleOp(name="Servo Opmode", group="Iterative OpMode")
+//@Disabled
 public class ServoTest extends OpMode{
 
     /* Declare OpMode members. */
@@ -169,12 +170,13 @@ public class ServoTest extends OpMode{
         leftHand.setPosition(MID_SERVO + offset);
         rightHand.setPosition(MID_SERVO - offset);
     }
-}
-@Override
-public void init_loop() {
-}
-@Override
-public void start() {runtime.reset();}
+    @Override
+    public void init_loop() {
+    }
+    @Override
+    public void start() {runtime.reset();}
+    @Override
+    public void loop() {
 
-@Override
-public void loop() {}
+    }
+}
