@@ -173,10 +173,21 @@ public class ServoTest extends OpMode{
     @Override
     public void init_loop() {
     }
+
     @Override
     public void start() {runtime.reset();}
+
     @Override
     public void loop() {
+double power;
+boolean button = gamepad1.x;
+//I have no idea
+power = Range.clip(0, -1, 1);
+
+
+    }
+    @Override
+    public void stop() {
 
     }
 }
