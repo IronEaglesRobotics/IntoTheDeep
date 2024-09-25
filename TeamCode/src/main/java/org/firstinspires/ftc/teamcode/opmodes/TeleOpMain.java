@@ -6,12 +6,12 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 @TeleOp(name="Basic: Iterative OpMode", group="Iterative OpMode")
 public class TeleOpMain extends OpMode
 {
-    private Robot robot = new Robot();
+    private Robot robot;
 
     @Override
     public void init()
     {
-        robot.init(hardwareMap);
+        robot = new Robot().init(hardwareMap);
     }
 
     @Override
