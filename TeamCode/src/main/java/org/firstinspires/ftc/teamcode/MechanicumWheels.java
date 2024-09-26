@@ -39,10 +39,12 @@ public class MechanicumWheels extends LinearOpMode {
             double denominator = Math.max(Math.abs(y) + Math.abs(x) +Math.abs(turn), 1);
 
             //sets motor power based on input
-            FL.setPower((x + y + turn) / denominator);
-            BL.setPower((y - x + turn) / denominator);
-            FR.setPower((y - x - turn) / denominator);
-            BR.setPower((y + x - turn) / denominator);
+            FL.setPower((y - x - turn) / denominator);
+            BL.setPower((y + x - turn) / denominator);
+            FR.setPower((y + x + turn) / denominator);
+            BR.setPower((y - x + turn) / denominator);
+            
+
 
         }
 
