@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp(name = "mechanicumOpMode", group = "movement")
@@ -14,6 +13,14 @@ public class MechanicumWheels extends LinearOpMode {
     public DcMotor BL;
     public DcMotor FR;
     public DcMotor BR;
+    public Servo leftHand;
+    public Servo extendo;
+    public double OPEN = 2;
+    public double CLOSE =0;
+    public double CLAW_MIN = 0;
+    public double CLAW_MAX = 2;
+    public double EXTEND = 2;
+    public double RETRACT = 0;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -22,6 +29,10 @@ public class MechanicumWheels extends LinearOpMode {
         BL = hardwareMap.dcMotor.get("backLeft");
         FR = hardwareMap.dcMotor.get("frontRight");
         BR = hardwareMap.dcMotor.get("backRight");
+        leftHand = hardwareMap.servo.get("aS");
+        extendo = hardwareMap.servo.get("eX");
+        leftHand.scaleRange(CLAW_MIN, CLAW_MAX);
+        extendo.scaleRange(EXTEND, RETRACT);
 
         FL.setDirection(DcMotor.Direction.FORWARD);
         BL.setDirection(DcMotor.Direction.FORWARD);
@@ -49,10 +60,28 @@ public class MechanicumWheels extends LinearOpMode {
             BL.setPower((y + x - turn) / denominator);
             FR.setPower((y + x + turn) / denominator);
             BR.setPower((y - x + turn) / denominator);
-            
 
+            if (gamepad1.right_bumper) {
+                leftHand.setPosition(OPEN);
+            }
+            else {
+                leftHand.setPosition(CLOSE);
+            }
+            telemetry.update();
+            telemetry.addData("open",OPEN);
+            telemetry.addData("closed",CLOSE);
+
+            if (gamepad1.left_bumper) {
+                extendo.setPosition(EXTEND);
+            }
+            else {
+                extendo.setPosition(RETRACT);
+            }
+        }   telemetry.update();
+            telemetry.addData("extended",EXTEND);
+            telemetry.addData("retracted",RETRACT);
 
         }
 
     }
-}
+
