@@ -7,12 +7,12 @@ public class Robot
 {
     public DcMotor fl, fr, bl, br;
 
-    public Robot init(HardwareMap hmap)
+    public Robot init(HardwareMap hardwareMap)
     {
-        fl = hmap.get(DcMotor.class, FL_WHEEL);
-        fr = hmap.get(DcMotor.class, FR_WHEEL);
-        bl = hmap.get(DcMotor.class, BL_WHEEL);
-        br = hmap.get(DcMotor.class, BR_WHEEL);
+        fl = hardwareMap.get(DcMotor.class, FL_WHEEL);
+        fr = hardwareMap.get(DcMotor.class, FR_WHEEL);
+        bl = hardwareMap.get(DcMotor.class, BL_WHEEL);
+        br = hardwareMap.get(DcMotor.class, BR_WHEEL);
 
         fl.setDirection(DcMotor.Direction.FORWARD);
         fr.setDirection(DcMotor.Direction.REVERSE);
