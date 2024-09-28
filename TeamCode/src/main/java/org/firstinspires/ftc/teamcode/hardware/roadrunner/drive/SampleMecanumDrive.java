@@ -21,6 +21,8 @@ import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
@@ -103,6 +105,12 @@ public class SampleMecanumDrive extends MecanumDrive {
         leftRear = hardwareMap.get(DcMotorEx.class, "leftRear");
         rightRear = hardwareMap.get(DcMotorEx.class, "rightRear");
         rightFront = hardwareMap.get(DcMotorEx.class, "rightFront");
+        //Direction
+        leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightRear.setDirection(DcMotorSimple.Direction.FORWARD);
+        leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
+
 
         motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
 
@@ -308,4 +316,16 @@ public class SampleMecanumDrive extends MecanumDrive {
     public static TrajectoryAccelerationConstraint getAccelerationConstraint(double maxAccel) {
         return new ProfileAccelerationConstraint(maxAccel);
     }
+
+    public void setInput(Gamepad gamepad1) {
+        double speedScale = gamepad1.right_bumper ? .3 : .85;
+        double turnScale = gamepad1.right_bumper ? .3 : .75;
+
+        double ly = -gamepad1.left_stick_y * speedScale;
+        double lx = -gamepad1.left_stick_x * speedScale;
+        double rx = -gamepad1.right_stick_x * turnScale;
+        this.setWeightedDrivePower(
+                new Pose2d(ly,lx,rx));
+    }
+
 }
