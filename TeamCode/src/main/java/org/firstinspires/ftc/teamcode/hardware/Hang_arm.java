@@ -18,7 +18,7 @@ public class Hang_arm {
 
         return null;
     }
-    public Hang_arm lift_hook (double pos){
+    public static Hang_arm lift_hook(double pos){
         servo.setPosition(pos);
         return null;
     }

@@ -23,6 +23,8 @@ public class Robot
         bl.setDirection(DcMotor.Direction.FORWARD);
         br.setDirection(DcMotor.Direction.REVERSE);
 
+        Hang_arm.lift_hook(.5);
+
         return this;
     }
 }
