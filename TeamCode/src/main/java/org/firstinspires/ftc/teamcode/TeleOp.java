@@ -8,8 +8,6 @@ import org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.SampleMecanumDri
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOp")
 public class TeleOp extends OpMode {
     private Robot robot;
-//    private SampleMecanumDrive drive;
-
     @Override
     public void init() {
         this.robot = new Robot().init(hardwareMap);
