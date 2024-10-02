@@ -11,7 +11,7 @@ public class TeleOpMain extends OpMode
     private curSpeed = DEFAULT_SPEED;
     private curTurn = DEFAULT_TURN;
 
-    private static float lerp(float a, float b, float t)
+    private static double lerp(double a, double b, double t)
     { return a + t * (b - a); }
 
     @Override
