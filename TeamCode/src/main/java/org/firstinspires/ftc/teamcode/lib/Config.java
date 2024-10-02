@@ -2,10 +2,10 @@ package org.firstinspires.ftc.teamcode.lib;
 
 public class Config {
     // wheels
-    public static final String FL_WHEEL = "frontLeft";
-    public static final String FR_WHEEL = "frontRight";
-    public static final String BL_WHEEL = "backLeft";
-    public static final String BR_WHEEL = "backRight";
+    public static final String FL_WHEEL = "front_left";
+    public static final String FR_WHEEL = "front_right";
+    public static final String BL_WHEEL = "back_left";
+    public static final String BR_WHEEL = "back_right";
 
     // drive speed
     public static final double DEFAULT_SPEED = 1;
