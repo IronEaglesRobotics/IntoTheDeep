@@ -10,7 +10,7 @@ public class Robot
 
     public Robot init(HardwareMap hardwareMap)
     {
-        hangArm = new Hang_arm().Init(hardwareMap);
+        //hangArm = new Hang_arm().Init(hardwareMap);
         fl = hardwareMap.get(DcMotor.class, FL_WHEEL);
         fr = hardwareMap.get(DcMotor.class, FR_WHEEL);
         bl = hardwareMap.get(DcMotor.class, BL_WHEEL);

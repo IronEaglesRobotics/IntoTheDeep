@@ -17,10 +17,16 @@ public class TeleOpMain extends OpMode
     {
         double x = gamepad1.left_stick_x, y = -gamepad1.left_stick_y, z = gamepad1.right_stick_x;
         double max = Math.max(Math.abs(y)+Math.abs(x)+Math.abs(z),1);
+        double speed = .5;
+
+        if (gamepad1.a) {
+            speed = 1;
+        }
+        if (gamepad1.b) speed = .5;
         
-        robot.fl.setPower((x + y + z)/max);
-        robot.fr.setPower((-x + y - z)/max);
-        robot.bl.setPower((-x + y + z)/max);
-        robot.bl.setPower((x + y - z)/max);
+        robot.fl.setPower(((x + y + z)/max)*speed);
+        robot.fr.setPower(((-x + y - z)/max)*speed);
+        robot.bl.setPower(((-x + y + z)/max)*speed);
+        robot.br.setPower(((x + y - z)/max)*speed);
     }
 }
