@@ -1,4 +1,9 @@
 package org.firstinspires.ftc.teamcode.opmodes;
+import static org.firstinspires.ftc.teamcode.lib.Config.DEFAULT_SPEED;
+import static org.firstinspires.ftc.teamcode.lib.Config.DEFAULT_TURN;
+import static org.firstinspires.ftc.teamcode.lib.Config.SLOW_SPEED;
+import static org.firstinspires.ftc.teamcode.lib.Config.SLOW_TURN;
+
 import org.firstinspires.ftc.teamcode.hardware.Robot;
 import org.firstinspires.ftc.teamcode.lib.Config.*;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -8,8 +13,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 public class TeleOpMain extends OpMode
 {
     private Robot robot;
-    private curSpeed = DEFAULT_SPEED;
-    private curTurn = DEFAULT_TURN;
+    private double curSpeed = DEFAULT_SPEED;
+    private double curTurn = DEFAULT_TURN;
 
     private static double lerp(double a, double b, double t)
     { return a + t * (b - a); }
