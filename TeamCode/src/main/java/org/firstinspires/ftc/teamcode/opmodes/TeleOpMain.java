@@ -28,7 +28,7 @@ public class TeleOpMain extends OpMode
     public void loop()
     {
         // if not using dt lerp speed is dependent on loop freq... not good this fix.
-        double time = System.currentTimeMillis()
+        double time = System.currentTimeMillis();
         double deltaTime = (time - lastTime);
         
         double speedMod = gamepad1.a ? SLOW_SPEED : DEFAULT_SPEED;
