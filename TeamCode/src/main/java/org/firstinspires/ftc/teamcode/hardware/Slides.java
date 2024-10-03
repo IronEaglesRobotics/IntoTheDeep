@@ -104,7 +104,7 @@ public class Slides {
 
         pid = controller.calculate(slide.getCurrentPosition(), target);
         ff = f;
-        slide.setPower(pid + ff);
+        slide.setPower(-(pid + ff));
 
         pid = controller.calculate(slide2.getCurrentPosition(), target);
         ff = f;
