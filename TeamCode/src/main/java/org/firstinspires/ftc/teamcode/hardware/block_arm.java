@@ -19,7 +19,7 @@ public class block_arm {
     }
     public void toggle_claw(){
         claw_open = !claw_open;
-        Claw.setPosition(claw_open ? 0 : 1);
+        claw = claw_open ? 0 : 1;
     }
     public void rotate_claw (Claw_pos pos){
         if (pos == Claw_pos.up){
@@ -32,8 +32,8 @@ public class block_arm {
             claw_rot = .5;
         }
     }
-    public void rotate_arm (Gamepad gamepad){
-        main_rot += gamepad.left_stick_y * .05;
+    public void rotate_arm (double change){
+        main_rot += change;
     }
     public void set_grab(Position pos){
         if (pos == Position.pickup){
@@ -49,5 +49,10 @@ public class block_arm {
             main_rot = .5;
             claw_rot = 0;
         }
+    }
+    public void update_claws(){
+        Claw.setPosition(claw);
+        Claw_rot.setPosition(claw_rot);
+        Main_rot.setPosition(main_rot);
     }
 }
