@@ -55,6 +55,8 @@ public class TeleOpMain extends OpMode
 
         lastTime = time;
 
-
+        if (gamepad1.a){
+            robot.intake.toggle_beatbar();
+        }
     }
 }

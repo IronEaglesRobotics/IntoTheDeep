@@ -8,6 +8,7 @@ public class block_arm {
     boolean claw_open = false;
     Servo Claw, Claw_rot, Main_rot;
     double claw, claw_rot, main_rot = 0;
+    public Slides slides;
     public enum Position {pickup,score,wall}
     public enum Claw_pos {up,right,left,down}
 
@@ -15,6 +16,7 @@ public class block_arm {
         Claw = HardwareMap.get(Servo.class,"block_claw");
         Claw_rot = HardwareMap.get(Servo.class,"claw_rot");
         Main_rot = HardwareMap.get(Servo.class,"main_rot");
+        slides = new Slides(HardwareMap);
         return this;
     }
     public void toggle_claw(){
@@ -37,15 +39,18 @@ public class block_arm {
     }
     public void set_grab(Position pos){
         if (pos == Position.pickup){
+            slides.setTarget(Slides.Position.DOWN);
             main_rot = 1;
             this.rotate_claw(Claw_pos.up);
             if (!claw_open){
                 this.toggle_claw();
             }
         } else if (pos == Position.wall){
+            slides.setTarget(Slides.Position.DOWN);
             main_rot = 0;
             claw_rot = 0;
         } else if (pos == Position.score){
+            slides.setTarget(Slides.Position.TIER4);
             main_rot = .5;
             claw_rot = 0;
         }

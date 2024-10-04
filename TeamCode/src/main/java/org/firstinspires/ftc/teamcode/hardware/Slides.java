@@ -25,12 +25,13 @@ public class Slides {
     public static int tier1 = 200;
     public static int tier2 = 350;
     public static int tier3 = 500;
+    public static int tier4 = 650;
 
     private int target = 0;
 
     public static int manualSpeed = 20;
 
-    public enum Position { DOWN, TIER1, TIER2, TIER3 }
+    public enum Position { DOWN, TIER1, TIER2, TIER3,TIER4 }
 
     public Slides(HardwareMap hardwareMap) {
         slide = hardwareMap.get(DcMotor.class, "Right Slide Motor");
@@ -59,6 +60,8 @@ public class Slides {
             target = Math.min(Math.max(tier2, targetMin), targetMax);
         } else if (pos == Position.TIER3) {
             target = Math.min(Math.max(tier3, targetMin), targetMax);
+        } else if (pos == Position.TIER4) {
+            target = Math.min(Math.max(tier4, targetMin), targetMax);
         }
     }
 

@@ -12,6 +12,7 @@ public class intake {
     Servo Rot1,Rot2,Eject,Beat_bar;
     ColorSensor c_sensor;
     boolean beatbar_flipped;
+    boolean in_lower = false;
     double rot1,rot2,eject,beat_bar;
     Color_check color_check = new Color_check();
 
@@ -29,6 +30,14 @@ public class intake {
     public void toggle_beatbar (){
         beatbar_flipped = !beatbar_flipped;
         beat_bar = beatbar_flipped ? 1 : 0;
+    }
+    public boolean getbeatbar_pos(){
+        return beatbar_flipped;
+    }
+    public void toggle_lower(){
+        in_lower = !in_lower;
+        rot1 = in_lower ? 1 : 0;
+        rot2 = -rot1;
     }
     public void pickup() throws InterruptedException {
         this.toggle_beatbar();
