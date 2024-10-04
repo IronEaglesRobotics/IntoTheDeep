@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
 import static java.lang.Thread.sleep;
 
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -12,7 +13,7 @@ public class intake {
     ColorSensor c_sensor;
     boolean beatbar_flipped;
     double rot1,rot2,eject,beat_bar;
-    color_check color_check = new color_check();
+    Color_check color_check = new Color_check();
 
 
     public intake Init(HardwareMap HardwareMap){
@@ -29,39 +30,20 @@ public class intake {
         beatbar_flipped = !beatbar_flipped;
         beat_bar = beatbar_flipped ? 1 : 0;
     }
-    public void pickup(){
+    public void pickup() throws InterruptedException {
         this.toggle_beatbar();
-        wait(1000);
+        Thread.sleep(1000);
         color_check.getcolor();
     }
-    void eject(){
+    void eject() throws InterruptedException {
         eject = 0;
         sleep(1000);
         eject = 1;
     }
-}
-class color_check {
-    enum color {red,blue,yellow}
-    ColorSensor c_sensor;
-    color request;
-    color_check Init(ColorSensor temp_c_sensor,HardwareMap HardwareMap,color i_request){
-        c_sensor = temp_c_sensor;
-        request = i_request;
-        intake intake = new intake.Init(HardwareMap);
-        return this;
-    }
-    color getcolor(){
-        int sensitivity = 30;
-        color temp_color;
-        if (c_sensor.red()>c_sensor.blue()+sensitivity) temp_color = color.red;
-        else if (c_sensor.blue()>c_sensor.red()+sensitivity) temp_color = color.blue;
-        else temp_color = color.yellow;
-
-        return temp_color;
-    }
-    void check (){
-        if (!(this.getcolor() == request)){
-
-        }
+    void update_servo(){
+        Rot1.setPosition(rot1);
+        Rot2.setPosition(rot2);
+        Eject.setPosition(eject);
+        Beat_bar.setPosition(beat_bar);
     }
 }
