@@ -11,7 +11,7 @@ class Color_check {
     Color_check Init(ColorSensor temp_c_sensor, HardwareMap HardwareMap, color i_request){
         c_sensor = temp_c_sensor;
         request = i_request;
-        intake = new intake().Init(HardwareMap);
+        intake = new intake().Init(HardwareMap); // creates paradox
         return this;
     }
     color getcolor(){

@@ -14,4 +14,6 @@ public class Config {
     // turn speed
     public static final double DEFAULT_TURN = 1;
     public static final double SLOW_TURN = 0.5;
+
+    public static final double HSpos = 1;
 }

@@ -21,9 +21,8 @@ public class Hang_arm {
     public void lift_hook(double pos){
         servo.setPosition(pos);
     }
-    public void pullup(double time,double cur_time){
-        double delay = time + 5;
-        while (time<delay)
-            motor.setPower(.7);
+    public void pullup(double power){
+            motor.setPower(power);
     }
+
 }

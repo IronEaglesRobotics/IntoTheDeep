@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.hardware;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
 import static java.lang.Thread.sleep;
 
+import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -39,10 +41,12 @@ public class intake {
         rot1 = in_lower ? 1 : 0;
         rot2 = -rot1;
     }
-    public void pickup() throws InterruptedException {
-        this.toggle_beatbar();
-        Thread.sleep(1000);
-        color_check.getcolor();
+    public void pickup(GamepadEx gamepadEx) throws InterruptedException {
+        if (gamepadEx.wasJustReleased(GamepadKeys.Button.A)){
+            this.toggle_beatbar();
+            wait(1000);
+            color_check.check();
+        }
     }
     void eject() throws InterruptedException {
         eject = 0;

@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
+import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -11,6 +13,7 @@ public class block_arm {
     public Slides slides;
     public enum Position {pickup,score,wall}
     public enum Claw_pos {up,right,left,down}
+    Claw_pos pos;
 
     public block_arm Init(HardwareMap HardwareMap){
         Claw = HardwareMap.get(Servo.class,"block_claw");
@@ -23,7 +26,16 @@ public class block_arm {
         claw_open = !claw_open;
         claw = claw_open ? 0 : 1;
     }
-    public void rotate_claw (Claw_pos pos){
+    public void rotate_claw (GamepadEx gamepadEx){
+        if (gamepadEx.wasJustReleased(GamepadKeys.Button.DPAD_UP)){
+            pos = Claw_pos.up;
+        } else if (gamepadEx.wasJustReleased(GamepadKeys.Button.DPAD_DOWN)){
+            pos = Claw_pos.down;
+        } else if (gamepadEx.wasJustReleased(GamepadKeys.Button.DPAD_LEFT)){
+            pos = Claw_pos.left;
+        } else if (gamepadEx.wasJustReleased(GamepadKeys.Button.DPAD_RIGHT)){
+            pos = Claw_pos.right;
+        }
         if (pos == Claw_pos.up){
             claw_rot = .5;
         }   else if (pos == Claw_pos.right){
@@ -31,6 +43,17 @@ public class block_arm {
         } else if (pos == Claw_pos.left){
             claw_rot = .5;
         } else if (pos == Claw_pos.down){
+            claw_rot = .5;
+        }
+    }
+    public void rotate_claw (Claw_pos pos) {
+        if (pos == Claw_pos.up) {
+            claw_rot = .5;
+        } else if (pos == Claw_pos.right) {
+            claw_rot = .5;
+        } else if (pos == Claw_pos.left) {
+            claw_rot = .5;
+        } else if (pos == Claw_pos.down) {
             claw_rot = .5;
         }
     }

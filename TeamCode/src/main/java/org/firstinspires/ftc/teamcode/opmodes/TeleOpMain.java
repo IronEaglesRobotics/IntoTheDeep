@@ -1,11 +1,14 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 import static org.firstinspires.ftc.teamcode.lib.Config.DEFAULT_SPEED;
 import static org.firstinspires.ftc.teamcode.lib.Config.DEFAULT_TURN;
+import static org.firstinspires.ftc.teamcode.lib.Config.HSpos;
 import static org.firstinspires.ftc.teamcode.lib.Config.SLOW_SPEED;
 import static org.firstinspires.ftc.teamcode.lib.Config.SLOW_TURN;
 
 import org.firstinspires.ftc.teamcode.hardware.Robot;
 import org.firstinspires.ftc.teamcode.lib.Config.*;
+
+import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -16,13 +19,17 @@ public class TeleOpMain extends OpMode
     private double lastTime = System.currentTimeMillis();
     private double curSpeed = DEFAULT_SPEED;
     private double curTurn = DEFAULT_TURN;
+    private GamepadEx controller1 = new GamepadEx(gamepad1);
+    private GamepadEx controller2 = new GamepadEx(gamepad2);
 
     private static double lerp(double a, double b, double t)
     { return a + t * (b - a); }
 
     @Override
-    public void init()
-    { robot = new Robot().init(hardwareMap); }
+    public void init() {
+        robot = new Robot().init(hardwareMap);
+        robot.getHangArm().lift_hook(HSpos);
+    }
 
     @Override
     public void loop()
@@ -53,10 +60,19 @@ public class TeleOpMain extends OpMode
         robot.bl.setPower(((-x + y + z)/max));
         robot.br.setPower(((x + y - z)/max));
 
-        lastTime = time;
-
         if (gamepad1.a){
             robot.intake.toggle_beatbar();
         }
+
+        robot.Block_Macro(controller2,time);
+        robot.Hang_Macro(controller2,time);
+
+        try {
+            robot.getIntake().pickup(controller1);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        lastTime = time;
     }
 }
