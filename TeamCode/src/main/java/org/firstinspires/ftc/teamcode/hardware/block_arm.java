@@ -20,6 +20,7 @@ public class block_arm {
         Claw_rot = HardwareMap.get(Servo.class,"claw_rot");
         Main_rot = HardwareMap.get(Servo.class,"main_rot");
         slides = new Slides(HardwareMap);
+
         return this;
     }
     public void toggle_claw(){

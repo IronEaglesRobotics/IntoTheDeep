@@ -1,54 +1,39 @@
 package org.firstinspires.ftc.teamcode.hardware;
-import static org.firstinspires.ftc.teamcode.lib.Config.*;
 
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.teamcode.hardware.block_arm.*;
 
-public class Robot
-{
-    public DcMotor fl, fr, bl, br;
-    public Hang_arm hangArm;
-    public intake intake;
-    public block_arm block_arm;
-    public enum Block_macro_state {idle,take,grab,score}
-    Block_macro_state block_macro_state = Block_macro_state.idle;
-    public enum hang_macro {idle,pullup,stop}
-    hang_macro hangMacro = hang_macro.idle;
+public class Robot {
+    private Drive drive;
+    private Hang_arm hangArm;
+    private intake intake;
+    private block_arm block_arm;
+    private enum Block_macro_state {idle,take,grab,score}
+    private Block_macro_state block_macro_state = Block_macro_state.idle;
+    private enum hang_macro {idle,pullup,stop}
+    private hang_macro hangMacro = hang_macro.idle;
     double delay;
 
-    public Robot init(HardwareMap hardwareMap)
-    {
+    public Robot init(HardwareMap hardwareMap) {
+        drive = new Drive().Init(hardwareMap);
         hangArm = new Hang_arm().Init(hardwareMap);
         intake = new intake().Init(hardwareMap);
         block_arm = new block_arm().Init(hardwareMap);
 
-        fl = hardwareMap.get(DcMotor.class, FL_WHEEL);
-        fr = hardwareMap.get(DcMotor.class, FR_WHEEL);
-        bl = hardwareMap.get(DcMotor.class, BL_WHEEL);
-        br = hardwareMap.get(DcMotor.class, BR_WHEEL);
-
-        fl.setDirection(DcMotor.Direction.FORWARD);
-        fr.setDirection(DcMotor.Direction.REVERSE);
-        bl.setDirection(DcMotor.Direction.FORWARD);
-        br.setDirection(DcMotor.Direction.REVERSE);
-
         return this;
     }
 
+    public Drive getDrive() { return drive; }
     public Hang_arm getHangArm() {
         return hangArm;
     }
-
     public intake getIntake() {
         return intake;
     }
+    public block_arm getBlockarm() { return block_arm; }
 
-    public block_arm getBlockarm() {
-        return block_arm;
-    }
     public void Block_Macro(GamepadEx gamepadEx, double curtime){
         switch (block_macro_state){
             case idle:
@@ -77,6 +62,7 @@ public class Robot
         block_arm.update_claws();
         intake.update_servo();
     }
+
     public void Hang_Macro(GamepadEx gamepadEx,double cur_time){
         switch (hangMacro) {
             case idle:
@@ -94,5 +80,4 @@ public class Robot
                 hangArm.pullup(0);
         }
     }
-
 }
