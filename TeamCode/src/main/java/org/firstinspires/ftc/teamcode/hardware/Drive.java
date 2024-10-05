@@ -15,7 +15,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 
 public class Drive {
     private DcMotor fl, fr, bl, br;
-    private double lastTime = System.currentTimeMillis();
+    private double lastTime;
     private double curSpeed = DEFAULT_SPEED;
     private double curTurn = DEFAULT_TURN;
 
@@ -32,6 +32,8 @@ public class Drive {
         fr.setDirection(DcMotor.Direction.REVERSE);
         bl.setDirection(DcMotor.Direction.FORWARD);
         br.setDirection(DcMotor.Direction.REVERSE);
+
+        lastTime = System.currentTimeMillis();
 
         return  this;
     }
