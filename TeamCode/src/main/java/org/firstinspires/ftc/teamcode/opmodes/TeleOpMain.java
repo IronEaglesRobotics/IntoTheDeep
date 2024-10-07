@@ -22,9 +22,7 @@ public class TeleOpMain extends OpMode {
     public void loop() {
         double currentTime = System.currentTimeMillis();
 
-        robot.getDrive().setDrive(gamepad1, currentTime);
-
-        if (gamepad1.a) robot.getIntake().toggle_beatbar();
+        robot.getDrive().setDrive(controller1, currentTime);
 
         robot.Block_Macro(controller2, currentTime);
         robot.Hang_Macro(controller2, currentTime);
