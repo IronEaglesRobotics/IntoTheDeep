@@ -44,8 +44,8 @@ public class Drive {
         // if not using dt lerp speed is dependent on loop freq... not good this fix.
         double deltaTime = (currentTime - lastTime);
 
-        double speedMod = gamepad.wasJustReleased(GamepadKeys.Button.A) ? SLOW_SPEED : DEFAULT_SPEED;
-        double turnMod = gamepad.wasJustReleased(GamepadKeys.Button.A) ? SLOW_TURN : DEFAULT_TURN;
+        double speedMod = gamepad.getButton(GamepadKeys.Button.A) ? SLOW_SPEED : DEFAULT_SPEED;
+        double turnMod = gamepad.getButton(GamepadKeys.Button.A) ? SLOW_TURN : DEFAULT_TURN;
 
         // interpolate instead of instant to fix jitter maybe, idk if ftc already has something for this...
         double step = 1-Math.exp(-7 * deltaTime);
