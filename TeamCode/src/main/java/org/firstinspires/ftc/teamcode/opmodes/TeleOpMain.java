@@ -15,7 +15,6 @@ public class TeleOpMain extends OpMode {
     @Override
     public void init() {
         robot = new Robot().init(hardwareMap);
-        robot.getHangArm().lift_hook(HSpos);
     }
 
     @Override
@@ -24,6 +23,7 @@ public class TeleOpMain extends OpMode {
 
         robot.getDrive().setDrive(controller1, currentTime);
 
+        robot.getHangArm().lift_hook(HSpos);
         robot.Block_Macro(controller2, currentTime);
         robot.Hang_Macro(controller2, currentTime);
 

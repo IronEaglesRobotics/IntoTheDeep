@@ -22,6 +22,8 @@ public class Slides {
     public static int targetMax = 1000;
 
     public static int down = 0;
+    public static int postclip = 75;
+    public static int preclip = 100;
     public static int tier1 = 200;
     public static int tier2 = 350;
     public static int tier3 = 500;
@@ -31,7 +33,7 @@ public class Slides {
 
     public static int manualSpeed = 20;
 
-    public enum Position { DOWN, TIER1, TIER2, TIER3,TIER4 }
+    public enum Position { DOWN, PRECLIP, POSTCLIP, TIER1, TIER2, TIER3,TIER4 }
 
     public Slides(HardwareMap hardwareMap) {
         slide = hardwareMap.get(DcMotor.class, "Right Slide Motor");
@@ -54,7 +56,11 @@ public class Slides {
     public void setTarget(Position pos) {
         if (pos == Position.DOWN) {
             target = Math.min(Math.max(down, targetMin), targetMax);
-        } else if (pos == Position.TIER1) {
+        } else if (pos == Position.PRECLIP){
+            target = Math.min(Math.max(preclip,targetMin),targetMax);
+        }else if (pos == Position.POSTCLIP){
+            target = Math.min(Math.max(postclip,targetMin),targetMax);
+        }else if (pos == Position.TIER1) {
             target = Math.min(Math.max(tier1, targetMin), targetMax);
         } else if (pos == Position.TIER2) {
             target = Math.min(Math.max(tier2, targetMin), targetMax);

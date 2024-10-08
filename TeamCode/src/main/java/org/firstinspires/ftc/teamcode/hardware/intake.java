@@ -53,6 +53,9 @@ public class intake {
         sleep(1000);
         eject = 1;
     }
+    public void setEject(double target){
+        eject = target;
+    }
     void update_servo(){
         Rot1.setPosition(rot1);
         Rot2.setPosition(rot2);

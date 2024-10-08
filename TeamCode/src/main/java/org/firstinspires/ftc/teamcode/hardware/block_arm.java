@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.hardware;
 
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
-import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -11,7 +10,7 @@ public class block_arm {
     Servo Claw, Claw_rot, Main_rot;
     double claw, claw_rot, main_rot = 0;
     public Slides slides;
-    public enum Position {pickup,score,wall}
+    public enum Position {pickup,score,wall, preclip,postclip}
     public enum Claw_pos {up,right,left,down}
     Claw_pos pos;
 
@@ -58,8 +57,18 @@ public class block_arm {
             claw_rot = .5;
         }
     }
-    public void rotate_arm (double change){
-        main_rot += change;
+    public void rotate_arm (GamepadEx gamepadEx){
+        main_rot += gamepadEx.getRightX();
+        main_rot = Math.min(Math.max(main_rot,0),1);
+    }
+    public void rotate_arm (Position pos){
+        if (pos == Position.wall){
+            main_rot = 0;
+        } else if (pos == Position.score){
+            main_rot = 0.5;
+        } else if (pos == Position.pickup){
+            main_rot = 1;
+        }
     }
     public void set_grab(Position pos){
         if (pos == Position.pickup){
@@ -77,6 +86,21 @@ public class block_arm {
             slides.setTarget(Slides.Position.TIER4);
             main_rot = .5;
             claw_rot = 0;
+        } else if (pos == Position.preclip){
+            slides.setTarget(Slides.Position.PRECLIP);
+            main_rot = 0;
+            claw_rot = 0;
+        } else if (pos == Position.postclip){
+            slides.setTarget(Slides.Position.POSTCLIP);
+            main_rot = 0;
+            claw_rot = 0;
+        }
+    }
+    public void clip(GamepadEx gamepadEx){
+        if (gamepadEx.wasJustPressed(GamepadKeys.Button.A)){
+            set_grab(Position.postclip);
+        } else if (gamepadEx.wasJustReleased(GamepadKeys.Button.A)){
+            toggle_claw();
         }
     }
     public void update_claws(){

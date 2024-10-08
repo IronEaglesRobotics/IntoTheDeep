@@ -80,4 +80,8 @@ public class Robot {
                 hangArm.pullup(0);
         }
     }
+    public void update(){
+        block_arm.update_claws();
+        intake.update_servo();
+    }
 }
