@@ -41,6 +41,9 @@ public class intake {
         rot1 = in_lower ? 1 : 0;
         rot2 = -rot1;
     }
+    public void Lower(GamepadEx gamepadEx){
+        if (gamepadEx.wasJustReleased(GamepadKeys.Button.B)) toggle_lower();
+    }
     public void pickup(GamepadEx gamepadEx) throws InterruptedException {
         if (gamepadEx.wasJustReleased(GamepadKeys.Button.A)){
             this.toggle_beatbar();

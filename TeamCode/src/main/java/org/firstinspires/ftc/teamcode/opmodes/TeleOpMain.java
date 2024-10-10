@@ -27,6 +27,12 @@ public class TeleOpMain extends OpMode {
         robot.Block_Macro(controller2, currentTime);
         robot.Hang_Macro(controller2, currentTime);
 
+        robot.getBlockarm().rotate_arm(controller2);
+        robot.getBlockarm().rotate_claw(controller2);
+        robot.getBlockarm().clip(controller2);
+        // add toggle claw
+
+        robot.getIntake().Lower(controller1);
         try {
             robot.getIntake().pickup(controller1);
         } catch (InterruptedException e) {
