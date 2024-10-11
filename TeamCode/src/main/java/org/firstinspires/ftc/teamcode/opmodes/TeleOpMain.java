@@ -32,6 +32,7 @@ public class TeleOpMain extends OpMode {
         robot.getBlockarm().clip(controller2);
         robot.getBlockarm().toggle_claw(controller2);
 
+        robot.getIntake().setColor(controller1);
         robot.getIntake().Lower(controller1);
         try {
             robot.getIntake().pickup(controller1);

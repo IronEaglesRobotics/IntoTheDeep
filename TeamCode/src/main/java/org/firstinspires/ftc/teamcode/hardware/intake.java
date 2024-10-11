@@ -17,6 +17,7 @@ public class intake {
     boolean in_lower = false;
     double rot1,rot2,eject,beat_bar;
     Color_check color_check = new Color_check();
+    color c_input = color.yellow;
 
 
     public intake Init(HardwareMap HardwareMap){
@@ -28,6 +29,15 @@ public class intake {
 
 
         return this;
+    }
+    public void setColor(GamepadEx gamepadEx){
+        if (gamepadEx.wasJustReleased(GamepadKeys.Button.DPAD_RIGHT)){
+            c_input = color.blue;
+        } else if (gamepadEx.wasJustReleased(GamepadKeys.Button.DPAD_LEFT)) {
+            c_input = color.red;
+        } else if (gamepadEx.wasJustReleased(GamepadKeys.Button.DPAD_UP)){
+            c_input = color.yellow;
+        }
     }
     public void toggle_beatbar (){
         beatbar_flipped = !beatbar_flipped;
@@ -48,7 +58,7 @@ public class intake {
         if (gamepadEx.wasJustReleased(GamepadKeys.Button.A)){
             this.toggle_beatbar();
             wait(1000);
-            color_check.check();
+            color_check.check(c_input);
         }
     }
     void eject() throws InterruptedException {
