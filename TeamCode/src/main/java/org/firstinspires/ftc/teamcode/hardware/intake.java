@@ -58,7 +58,7 @@ public class intake {
         if (gamepadEx.wasJustReleased(GamepadKeys.Button.A)){
             this.toggle_beatbar();
             wait(1000);
-            color_check.check(c_input);
+            color_check.check (c_input);
         }
     }
     void eject() throws InterruptedException {

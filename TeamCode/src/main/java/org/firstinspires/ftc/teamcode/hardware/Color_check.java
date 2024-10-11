@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 class Color_check {
     ColorSensor c_sensor;
     intake intake;
-    Color_check Init(ColorSensor temp_c_sensor, HardwareMap HardwareMap,){
+    Color_check Init(ColorSensor temp_c_sensor, HardwareMap HardwareMap){
         c_sensor = temp_c_sensor;
         intake = new intake().Init(HardwareMap); // creates paradox
         return this;
