@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
+import androidx.annotation.Nullable;
+
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -10,7 +12,7 @@ public class Robot {
     private Hang_arm hangArm;
     private intake intake;
     private block_arm block_arm;
-    private enum Block_macro_state {idle,take,grab,score}
+    public enum Block_macro_state {idle,take,grab,score,Null}
     private Block_macro_state block_macro_state = Block_macro_state.idle;
     private enum hang_macro {idle,pullup,stop}
     private hang_macro hangMacro = hang_macro.idle;
@@ -34,7 +36,10 @@ public class Robot {
     }
     public block_arm getBlockarm() { return block_arm; }
 
-    public void Block_Macro(GamepadEx gamepadEx, double curtime){
+    public void Block_Macro(GamepadEx gamepadEx, double curtime,Block_macro_state temp_macro){
+        if (temp_macro != Block_macro_state.Null){
+            block_macro_state = temp_macro;
+        }
         switch (block_macro_state){
             case idle:
                 if (gamepadEx.wasJustReleased(GamepadKeys.Button.RIGHT_BUMPER)){
