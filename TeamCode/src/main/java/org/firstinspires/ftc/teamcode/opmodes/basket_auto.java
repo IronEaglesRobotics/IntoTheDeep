@@ -48,7 +48,9 @@ public class basket_auto extends LinearOpMode {
                 .build();
         drive.followTrajectory(traj2);
         bot.getIntake().toggle_beatbar();
-        bot.Block_Macro(controller,cur_time, Robot.Block_macro_state.grab);
+        bot.Block_Macro(controller,cur_time,Robot.Block_macro_state.grab);
+        drive.followTrajectory(traj3);
+        bot.getBlockarm().toggle_claw();
     }
     @Override
     public void runOpMode() throws InterruptedException {
