@@ -26,6 +26,11 @@ public class block_arm {
         claw_open = !claw_open;
         claw = claw_open ? 0 : 1;
     }
+    public void toggle_claw(GamepadEx gamepadEx){
+        if (gamepadEx.wasJustReleased(GamepadKeys.Button.A)){
+            toggle_claw();
+        }
+    }
     public void rotate_claw (GamepadEx gamepadEx){
         if (gamepadEx.wasJustReleased(GamepadKeys.Button.DPAD_UP)){
             pos = Claw_pos.up;
@@ -97,9 +102,9 @@ public class block_arm {
         }
     }
     public void clip(GamepadEx gamepadEx){
-        if (gamepadEx.wasJustPressed(GamepadKeys.Button.A)){
+        if (gamepadEx.wasJustPressed(GamepadKeys.Button.B)){
             set_grab(Position.postclip);
-        } else if (gamepadEx.wasJustReleased(GamepadKeys.Button.A)){
+        } else if (gamepadEx.wasJustReleased(GamepadKeys.Button.B)){
             toggle_claw();
         }
     }
