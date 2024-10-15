@@ -100,6 +100,7 @@ public class block_arm {
             main_rot = 0;
             claw_rot = 0;
         }
+        update_claws();
     }
     public void clip(GamepadEx gamepadEx){
         if (gamepadEx.wasJustPressed(GamepadKeys.Button.B)){
@@ -107,6 +108,7 @@ public class block_arm {
         } else if (gamepadEx.wasJustReleased(GamepadKeys.Button.B)){
             toggle_claw();
         }
+        update_claws();
     }
     public void update_claws(){
         Claw.setPosition(claw);

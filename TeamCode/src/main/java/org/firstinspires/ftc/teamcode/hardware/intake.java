@@ -53,6 +53,7 @@ public class intake {
     }
     public void Lower(GamepadEx gamepadEx){
         if (gamepadEx.wasJustReleased(GamepadKeys.Button.B)) toggle_lower();
+        update_servo();
     }
     public void pickup(GamepadEx gamepadEx) throws InterruptedException {
         if (gamepadEx.wasJustReleased(GamepadKeys.Button.A)){
@@ -60,14 +61,17 @@ public class intake {
             wait(1000);
             color_check.check (c_input);
         }
+        update_servo();
     }
     void eject() throws InterruptedException {
         eject = 0;
+        update_servo();
         sleep(1000);
         eject = 1;
     }
     public void setEject(double target){
         eject = target;
+        update_servo();
     }
     void update_servo(){
         Rot1.setPosition(rot1);
