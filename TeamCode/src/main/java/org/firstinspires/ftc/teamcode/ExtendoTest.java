@@ -13,21 +13,24 @@ public class ExtendoTest extends LinearOpMode{
 
     public Servo extendo;
     public double EXTENDED = 2;
-    public double RETRACTED = 0;
+    public double RETRACTED = -2;
 
     @Override
     public void runOpMode() throws InterruptedException{
         extendo = hardwareMap.servo.get("eX");
-        extendo.scaleRange(EXTENDED,RETRACTED);
+        extendo.scaleRange(RETRACTED,EXTENDED);
         waitForStart();
 
         while (opModeIsActive()) {
 
-            if (gamepad1.left_stick_y >= -1 && gamepad1.left_stick_x < 0) {
+            if (gamepad1.left_stick_y >= 0) {
                 extendo.setPosition(extendo.getPosition()+0.1);
             }
-            else if (gamepad1.left_stick_y <= 2 && gamepad1.left_stick_x < 0) {
+            else if (gamepad1.left_stick_y <= 0) {
                 extendo.setPosition(extendo.getPosition()-0.1);
+            }
+            else {
+                stop();
             }
 
         }

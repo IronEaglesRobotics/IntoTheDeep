@@ -10,20 +10,21 @@ import com.qualcomm.robotcore.hardware.I2cAddr;
 
 @TeleOp(name="ColorSensor Opmode", group="Iterative OpMode")
 public class ColorSensorTest extends OpMode{
-    public ColorSensor frontColorSensor;
-
+    public ColorSensor colorSensor;
+    private double redValue;
+    private double
 
     @Override
     public void init() {
-        frontColorSensor = hardwareMap.get(ColorSensor.class,"cS");
-        frontColorSensor.enableLed(true);
+        colorSensor = hardwareMap.get(ColorSensor.class,"cS");
+        colorSensor.enableLed(true);
     }
 
     @Override
     public void loop() {
-        telemetry.addData("Red", frontColorSensor.red());
-        telemetry.addData("Green", frontColorSensor.green());
-        telemetry.addData("Blue", frontColorSensor.blue());
+        telemetry.addData("Red", colorSensor.red());
+        telemetry.addData("Green", colorSensor.green());
+        telemetry.addData("Blue", colorSensor.blue());
         telemetry.update();
     }
 

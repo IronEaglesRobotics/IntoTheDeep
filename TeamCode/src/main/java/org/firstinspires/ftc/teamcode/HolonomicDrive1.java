@@ -17,8 +17,6 @@ public class HolonomicDrive1 extends LinearOpMode {
     private DcMotor leftBackDrive = null;
     private DcMotor rightFrontDrive = null;
     private DcMotor rightBackDrive = null;
-    private Servo servo;
-    boolean rampUp = true;
 
     public void runOpMode() {
 
@@ -28,7 +26,6 @@ public class HolonomicDrive1 extends LinearOpMode {
         leftBackDrive  = hardwareMap.get(DcMotor.class, "lb");
         rightFrontDrive = hardwareMap.get(DcMotor.class, "rf");
         rightBackDrive = hardwareMap.get(DcMotor.class, "rb");
-        servo = hardwareMap.get(Servo.class, "claw");
 
         // ########################################################################################
         // !!!            IMPORTANT Drive Information. Test your motor directions.            !!!!!
@@ -44,7 +41,6 @@ public class HolonomicDrive1 extends LinearOpMode {
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
-        servo.setDirection((Servo.Direction.FORWARD));
 
         // Wait for the game to start (driver presses START)
         telemetry.addData("Status", "Initialized");
@@ -61,14 +57,6 @@ public class HolonomicDrive1 extends LinearOpMode {
             double axial   = -gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value
             double lateral =  gamepad1.left_stick_x;
             double yaw     =  gamepad1.right_stick_x;
-
-            if (gamepad1.left_bumper) {
-                servo.setPosition(2);
-
-            }
-            else {
-                servo.setPosition(0);
-            }
 
             // Combine the joystick requests for each axis-motion to determine each wheel's power.
             // Set up a variable for each drive wheel to save the power level for telemetry.
@@ -102,8 +90,7 @@ public class HolonomicDrive1 extends LinearOpMode {
 
 
             //leftFrontPower  = gamepad1.x ? 1.0 : 0.0;  // X gamepad
-            //leftBackPower   = gamepad1.a ? 1.0 : 0.0;  // A gamepad
-            //rightFrontPower = gamepad1.y ? 1.0 : 0.0;  // Y gamepad
+            //leftBackPower   = gamepad1.a ? 1.0 : 0.0;  // A gamep;0d
             //rightBackPower  = gamepad1.b ? 1.0 : 0.0;  // B gamepad
 
 
