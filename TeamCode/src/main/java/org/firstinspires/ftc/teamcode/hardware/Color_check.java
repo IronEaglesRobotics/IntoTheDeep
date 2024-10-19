@@ -8,7 +8,7 @@ public class Color_check {
     intake intake;
     public Color_check Init(ColorSensor temp_c_sensor, HardwareMap HardwareMap){
         c_sensor = temp_c_sensor;
-        intake = new intake().Init(HardwareMap); // creates paradox
+        intake = new intake().Init(HardwareMap); // creates paradox (THEN WHY WOULD WE HAVE IT?????)
         return this;
     }
     public color getcolor(){
