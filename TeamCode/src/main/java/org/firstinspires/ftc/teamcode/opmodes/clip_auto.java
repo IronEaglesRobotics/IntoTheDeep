@@ -70,6 +70,9 @@ public class clip_auto extends LinearOpMode {
         wait(20);
         push();
         wait(20);
+        Clip2();
+        wait(20);
+        Clip2();
         bot.update();
     }
 }
