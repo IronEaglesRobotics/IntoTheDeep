@@ -21,6 +21,10 @@ allprojects {
     repositories {
         mavenCentral()
         google()
+        // added to try to get robot to stop crashing, take out later if not good
+        maven {
+            url 'https://maven.acmerobotics.org/'
+        }
     }
 }
 
