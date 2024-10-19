@@ -37,6 +37,7 @@ public class basket_auto extends LinearOpMode {
             bot.update();
             wait(100);
         }
+
     protected void pickup(double cur_time){
         bot.getIntake().toggle_lower();
         traj2 = drive.trajectoryBuilder(traj1.end())
