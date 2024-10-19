@@ -23,10 +23,10 @@ public class ExtendoTest extends LinearOpMode{
 
         while (opModeIsActive()) {
 
-            if (gamepad1.left_stick_y >= 0) {
+            if (gamepad1.left_stick_y > 0) {
                 extendo.setPosition(extendo.getPosition()+0.1);
             }
-            else if (gamepad1.left_stick_y <= 0) {
+            else if (gamepad1.left_stick_y < 0) {
                 extendo.setPosition(extendo.getPosition()-0.1);
             }
             else {
