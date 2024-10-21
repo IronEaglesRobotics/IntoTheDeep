@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public class block_arm {
     boolean claw_open = false;
-    Servo Claw, Claw_rot, Main_rot;
+    Servo Claw, Claw_rot, Main_rot1, Main_rot2;
     double claw, claw_rot, main_rot = 0;
     public Slides slides;
     public enum Position {pickup,score,wall, preclip,postclip}
@@ -17,7 +17,9 @@ public class block_arm {
     public block_arm Init(HardwareMap HardwareMap){
         Claw = HardwareMap.get(Servo.class,"block_claw");
         Claw_rot = HardwareMap.get(Servo.class,"claw_rot");
-        Main_rot = HardwareMap.get(Servo.class,"main_rot");
+        Main_rot1 = HardwareMap.get(Servo.class,"main_rot1");
+        Main_rot2 = HardwareMap.get(Servo.class,"main_rot2");
+        Main_rot2.setDirection(Servo.Direction.REVERSE);
         slides = new Slides(HardwareMap);
 
         return this;
@@ -113,6 +115,7 @@ public class block_arm {
     public void update_claws(){
         Claw.setPosition(claw);
         Claw_rot.setPosition(claw_rot);
-        Main_rot.setPosition(main_rot);
+        Main_rot1.setPosition(main_rot);
+        Main_rot2.setPosition(main_rot);
     }
 }

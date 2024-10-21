@@ -27,6 +27,7 @@ public class intake {
         Eject = HardwareMap.get(Servo.class,"eject");
         Beat_bar = HardwareMap.get(Servo.class,"beat_bar");
         c_sensor = HardwareMap.get(ColorSensor.class,"c_sensor");
+        Rot2.setDirection(Servo.Direction.REVERSE);
 
 
         return this;
@@ -50,7 +51,7 @@ public class intake {
     public void toggle_lower(){
         in_lower = !in_lower;
         rot1 = in_lower ? 1 : 0;
-        rot2 = -rot1;
+        rot2 = rot1;
     }
     public void Lower(GamepadEx gamepadEx){
         if (gamepadEx.wasJustReleased(GamepadKeys.Button.B)) toggle_lower();
