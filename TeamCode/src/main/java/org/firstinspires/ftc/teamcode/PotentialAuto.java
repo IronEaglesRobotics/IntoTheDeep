@@ -32,6 +32,8 @@ public class PotentialAuto extends LinearOpMode {
             while (opModeIsActive()) {
 
 
+
+
             }
         }
     }
