@@ -28,7 +28,8 @@ public class intake {
         Beat_bar = HardwareMap.get(Servo.class,"beat_bar");
         c_sensor = HardwareMap.get(ColorSensor.class,"c_sensor");
         Rot2.setDirection(Servo.Direction.REVERSE);
-
+        Rot1.scaleRange(0,.5);
+        Rot2.scaleRange(0,.5);
 
         return this;
     }

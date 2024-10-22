@@ -14,9 +14,9 @@ public class Color_check {
     public color getcolor(){
         int sensitivity = 30;
         color temp_color = color.yellow;
-        if (c_sensor.green()>c_sensor.red()) temp_color = color.yellow;
+        if (c_sensor.blue()>c_sensor.red()+sensitivity) temp_color = color.blue;
+        else if (c_sensor.green()>c_sensor.red()) temp_color = color.yellow;
         else if (c_sensor.red()>c_sensor.blue()+sensitivity) temp_color = color.red;
-        else if (c_sensor.blue()>c_sensor.red()+sensitivity) temp_color = color.blue;
 
         return temp_color;
     }
