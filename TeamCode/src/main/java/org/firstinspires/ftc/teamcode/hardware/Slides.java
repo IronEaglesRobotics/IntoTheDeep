@@ -11,10 +11,14 @@ public class Slides {
     private DcMotor slide;
     private DcMotor slide2;
 
-    public static double p = 0.0014;
+    /*public static double p = 0.0014;
     public static double i = 0.02;
     public static double d = 0;
-    public static double f = 0.01;
+    public static double f = 0.01;*/
+    public static double p = 0.000005;
+    public static double i = 0;
+    public static double d = 0;
+    public static double f = 0;
     public static double pTolerance = 20;
     public static PIDController controller = new PIDController(p, i, d);
 
@@ -36,16 +40,15 @@ public class Slides {
     public enum Position { DOWN, PRECLIP, POSTCLIP, TIER1, TIER2, TIER3,TIER4 }
 
     public Slides(HardwareMap hardwareMap) {
-        slide = hardwareMap.get(DcMotor.class, "Right Slide Motor");
+        slide = hardwareMap.get(DcMotor.class, "motor1");
         slide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         slide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //        slide.setDirection(DcMotorSimple.Direction.REVERSE);
         slide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        slide2 = hardwareMap.get(DcMotor.class, "Left Slide Motor");
+        slide2 = hardwareMap.get(DcMotor.class, "motor2");
         slide2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         slide2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        slide2.setDirection(DcMotorSimple.Direction.REVERSE);
         slide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
@@ -111,13 +114,14 @@ public class Slides {
         controller.setPID(p, i, d);
         controller.setTolerance(pTolerance);
 
-        pid = controller.calculate(slide.getCurrentPosition(), target);
+        pid = controller.calculate(-slide.getCurrentPosition(), target);
         ff = f;
-        slide.setPower(-(pid + ff));
+        slide.setPower((pid + ff));
+        slide2.setPower((pid + ff));
 
-        pid = controller.calculate(slide2.getCurrentPosition(), target);
-        ff = f;
-        slide2.setPower(pid + ff);
+        //pid = controller.calculate(slide2.getCurrentPosition(), target);
+        //ff = f;
+        //slide2.setPower(pid + ff);
 //            }
 //        }
     }
