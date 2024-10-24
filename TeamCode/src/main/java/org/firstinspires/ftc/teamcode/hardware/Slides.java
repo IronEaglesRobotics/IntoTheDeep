@@ -16,22 +16,22 @@ public class Slides {
     public static double d = 0;
     public static double f = 0.01;*/
     public static double p = 0.000005;
-    public static double i = 0;
-    public static double d = 0;
+    public static double i = 0.00000003;
+    public static double d = 0.0000000000001;
     public static double f = 0;
     public static double pTolerance = 20;
     public static PIDController controller = new PIDController(p, i, d);
 
-    public static int targetMin = -10;
-    public static int targetMax = 1000;
+    public static int targetMin = 0;
+    public static int targetMax = 60000;
 
     public static int down = 0;
-    public static int postclip = 75;
-    public static int preclip = 100;
-    public static int tier1 = 200;
-    public static int tier2 = 350;
-    public static int tier3 = 500;
-    public static int tier4 = 650;
+    public static int postclip = 7500;
+    public static int preclip = 10000;
+    public static int tier1 = 20000;
+    public static int tier2 = 35000;
+    public static int tier3 = 50000;
+    public static int tier4 = 60000;
 
     private int target = 0;
 

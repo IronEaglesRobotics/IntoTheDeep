@@ -18,8 +18,8 @@ public class presentation_op extends OpMode {
     private DcMotor fl, fr, bl, br;
     Servo Servo1;
     Servo Servo2;
-    double servo1 = .5;
-    double servo2 = .5;
+    double servo1 = .7;
+    double servo2 = .7;
     DcMotor Motor1;
     DcMotor Motor2;
     int target_pos = 0;
@@ -68,7 +68,7 @@ public class presentation_op extends OpMode {
         servo1 = Math.max(Math.min(servo1,1),0);
         servo2 = Math.max(Math.min(servo2,1),0);
         target_pos = Math.max(Math.min(target_pos,60000),0);
-        slides.setTarget(target_pos);
+        slides.setTarget(Slides.Position.TIER3);
         slides.update(System.currentTimeMillis());
         //Servo1.setPosition(servo1);
         //Servo2.setPosition(servo2);
