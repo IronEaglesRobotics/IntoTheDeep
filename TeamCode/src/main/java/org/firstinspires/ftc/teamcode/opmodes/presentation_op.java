@@ -97,6 +97,7 @@ public class presentation_op extends OpMode {
         telemetry.addData("servo2",servo2);
         telemetry.addData("motor1",motor1);
         telemetry.addData("motor2", motor2);
+        telemetry.addData("motor2", Slides.controller.calculate(Motor2.getCurrentPosition(), Slides.target));
         telemetry.update();
     }
 }

@@ -15,25 +15,25 @@ public class Slides {
     public static double i = 0.02;
     public static double d = 0;
     public static double f = 0.01;*/
-    public static double p = 0.000005;
+    public static double p = 0.000003;
     public static double i = 0;
     public static double d = 0;
     public static double f = 0;
     public static double pTolerance = 20;
     public static PIDController controller = new PIDController(p, i, d);
 
-    public static int targetMin = -10;
-    public static int targetMax = 1000;
+    public static int targetMin = -60000;
+    public static int targetMax = 60000;
 
     public static int down = 0;
-    public static int postclip = 75;
-    public static int preclip = 100;
-    public static int tier1 = 200;
-    public static int tier2 = 350;
-    public static int tier3 = 500;
-    public static int tier4 = 650;
+    public static int postclip = 7500;
+    public static int preclip = 10000;
+    public static int tier1 = 20000;
+    public static int tier2 = 35000;
+    public static int tier3 = -50000;
+    public static int tier4 = 60000;
 
-    private int target = 0;
+    public static int target = 0;
 
     public static int manualSpeed = 20;
 
@@ -42,13 +42,13 @@ public class Slides {
     public Slides(HardwareMap hardwareMap) {
         slide = hardwareMap.get(DcMotor.class, "motor1");
         slide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        slide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        slide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 //        slide.setDirection(DcMotorSimple.Direction.REVERSE);
         slide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         slide2 = hardwareMap.get(DcMotor.class, "motor2");
         slide2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        slide2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        slide2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         slide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
@@ -114,7 +114,8 @@ public class Slides {
         controller.setPID(p, i, d);
         controller.setTolerance(pTolerance);
 
-        pid = controller.calculate(-slide.getCurrentPosition(), target);
+        pid = controller.calculate(slide.getCurrentPosition(), target);
+        pid = Math.min(Math.max(pid,-1),1);
         ff = f;
         slide.setPower((pid + ff));
         slide2.setPower((pid + ff));
