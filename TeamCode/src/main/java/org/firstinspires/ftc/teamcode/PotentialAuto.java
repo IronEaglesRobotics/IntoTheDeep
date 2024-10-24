@@ -16,6 +16,10 @@ public class PotentialAuto extends LinearOpMode {
     private DcMotor rightFrontDrive = null;
     private DcMotor rightBackDrive = null;
     public Servo leftHand;
+    public Servo extendo;
+    public Servo arm1;
+    public Servo arm2;
+    public Servo arm3;
 
     @Override
     public void runOpMode() {
@@ -25,6 +29,10 @@ public class PotentialAuto extends LinearOpMode {
         rightBackDrive = hardwareMap.get(DcMotor.class, "rb");
         leftHand = hardwareMap.servo.get("aS");
         leftHand.scaleRange(0,2);
+        extendo = hardwareMap.servo.get("eX");
+        arm1 = hardwareMap.servo.get("a1");
+        arm2 = hardwareMap.servo.get("a2");
+        arm3 = hardwareMap.servo.get("a3");
 
         waitForStart();
         if (opModeIsActive()) {

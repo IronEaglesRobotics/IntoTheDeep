@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-public class EncoderTest extends OpMode {
+public class MotorEncoderTest extends OpMode {
     private DcMotor motor;
     double ticks = 384.5;
     double newTarget;
