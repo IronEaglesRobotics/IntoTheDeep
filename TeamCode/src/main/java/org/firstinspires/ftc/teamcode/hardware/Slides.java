@@ -15,7 +15,7 @@ public class Slides {
     public static double i = 0.02;
     public static double d = 0;
     public static double f = 0.01;*/
-    public static double p = 0.000003;
+    public static double p = 0.000009;
     public static double i = 0;
     public static double d = 0;
     public static double f = 0;
@@ -30,7 +30,7 @@ public class Slides {
     public static int preclip = 10000;
     public static int tier1 = 20000;
     public static int tier2 = 35000;
-    public static int tier3 = -50000;
+    public static int tier3 = 50000;
     public static int tier4 = 60000;
 
     public static int target = 0;

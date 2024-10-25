@@ -68,7 +68,7 @@ public class presentation_op extends OpMode {
         servo1 = Math.max(Math.min(servo1,1),0);
         servo2 = Math.max(Math.min(servo2,1),0);
         target_pos = Math.max(Math.min(target_pos,60000),0);
-        slides.setTarget(Slides.Position.TIER3);
+        slides.setTarget(Slides.Position.DOWN);
         slides.update(System.currentTimeMillis());
         //Servo1.setPosition(servo1);
         //Servo2.setPosition(servo2);
