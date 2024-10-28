@@ -17,6 +17,8 @@ public class colorSensor extends LinearOpMode{
 
     public void runOpMode() {
 
+        runOpMode();
+
         yeah = hardwareMap.get(ColorSensor.class, "test");
 
         telemetry.addData("Status:", "Hi, this is functioning");
@@ -28,3 +30,4 @@ public class colorSensor extends LinearOpMode{
     }
 }
 
+    
