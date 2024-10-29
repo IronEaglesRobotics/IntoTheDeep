@@ -16,8 +16,8 @@ public class set0 extends OpMode {
     @Override
     public void init(){
         Servo1 = hardwareMap.get(Servo.class,"rot1");
-        //Servo2 = hardwareMap.get(Servo.class,"rot2");
-        crServo = hardwareMap.get(CRServo.class,"rot2");
+        Servo2 = hardwareMap.get(Servo.class,"rot2");
+        crServo = hardwareMap.get(CRServo.class,"cr");
     }
     @Override
     public void loop()  {
