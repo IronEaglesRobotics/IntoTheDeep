@@ -108,6 +108,8 @@ public class presentation_op extends OpMode {
         if (gamepad1.right_bumper && !rightBumperDown) {
             rightBumperDown = true;
             increment = -increment;
+        } else if (!gamepad1.right_bumper) {
+            rightBumperDown = false;
         }
 
         slides.update(System.currentTimeMillis());
