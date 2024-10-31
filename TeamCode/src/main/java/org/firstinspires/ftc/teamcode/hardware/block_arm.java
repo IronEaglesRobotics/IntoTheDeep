@@ -17,8 +17,8 @@ public class block_arm {
     public block_arm Init(HardwareMap HardwareMap){
         Claw = HardwareMap.get(Servo.class,"block_claw");
         Claw_rot = HardwareMap.get(Servo.class,"claw_rot");
-        Main_rot1 = HardwareMap.get(Servo.class,"main_rot1");
-        Main_rot2 = HardwareMap.get(Servo.class,"main_rot2");
+        Main_rot1 = HardwareMap.get(Servo.class,"left_arm");
+        Main_rot2 = HardwareMap.get(Servo.class,"right_arm");
         Main_rot2.setDirection(Servo.Direction.REVERSE);
         slides = new Slides(HardwareMap);
 

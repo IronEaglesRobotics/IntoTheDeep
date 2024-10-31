@@ -69,7 +69,7 @@ public class presentation_op extends OpMode {
 
         servo1 += gamepad2.left_stick_x;
         servo2 += gamepad2.left_stick_x;
-        target_pos += (int) (gamepad2.right_stick_y  * 50);
+        //target_pos += (int) (gamepad2.right_stick_y  * 50);
         servo1 = Math.max(Math.min(servo1,1),0);
         servo2 = Math.max(Math.min(servo2,1),0);
         target_pos = Math.max(Math.min(target_pos,60000),0);

@@ -15,22 +15,20 @@ public class set0 extends OpMode {
     CRServo crServo;
     @Override
     public void init(){
-        Servo1 = hardwareMap.get(Servo.class,"rot1");
-        Servo2 = hardwareMap.get(Servo.class,"rot2");
-        crServo = hardwareMap.get(CRServo.class,"cr");
+        Servo1 = hardwareMap.get(Servo.class,"left_arm");
+        Servo2 = hardwareMap.get(Servo.class,"right_arm");
     }
     @Override
     public void loop()  {
         //Servo1.scaleRange(0,.5);
         //Servo2.scaleRange(0,.5);
-        //Servo2.setDirection(Servo.Direction.REVERSE);
+        Servo2.setDirection(Servo.Direction.REVERSE);
         servo1 += gamepad1.left_stick_x;
         servo2 += gamepad1.left_stick_x;
         servo1 = Math.max(Math.min(servo1,1),0);
         servo2 = Math.max(Math.min(servo2,1),0);
         Servo1.setPosition(servo1);
-        //Servo2.setPosition(servo2);
-        crServo.setPower(gamepad1.right_stick_x);
+        Servo2.setPosition(servo2);
         telemetry.addData("servo1",servo1);
         telemetry.addData("servo2",servo2);
     }
