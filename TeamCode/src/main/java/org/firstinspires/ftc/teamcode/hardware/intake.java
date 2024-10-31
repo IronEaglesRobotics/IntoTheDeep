@@ -1,31 +1,34 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad1;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
 import static java.lang.Thread.sleep;
 
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.hardware.ServoEx;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 
 public class intake {
-    Servo Rot1,Rot2,Eject,Beat_bar;
+    Servo Rot1,Rot2,Eject;
+    CRServo Beat_bar;
     ColorSensor c_sensor;
     boolean beatbar_flipped;
     boolean in_lower = false;
-    double rot1,rot2,eject,beat_bar;
+    double rot1,rot2,eject,beat_bar = 0;
     Color_check color_check = new Color_check();
     color c_input = color.yellow;
 
 
     public intake Init(HardwareMap HardwareMap){
-        Rot1 = HardwareMap.get(Servo.class,"intake_rot1");
-        Rot2 = HardwareMap.get(Servo.class,"intake_rot2");
+        Rot1 = HardwareMap.get(Servo.class,"intake_left");
+        Rot2 = HardwareMap.get(Servo.class,"intake_right");
         Eject = HardwareMap.get(Servo.class,"eject");
-        Beat_bar = HardwareMap.get(Servo.class,"beat_bar");
+        Beat_bar = HardwareMap.get(CRServo.class,"beat_bar");
         c_sensor = HardwareMap.get(ColorSensor.class,"c_sensor");
         Rot2.setDirection(Servo.Direction.REVERSE);
         Rot1.scaleRange(0,.5);
@@ -42,9 +45,8 @@ public class intake {
             c_input = color.yellow;
         }
     }
-    public void toggle_beatbar (){
-        beatbar_flipped = !beatbar_flipped;
-        beat_bar = beatbar_flipped ? 1 : 0;
+    public void toggle_beatbar (GamepadEx gamepad){
+        Beat_bar.setPower(gamepad.getRightX());
     }
     public boolean getbeatbar_pos(){
         return beatbar_flipped;
@@ -60,7 +62,6 @@ public class intake {
     }
     public void pickup(GamepadEx gamepadEx) throws InterruptedException {
         if (gamepadEx.wasJustReleased(GamepadKeys.Button.A)){
-            this.toggle_beatbar();
             wait(1000);
             color_check.check (c_input);
         }
@@ -80,6 +81,5 @@ public class intake {
         Rot1.setPosition(rot1);
         Rot2.setPosition(rot2);
         Eject.setPosition(eject);
-        Beat_bar.setPosition(beat_bar);
     }
 }

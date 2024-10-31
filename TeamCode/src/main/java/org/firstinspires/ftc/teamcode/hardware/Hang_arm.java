@@ -13,8 +13,8 @@ public class Hang_arm {
     public Servo servo;
 
     public Hang_arm Init(HardwareMap hmap){
-        motor = hmap.get(DcMotor.class,"hang_motor");
-        servo = hmap.get(Servo.class,"hand_servo");
+        motor = hmap.get(DcMotor.class,"hang");
+        servo = hmap.get(Servo.class,"hang_lift");
 
         return this;
     }
