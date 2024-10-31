@@ -15,27 +15,27 @@ public class Slides {
     public static double i = 0.02;
     public static double d = 0;
     public static double f = 0.01;*/
-    public static double p = 0.000009;
-    public static double i = 0;
-    public static double d = 0;
-    public static double f = 0;
-    public static double pTolerance = 20;
-    public static PIDController controller = new PIDController(p, i, d);
+    private double p = 0.000009;
+    private double i = 0;
+    private double d = 0;
+    private double f = 0;
+    private double pTolerance = 20;
+    public PIDController controller = new PIDController(p, i, d);
 
-    public static int targetMin = -60000;
-    public static int targetMax = 60000;
+    public int targetMin = -60000;
+    public int targetMax = 60000;
 
-    public static int down = 0;
-    public static int postclip = 7500;
-    public static int preclip = 10000;
-    public static int tier1 = 20000;
-    public static int tier2 = 35000;
-    public static int tier3 = 50000;
-    public static int tier4 = 60000;
+    public int down = 0;
+    public int postclip = 7500;
+    public int preclip = 10000;
+    public int tier1 = 20000;
+    public int tier2 = 35000;
+    public int tier3 = 50000;
+    public int tier4 = 60000;
 
-    public static int target = 0;
+    public int target = 0;
 
-    public static int manualSpeed = 20;
+    public int manualSpeed = 20;
 
     public enum Position { DOWN, PRECLIP, POSTCLIP, TIER1, TIER2, TIER3,TIER4 }
 
@@ -57,21 +57,18 @@ public class Slides {
     }
 
     public void setTarget(Position pos) {
-        if (pos == Position.DOWN) {
-            target = Math.min(Math.max(down, targetMin), targetMax);
-        } else if (pos == Position.PRECLIP){
-            target = Math.min(Math.max(preclip,targetMin),targetMax);
-        }else if (pos == Position.POSTCLIP){
-            target = Math.min(Math.max(postclip,targetMin),targetMax);
-        }else if (pos == Position.TIER1) {
-            target = Math.min(Math.max(tier1, targetMin), targetMax);
-        } else if (pos == Position.TIER2) {
-            target = Math.min(Math.max(tier2, targetMin), targetMax);
-        } else if (pos == Position.TIER3) {
-            target = Math.min(Math.max(tier3, targetMin), targetMax);
-        } else if (pos == Position.TIER4) {
-            target = Math.min(Math.max(tier4, targetMin), targetMax);
+        int value = 0;
+        switch (pos) {
+            case DOWN: value = down; break;
+            case PRECLIP: value = preclip; break;
+            case POSTCLIP: value = postclip; break;
+            case TIER1: value = tier1; break;
+            case TIER2: value = tier2; break;
+            case TIER3: value = tier3; break;
+            case TIER4: value = tier4; break;
+            default: value = targetMin; // or handle unexpected cases
         }
+        target = Math.min(Math.max(value, targetMin), targetMax);
     }
 
     public void increaseTarget(double increase) {

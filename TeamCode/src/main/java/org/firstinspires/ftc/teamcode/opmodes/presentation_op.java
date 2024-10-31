@@ -27,6 +27,11 @@ public class presentation_op extends OpMode {
     int motor2;
     Slides slides;
 
+    private double increment = 0.000001;
+    private boolean buttonADown = false;
+    private boolean buttonBDown = false;
+    private boolean buttonXDown = false;
+    private boolean rightBumperDown = false;
 
     @Override
     public void init(){
@@ -68,6 +73,7 @@ public class presentation_op extends OpMode {
         servo1 = Math.max(Math.min(servo1,1),0);
         servo2 = Math.max(Math.min(servo2,1),0);
         target_pos = Math.max(Math.min(target_pos,60000),0);
+
         if (gamepad1.dpad_down) {
             slides.setTarget(Slides.Position.DOWN);
         } else if (gamepad1.dpad_up){
@@ -77,6 +83,35 @@ public class presentation_op extends OpMode {
         } else if (gamepad1.dpad_right){
             slides.setTarget(Slides.Position.TIER1);
         }
+
+        if (gamepad1.a && !buttonADown) {
+            buttonADown = true;
+            slides.controller.setP(slides.controller.getP()+increment);
+        } else if (!gamepad1.a) {
+            buttonADown = false;
+        }
+
+        if (gamepad1.b && !buttonBDown) {
+            buttonBDown = true;
+            slides.controller.setI(slides.controller.getI()+increment);
+        } else if (!gamepad1.b) {
+            buttonBDown = false;
+        }
+
+        if (gamepad1.x && !buttonXDown) {
+            buttonXDown = true;
+            slides.controller.setD(slides.controller.getD()+increment);
+        } else if (!gamepad1.x) {
+            buttonXDown = false;
+        }
+
+        if (gamepad1.right_bumper && !rightBumperDown) {
+            rightBumperDown = true;
+            increment = -increment;
+        } else if (!gamepad1.right_bumper) {
+            rightBumperDown = false;
+        }
+
         slides.update(System.currentTimeMillis());
         //Servo1.setPosition(servo1);
         //Servo2.setPosition(servo2);
@@ -105,7 +140,8 @@ public class presentation_op extends OpMode {
         telemetry.addData("servo2",servo2);
         telemetry.addData("motor1",motor1);
         telemetry.addData("motor2", motor2);
-        telemetry.addData("motor2", Slides.controller.calculate(Motor2.getCurrentPosition(), Slides.target));
+        telemetry.addData("motor2", slides.controller.calculate(Motor2.getCurrentPosition(), slides.target));
+        telemetry.addData("increment", increment);
         telemetry.update();
     }
 }
