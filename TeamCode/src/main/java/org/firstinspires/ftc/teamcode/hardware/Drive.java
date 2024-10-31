@@ -9,6 +9,7 @@ import static org.firstinspires.ftc.teamcode.lib.Config.DEFAULT_SPEED;
 import static org.firstinspires.ftc.teamcode.lib.Config.DEFAULT_TURN;
 import static org.firstinspires.ftc.teamcode.lib.Config.SLOW_SPEED;
 import static org.firstinspires.ftc.teamcode.lib.Config.SLOW_TURN;
+import static org.firstinspires.ftc.teamcode.lib.Config.LERP_SPEED;
 
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
@@ -48,7 +49,7 @@ public class Drive {
         double turnMod = gamepad.getButton(GamepadKeys.Button.A) ? SLOW_TURN : DEFAULT_TURN;
 
         // interpolate instead of instant to fix jitter maybe, idk if ftc already has something for this...
-        double step = 1-Math.exp(-7 * deltaTime);
+        double step = 1-Math.exp(-LERP_SPEED * deltaTime);
         curSpeed = Math.min(lerp(curSpeed, speedMod, step), 1);
         curTurn = Math.min(lerp(curTurn, turnMod, step), 1);
 

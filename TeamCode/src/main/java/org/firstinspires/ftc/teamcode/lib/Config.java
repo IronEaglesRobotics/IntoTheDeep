@@ -10,6 +10,7 @@ public class Config {
     // drive speed
     public static final double DEFAULT_SPEED = 1;
     public static final double SLOW_SPEED = 0.5;
+    public static final int LERP_SPEED = 5;
 
     // turn speed
     public static final double DEFAULT_TURN = 1;
