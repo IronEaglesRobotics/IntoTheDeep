@@ -142,6 +142,7 @@ public class presentation_op extends OpMode {
         telemetry.addData("motor2", motor2);
         telemetry.addData("motor2", slides.controller.calculate(Motor2.getCurrentPosition(), slides.target));
         telemetry.addData("increment", increment);
+        telemetry.addData("PID", slides.controller.getP()+"", slides.controller.getI()+"", slides.controller.getD()+"");
         telemetry.update();
     }
 }
