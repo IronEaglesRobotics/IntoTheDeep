@@ -26,17 +26,17 @@ public class basket_auto extends LinearOpMode {
     Pose2d pickup3 = new Pose2d(36,-24,Math.toRadians(-90));
     Pose2d park = new Pose2d(36,24,Math.toRadians(270));
     protected void clip() throws InterruptedException{
-            traj1 = drive.trajectoryBuilder(start)
-                    .lineToSplineHeading(clip)
-                    .build();
-            bot.getBlockarm().set_grab(block_arm.Position.preclip);
-            drive.followTrajectory(traj1);
-            bot.getBlockarm().set_grab(block_arm.Position.postclip);
-            wait(500);
-            bot.getBlockarm().toggle_claw();
-            bot.update();
-            wait(100);
-        }
+        traj1 = drive.trajectoryBuilder(start)
+                .lineToSplineHeading(clip)
+                .build();
+        bot.getBlockarm().set_grab(block_arm.Position.preclip);
+        drive.followTrajectory(traj1);
+        bot.getBlockarm().set_grab(block_arm.Position.postclip);
+        wait(500);
+        bot.getBlockarm().toggle_claw();
+        bot.update();
+        wait(100);
+    }
 
     protected void pickup(double cur_time){
         bot.getIntake().toggle_lower();
