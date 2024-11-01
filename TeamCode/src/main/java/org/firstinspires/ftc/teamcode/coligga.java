@@ -16,7 +16,6 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 @TeleOp(name = "Colour Sensor")
 public class coligga extends OpMode {
     GamepadEx controller1;
-
     public  intakeMacroStates intakemacrostate = intakeMacroStates.IDLE;
     public ColorSensor foo;
     public int b;
@@ -27,9 +26,9 @@ public class coligga extends OpMode {
     public DcMotor intake;
     public String targetColor = "yellow";
     public static double OUTTAKEDELAY = .75;
+    public static int ALPHA = 50;
+    public static double POWER = 1;
     double delay;
-
-
 
     @Override
     public void init() {
@@ -50,13 +49,6 @@ public class coligga extends OpMode {
             getColor();
         }
 
-//        if (controller1.isDown(GamepadKeys.Button.LEFT_BUMPER)){
-//            this.intake.setPower(1);
-////            intakeSample(targetColor);
-//        } else{
-//            this.intake.setPower(0);
-//        }
-
         if (controller1.wasJustPressed(GamepadKeys.Button.Y)){
             targetColor = "yellow";
         } else if (controller1.wasJustPressed(GamepadKeys.Button.X)){
@@ -67,31 +59,17 @@ public class coligga extends OpMode {
 
         intakeMacro(controller1,getRuntime(),targetColor);
 
-
-
         telemetry.addData("color: ", color);
         telemetry.addData("blue: ", b);
         telemetry.addData("red: ", r);
         telemetry.addData("green: ", g);
-        telemetry.addData("alpha: ", a);
+        telemetry.addData("alpha live: ", foo.alpha());
         telemetry.addData("targetColor:", targetColor);
         telemetry.addData("STATE:", intakemacrostate);
         telemetry.update();
     }
 
-//    public void intakeSample(String c){
-//        if (a>50 && foo.blue()+foo.red()+foo.green() > 200)  {
-//            getColor();
-//            if (!color.equals(c)){
-//                this.intake.setDirection(DcMotorSimple.Direction.REVERSE);
-//            } else {
-//                this.intake.setDirection(DcMotorSimple.Direction.FORWARD);
-//            }
-//        } else {
-//            this.intake.setDirection(DcMotorSimple.Direction.FORWARD);
-//        }
-//    }
-
+    //Get color function
     public void getColor() {
         b=foo.blue();
         g=foo.green();
@@ -111,10 +89,12 @@ public class coligga extends OpMode {
         }
     }
 
+    //IntakeMacroStates enum
     public enum intakeMacroStates{
         IDLE, INTAKE, DETECT ,OUTTAKE
     }
 
+    //State machine for intake color filter
     public void intakeMacro(GamepadEx gamepadEx, double runtime, String target){
         switch (intakemacrostate){
             case IDLE:
@@ -125,9 +105,9 @@ public class coligga extends OpMode {
                 }
                 break;
             case INTAKE:
-                this.intake.setPower(1);
+                this.intake.setPower(POWER);
                 this.intake.setDirection(DcMotorSimple.Direction.FORWARD);
-                if (foo.alpha()>65){
+                if (foo.alpha()>ALPHA){
                     intakemacrostate = intakeMacroStates.DETECT;
                 }
                 break;
