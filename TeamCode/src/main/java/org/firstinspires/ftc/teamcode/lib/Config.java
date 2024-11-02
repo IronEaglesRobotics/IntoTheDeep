@@ -3,11 +3,37 @@ package org.firstinspires.ftc.teamcode.lib;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 
 public class Config {
-    // wheels
+    // -- hardware map start -- //
+
+    // wheels, DcMotor
     public static final String FL_WHEEL = "front_left";
     public static final String FR_WHEEL = "front_right";
     public static final String BL_WHEEL = "back_left";
     public static final String BR_WHEEL = "back_right";
+
+    // slides, DcMotor
+    public static final String SLIDES_FRONT = "slides_front";
+    public static final String SLIDES_BACK = "slides_back";
+
+    // intake
+    // Servo
+    public static final String INTAKE_LEFT = "intake_left";
+    public static final String INTAKE_RIGHT = "intake_right";
+    public static final String EJECT = "eject";
+    // CRServo
+    public static final String BEAT_BAR = "beat_bar";
+    // ColorSensor
+    public static final String COLOR_SENSOR = "c_sensor";
+
+    public static final String HANG = "hang";
+    public static final String HANG_LIFT = "hang_lift";
+
+    public static final String BLOCK_CLAW = "block_claw";
+    public static final String CLAW_ROT = "claw_rot";
+    public static final String LEFT_ARM = "left_arm";
+    public static final String RIGHT_ARM = "right_arm";
+
+    // -- hardware map end -- //
 
     // drive speed
     public static final double DEFAULT_SPEED = 1;

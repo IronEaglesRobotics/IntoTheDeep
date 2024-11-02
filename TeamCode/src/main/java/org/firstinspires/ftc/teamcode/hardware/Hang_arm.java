@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
+import static org.firstinspires.ftc.teamcode.lib.Config.HANG;
+import static org.firstinspires.ftc.teamcode.lib.Config.HANG_LIFT;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -13,8 +16,8 @@ public class Hang_arm {
     public Servo servo;
 
     public Hang_arm Init(HardwareMap hmap){
-        motor = hmap.get(DcMotor.class,"hang");
-        servo = hmap.get(Servo.class,"hang_lift");
+        motor = hmap.get(DcMotor.class,HANG);
+        servo = hmap.get(Servo.class,HANG_LIFT);
 
         return this;
     }

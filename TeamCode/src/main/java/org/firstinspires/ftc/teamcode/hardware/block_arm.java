@@ -4,6 +4,10 @@ import static org.firstinspires.ftc.teamcode.lib.Config.BIND_CLAW_DOWN;
 import static org.firstinspires.ftc.teamcode.lib.Config.BIND_CLAW_LEFT;
 import static org.firstinspires.ftc.teamcode.lib.Config.BIND_CLAW_RIGHT;
 import static org.firstinspires.ftc.teamcode.lib.Config.BIND_CLAW_UP;
+import static org.firstinspires.ftc.teamcode.lib.Config.BLOCK_CLAW;
+import static org.firstinspires.ftc.teamcode.lib.Config.CLAW_ROT;
+import static org.firstinspires.ftc.teamcode.lib.Config.LEFT_ARM;
+import static org.firstinspires.ftc.teamcode.lib.Config.RIGHT_ARM;
 
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
@@ -20,10 +24,10 @@ public class block_arm {
     Claw_pos pos;
 
     public block_arm Init(HardwareMap HardwareMap){
-        Claw = HardwareMap.get(Servo.class,"block_claw");
-        Claw_rot = HardwareMap.get(Servo.class,"claw_rot");
-        Main_rot1 = HardwareMap.get(Servo.class,"left_arm");
-        Main_rot2 = HardwareMap.get(Servo.class,"right_arm");
+        Claw = HardwareMap.get(Servo.class,BLOCK_CLAW);
+        Claw_rot = HardwareMap.get(Servo.class,CLAW_ROT);
+        Main_rot1 = HardwareMap.get(Servo.class,LEFT_ARM);
+        Main_rot2 = HardwareMap.get(Servo.class,RIGHT_ARM);
         Main_rot2.setDirection(Servo.Direction.REVERSE);
         slides = new Slides(HardwareMap);
 

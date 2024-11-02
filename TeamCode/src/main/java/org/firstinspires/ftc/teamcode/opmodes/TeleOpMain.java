@@ -5,14 +5,13 @@ import org.firstinspires.ftc.teamcode.hardware.Robot;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.Gamepad;
-
 
 @TeleOp(name="Basic: Iterative OpMode", group="Iterative OpMode")
 public class TeleOpMain extends OpMode {
     private Robot robot;
-    GamepadEx controller1;
-    GamepadEx controller2;
+    private GamepadEx controller1;
+    private GamepadEx controller2;
+
     @Override
     public void init() {
         controller1 = new GamepadEx(gamepad1);

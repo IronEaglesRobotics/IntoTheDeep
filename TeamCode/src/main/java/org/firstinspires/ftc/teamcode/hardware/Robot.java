@@ -16,7 +16,7 @@ public class Robot {
     private Block_macro_state block_macro_state = Block_macro_state.idle;
     private enum hang_macro {idle,pullup,stop};
     private hang_macro hangMacro = hang_macro.idle;
-    double delay;
+    private double delay;
 
     public Robot init(HardwareMap hardwareMap) {
         drive = new Drive().Init(hardwareMap);

@@ -2,11 +2,16 @@ package org.firstinspires.ftc.teamcode.hardware;
 
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad1;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
+import static org.firstinspires.ftc.teamcode.lib.Config.BEAT_BAR;
 import static org.firstinspires.ftc.teamcode.lib.Config.BIND_COLOR_BLUE;
 import static org.firstinspires.ftc.teamcode.lib.Config.BIND_COLOR_RED;
 import static org.firstinspires.ftc.teamcode.lib.Config.BIND_COLOR_YELLOW;
 import static org.firstinspires.ftc.teamcode.lib.Config.BIND_INTAKE_LOWER;
 import static org.firstinspires.ftc.teamcode.lib.Config.BIND_INTAKE_PICKUP;
+import static org.firstinspires.ftc.teamcode.lib.Config.COLOR_SENSOR;
+import static org.firstinspires.ftc.teamcode.lib.Config.EJECT;
+import static org.firstinspires.ftc.teamcode.lib.Config.INTAKE_LEFT;
+import static org.firstinspires.ftc.teamcode.lib.Config.INTAKE_RIGHT;
 import static java.lang.Thread.sleep;
 
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
@@ -18,24 +23,24 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 public class intake {
-    Servo Rot1,Rot2,Eject;
-    CRServo Beat_bar;
-    ColorSensor c_sensor;
+    private Servo Rot1,Rot2,Eject;
+    private CRServo Beat_bar;
+    private ColorSensor c_sensor;
     boolean beatbar_flipped;
     boolean in_lower = false;
     double rot1,rot2,eject,beat_bar = 0;
-    Color_check color_check = new Color_check();
-    color c_input = color.yellow;
+    private Color_check color_check = new Color_check();
+    private color c_input = color.yellow;
     private double pickupTime = 0;
     private boolean pickingUp = false;
 
 
     public intake Init(HardwareMap HardwareMap){
-        Rot1 = HardwareMap.get(Servo.class,"intake_left");
-        Rot2 = HardwareMap.get(Servo.class,"intake_right");
-        Eject = HardwareMap.get(Servo.class,"eject");
-        Beat_bar = HardwareMap.get(CRServo.class,"beat_bar");
-        c_sensor = HardwareMap.get(ColorSensor.class,"c_sensor");
+        Rot1 = HardwareMap.get(Servo.class,INTAKE_LEFT);
+        Rot2 = HardwareMap.get(Servo.class,INTAKE_RIGHT);
+        Eject = HardwareMap.get(Servo.class,EJECT);
+        Beat_bar = HardwareMap.get(CRServo.class,BEAT_BAR);
+        c_sensor = HardwareMap.get(ColorSensor.class,COLOR_SENSOR);
         Rot2.setDirection(Servo.Direction.REVERSE);
         Rot1.scaleRange(0,.5);
         Rot2.scaleRange(0,.5);
