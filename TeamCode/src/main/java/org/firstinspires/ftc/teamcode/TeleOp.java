@@ -30,7 +30,7 @@ public class TeleOp extends LinearOpMode {
             //drive
             robot.getDrive().setInput(gamepad1);
             robot.getDrive().update();
-//            controller1.readButtons();
+            controller1.readButtons();
 
             robot.intakeMacro(controller1,getRuntime());
             robot.scoringMacro(controller1,getRuntime());

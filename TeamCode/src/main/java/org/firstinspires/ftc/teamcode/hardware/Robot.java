@@ -477,7 +477,7 @@ public class Robot {
         boolean D1 = controller1.wasJustPressed(GamepadKeys.Button.DPAD_UP); // SPECIMENH
         boolean D2 = controller1.wasJustPressed(GamepadKeys.Button.DPAD_LEFT); // SPECIMENL
         boolean L1 = controller1.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER); // RETRACT
-        boolean L2 = controller1.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER)>.3;
+        boolean L2 = controller1.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > .3;
 
         switch (scoringState) {
             case IDLE:
@@ -500,8 +500,7 @@ public class Robot {
                     claw.passiveclose();
                     bucketH = false;
                     scoringState = scoringStates.BUCKET;
-                }
-                else if (A) { //Intake Spec
+                } else if (A) { //Intake Spec
                     specStep = 0;
                     claw.passiveclose();
                     outtakeDelay = runtime + .5; //Delay for slides after grabbing
@@ -536,7 +535,7 @@ public class Robot {
                         } else if (Y) {
                             bucketH = true;
                             bucketStep = 0;
-                        } else if (X){
+                        } else if (X) {
                             bucketH = false;
                             bucketStep = 0;
                         }
@@ -550,14 +549,14 @@ public class Robot {
                 }
                 break;
             case BUCKETR:
-                switch (bucketStep){
+                switch (bucketStep) {
                     case 0:
                         claw.passiveclose();
                         outtakeDelay = runtime + .2;
-                        bucketStep ++;
+                        bucketStep++;
                         break;
                     case 1:
-                        if(runtime>outtakeDelay) {
+                        if (runtime > outtakeDelay) {
                             arm.intake();
                             wrist.intake();
                             outtakeDelay = runtime + .4;
@@ -565,7 +564,7 @@ public class Robot {
                         }
                         break;
                     case 2:
-                        if(runtime>outtakeDelay){
+                        if (runtime > outtakeDelay) {
                             slides.slideDown();
                             claw.open();
                             scoringState = scoringStates.IDLE;
@@ -574,7 +573,7 @@ public class Robot {
                 }
                 break;
             case SPECIMENGRAB:
-                switch (specStep){
+                switch (specStep) {
                     case 0: // Slides go somewhere
                         if (runtime > outtakeDelay) {
                             slides.slideRest();
@@ -586,7 +585,7 @@ public class Robot {
                         if (runtime > outtakeDelay) {
                             arm.intakeSpecimen();
                             wrist.intakeSpecien();
-                            outtakeDelay = runtime +.4;
+                            outtakeDelay = runtime + .4;
                             specStep++;
                         }
                         break;
@@ -597,10 +596,10 @@ public class Robot {
                         }
                         break;
                     case 3:
-                        if(L2){
+                        if (L2) {
                             scoringState = scoringStates.SPECIMENR;
                             specStep = 0;
-                        } else if (D1){
+                        } else if (D1) {
                             specH = true;
                             outtakeDelay = runtime + .75;
                             claw.passiveclose();
@@ -613,8 +612,8 @@ public class Robot {
                         }
                         break;
                     case 4:
-                        if (runtime>outtakeDelay){
-                            if(specH){
+                        if (runtime > outtakeDelay) {
+                            if (specH) {
                                 slides.slidesTo(Slides.SLIDEHSPEC);
                             } else {
                                 slides.slidesTo(Slides.SLIDELSPEC);
@@ -624,15 +623,15 @@ public class Robot {
                         }
                         break;
                     case 5:
-                        if (runtime>outtakeDelay){
+                        if (runtime > outtakeDelay) {
                             arm.outtakeSpecimen();
                             wrist.outtakeSpec();
-                            specStep ++;
+                            specStep++;
                         }
                         break;
                     case 6:
-                        if (L1){
-                            slides.slidesTo(slides.getPosition()-400);
+                        if (L1) {
+                            slides.slidesTo(slides.getPosition() - 400);
                             scoringState = scoringStates.SPECIMENR;
                             specStep = 0;
                         }
@@ -640,16 +639,16 @@ public class Robot {
                 }
                 break;
             case SPECIMENR:
-                switch (specStep){
+                switch (specStep) {
                     case 0:
-                        if(L2){
-                        claw.close();
-                        outtakeDelay = runtime + .2;
-                        specStep ++;
+                        if (L2) {
+                            claw.close();
+                            outtakeDelay = runtime + .2;
+                            specStep++;
                         }
                         break;
                     case 1:
-                        if(runtime>outtakeDelay) {
+                        if (runtime > outtakeDelay) {
                             arm.intake();
                             wrist.intake();
                             claw.passiveclose();
@@ -658,7 +657,7 @@ public class Robot {
                         }
                         break;
                     case 2:
-                        if(runtime>outtakeDelay){
+                        if (runtime > outtakeDelay) {
                             slides.slideDown();
                             claw.open();
                             scoringState = scoringStates.IDLE;
