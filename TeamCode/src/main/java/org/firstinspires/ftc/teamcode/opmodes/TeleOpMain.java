@@ -30,14 +30,13 @@ public class TeleOpMain extends OpMode {
 
         robot.getDrive().setDrive(controller1, currentTime);
 
-        robot.getHangArm().lift_hook(HSpos);
         robot.Block_Macro(controller2, currentTime, Robot.Block_macro_state.Null);
-        robot.Hang_Macro(controller2, currentTime);
 
         robot.getBlockarm().rotate_arm(controller2);
         robot.getBlockarm().rotate_claw(controller2);
         robot.getBlockarm().clip(controller2);
         robot.getBlockarm().toggle_claw(controller2);
+        robot.pullup(controller2.getRightY());
 
         robot.getIntake().setColor(controller1);
         robot.getIntake().Lower(controller1);

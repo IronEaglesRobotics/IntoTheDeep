@@ -19,7 +19,7 @@ public class intake {
     ColorSensor c_sensor;
     boolean beatbar_flipped;
     boolean in_lower = false;
-    double rot1,rot2,eject,beat_bar = 0;
+    double rot1,rot2,eject = 0;
     Color_check color_check = new Color_check();
     color c_input = color.yellow;
 
