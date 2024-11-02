@@ -22,7 +22,6 @@ public class TeleOpMain extends OpMode {
 
     @Override
     public void loop() {
-
         double currentTime = System.currentTimeMillis();
 
         controller1.readButtons();
@@ -42,7 +41,7 @@ public class TeleOpMain extends OpMode {
         robot.getIntake().Lower(controller1);
         robot.getIntake().toggle_beatbar(controller2);
         try {
-            robot.getIntake().pickup(controller1);
+            robot.getIntake().pickup(controller1, currentTime);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }

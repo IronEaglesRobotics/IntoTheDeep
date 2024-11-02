@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad1;
+import static org.firstinspires.ftc.teamcode.lib.Config.BIND_SPEED;
 import static org.firstinspires.ftc.teamcode.lib.Config.FL_WHEEL;
 import static org.firstinspires.ftc.teamcode.lib.Config.FR_WHEEL;
 import static org.firstinspires.ftc.teamcode.lib.Config.BL_WHEEL;
@@ -45,8 +46,9 @@ public class Drive {
         // if not using dt lerp speed is dependent on loop freq... not good this fix.
         double deltaTime = (currentTime - lastTime);
 
-        double speedMod = gamepad.getButton(GamepadKeys.Button.A) ? SLOW_SPEED : DEFAULT_SPEED;
-        double turnMod = gamepad.getButton(GamepadKeys.Button.A) ? SLOW_TURN : DEFAULT_TURN;
+        boolean speedDown = gamepad.getButton(BIND_SPEED);
+        double speedMod = speedDown ? SLOW_SPEED : DEFAULT_SPEED;
+        double turnMod = speedDown ? SLOW_TURN : DEFAULT_TURN;
 
         // interpolate instead of instant to fix jitter maybe, idk if ftc already has something for this...
         double step = 1-Math.exp(-LERP_SPEED * deltaTime);

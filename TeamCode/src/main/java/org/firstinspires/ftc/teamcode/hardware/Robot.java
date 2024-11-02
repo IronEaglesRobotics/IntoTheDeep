@@ -12,9 +12,9 @@ public class Robot {
     private Drive drive;
     private intake intake;
     private block_arm block_arm;
-    private DcMotor hang_motor;
     public enum Block_macro_state {idle,take,grab,score,Null}
     private Block_macro_state block_macro_state = Block_macro_state.idle;
+    private DcMotor hang_motor;
     double delay;
 
     public Robot init(HardwareMap hardwareMap) {
@@ -31,8 +31,8 @@ public class Robot {
         return intake;
     }
     public block_arm getBlockarm() { return block_arm; }
-    public void pullup(double input) {
-        hang_motor.setPower(input);
+    public void pullup(double speed){
+        hang_motor.setPower(speed);
     }
 
     public void Block_Macro(GamepadEx gamepadEx, double curtime,Block_macro_state temp_macro){
@@ -66,6 +66,7 @@ public class Robot {
         block_arm.update_claws();
         intake.update_servo();
     }
+
     public void update(){
         block_arm.update_claws();
         intake.update_servo();
