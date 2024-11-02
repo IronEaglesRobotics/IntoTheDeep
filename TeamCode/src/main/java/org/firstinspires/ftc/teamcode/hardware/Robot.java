@@ -14,7 +14,7 @@ public class Robot {
     private block_arm block_arm;
     public enum Block_macro_state {idle,take,grab,score,Null}
     private Block_macro_state block_macro_state = Block_macro_state.idle;
-    private enum hang_macro {idle,pullup,stop}
+    private enum hang_macro {idle,pullup,stop};
     private hang_macro hangMacro = hang_macro.idle;
     double delay;
 
@@ -68,23 +68,6 @@ public class Robot {
         intake.update_servo();
     }
 
-    public void Hang_Macro(GamepadEx gamepadEx,double cur_time){
-        switch (hangMacro) {
-            case idle:
-                if (gamepadEx.wasJustReleased(GamepadKeys.Button.LEFT_STICK_BUTTON)){
-                    delay = cur_time + 1;
-                    hangMacro = hang_macro.pullup;
-                }
-                break;
-            case pullup:
-                if (cur_time<delay){
-                    hangArm.pullup(1);
-                } else hangMacro = hang_macro.stop;
-                break;
-            case stop:
-                hangArm.pullup(0);
-        }
-    }
     public void update(){
         block_arm.update_claws();
         intake.update_servo();

@@ -2,6 +2,11 @@ package org.firstinspires.ftc.teamcode.hardware;
 
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad1;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
+import static org.firstinspires.ftc.teamcode.lib.Config.BIND_COLOR_BLUE;
+import static org.firstinspires.ftc.teamcode.lib.Config.BIND_COLOR_RED;
+import static org.firstinspires.ftc.teamcode.lib.Config.BIND_COLOR_YELLOW;
+import static org.firstinspires.ftc.teamcode.lib.Config.BIND_INTAKE_LOWER;
+import static org.firstinspires.ftc.teamcode.lib.Config.BIND_INTAKE_PICKUP;
 import static java.lang.Thread.sleep;
 
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
@@ -11,7 +16,6 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-
 
 public class intake {
     Servo Rot1,Rot2,Eject;
@@ -37,17 +41,18 @@ public class intake {
         return this;
     }
     public void setColor(GamepadEx gamepadEx){
-        if (gamepadEx.wasJustReleased(GamepadKeys.Button.DPAD_RIGHT)){
+        if (gamepadEx.wasJustReleased(BIND_COLOR_BLUE)){
             c_input = color.blue;
-        } else if (gamepadEx.wasJustReleased(GamepadKeys.Button.DPAD_LEFT)) {
+        } else if (gamepadEx.wasJustReleased(BIND_COLOR_RED)) {
             c_input = color.red;
-        } else if (gamepadEx.wasJustReleased(GamepadKeys.Button.DPAD_UP)){
+        } else if (gamepadEx.wasJustReleased(BIND_COLOR_YELLOW)) {
             c_input = color.yellow;
         }
     }
     public void toggle_beatbar (GamepadEx gamepad){
         Beat_bar.setPower(gamepad.getRightX());
     }
+
     public boolean getbeatbar_pos(){
         return beatbar_flipped;
     }
@@ -57,11 +62,11 @@ public class intake {
         rot2 = rot1;
     }
     public void Lower(GamepadEx gamepadEx){
-        if (gamepadEx.wasJustReleased(GamepadKeys.Button.B)) toggle_lower();
+        if (gamepadEx.wasJustReleased(BIND_INTAKE_LOWER)) toggle_lower();
         update_servo();
     }
     public void pickup(GamepadEx gamepadEx) throws InterruptedException {
-        if (gamepadEx.wasJustReleased(GamepadKeys.Button.A)){
+        if (gamepadEx.wasJustReleased(BIND_INTAKE_PICKUP)){
             wait(1000);
             color_check.check (c_input);
         }

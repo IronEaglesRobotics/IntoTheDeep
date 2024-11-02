@@ -1,5 +1,10 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
+import static org.firstinspires.ftc.teamcode.lib.Config.BIND_CLAW_DOWN;
+import static org.firstinspires.ftc.teamcode.lib.Config.BIND_CLAW_LEFT;
+import static org.firstinspires.ftc.teamcode.lib.Config.BIND_CLAW_RIGHT;
+import static org.firstinspires.ftc.teamcode.lib.Config.BIND_CLAW_UP;
+
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -34,13 +39,13 @@ public class block_arm {
         }
     }
     public void rotate_claw (GamepadEx gamepadEx){
-        if (gamepadEx.wasJustReleased(GamepadKeys.Button.DPAD_UP)){
+        if (gamepadEx.wasJustReleased(BIND_CLAW_UP)){
             pos = Claw_pos.up;
-        } else if (gamepadEx.wasJustReleased(GamepadKeys.Button.DPAD_DOWN)){
+        } else if (gamepadEx.wasJustReleased(BIND_CLAW_DOWN)){
             pos = Claw_pos.down;
-        } else if (gamepadEx.wasJustReleased(GamepadKeys.Button.DPAD_LEFT)){
+        } else if (gamepadEx.wasJustReleased(BIND_CLAW_LEFT)){
             pos = Claw_pos.left;
-        } else if (gamepadEx.wasJustReleased(GamepadKeys.Button.DPAD_RIGHT)){
+        } else if (gamepadEx.wasJustReleased(BIND_CLAW_RIGHT)){
             pos = Claw_pos.right;
         }
         if (pos == Claw_pos.up){
