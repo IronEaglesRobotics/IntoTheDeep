@@ -28,13 +28,13 @@ public class TeleOpMain extends OpMode {
 
         robot.getDrive().setDrive(controller1, currentTime);
 
-        robot.getHangArm().lift_hook(HSpos);
         robot.Block_Macro(controller2, currentTime, Robot.Block_macro_state.Null);
 
         robot.getBlockarm().rotate_arm(controller2);
         robot.getBlockarm().rotate_claw(controller2);
         robot.getBlockarm().clip(controller2);
         robot.getBlockarm().toggle_claw(controller2);
+        robot.pullup(controller2.getRightY());
 
         robot.getIntake().setColor(controller1);
         robot.getIntake().Lower(controller1);
@@ -44,5 +44,7 @@ public class TeleOpMain extends OpMode {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+        telemetry.addData("pos",robot.getIntake().getBeatBarPos());
+        telemetry.update();
     }
 }
