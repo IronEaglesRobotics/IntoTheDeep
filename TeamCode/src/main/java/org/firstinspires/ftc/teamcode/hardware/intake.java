@@ -26,6 +26,8 @@ public class intake {
     double rot1,rot2,eject,beat_bar = 0;
     Color_check color_check = new Color_check();
     color c_input = color.yellow;
+    private double pickupTime = 0;
+    private boolean pickingUp = false;
 
 
     public intake Init(HardwareMap HardwareMap){
@@ -65,10 +67,18 @@ public class intake {
         if (gamepadEx.wasJustReleased(BIND_INTAKE_LOWER)) toggle_lower();
         update_servo();
     }
-    public void pickup(GamepadEx gamepadEx) throws InterruptedException {
+    public void pickup(GamepadEx gamepadEx, double currentTime) throws InterruptedException {
         if (gamepadEx.wasJustReleased(BIND_INTAKE_PICKUP)){
-            wait(1000);
-            color_check.check (c_input);
+            pickingUp = true;
+            pickupTime = currentTime;
+        }
+
+        if (pickingUp) {
+            if (currentTime - pickupTime < 1000) {
+                color_check.check(c_input);
+            } else {
+                pickingUp = false;
+            }
         }
         update_servo();
     }
