@@ -12,6 +12,7 @@ import static java.lang.Thread.sleep;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.hardware.ServoEx;
+import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -28,6 +29,7 @@ public class intake {
     color c_input = color.yellow;
     private double pickupTime = 0;
     private boolean pickingUp = false;
+    private AnalogInput beat_bar_pos;
 
 
     public intake Init(HardwareMap HardwareMap){
@@ -36,6 +38,7 @@ public class intake {
         Eject = HardwareMap.get(Servo.class,"eject");
         Beat_bar = HardwareMap.get(CRServo.class,"beat_bar");
         c_sensor = HardwareMap.get(ColorSensor.class,"c_sensor");
+        beat_bar_pos = HardwareMap.get(AnalogInput.class,"servo_encoder");
         Rot2.setDirection(Servo.Direction.REVERSE);
         Rot1.scaleRange(0,.5);
         Rot2.scaleRange(0,.5);
@@ -96,5 +99,8 @@ public class intake {
         Rot1.setPosition(rot1);
         Rot2.setPosition(rot2);
         Eject.setPosition(eject);
+    }
+    public double getBeatBarPos(){
+        return beat_bar_pos.getVoltage();
     }
 }
