@@ -11,13 +11,11 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 public class block_arm {
-    boolean claw_open = false;
+    boolean claw_open,is_90,is_180 = false;
     Servo Claw, Claw_rot, Main_rot1, Main_rot2;
     double claw, claw_rot, main_rot = 0;
     public Slides slides;
     public enum Position {pickup,score,wall, preclip,postclip}
-    public enum Claw_pos {up,right,left,down}
-    Claw_pos pos;
 
     public block_arm Init(HardwareMap HardwareMap){
         Claw = HardwareMap.get(Servo.class,"block_claw");
@@ -31,64 +29,39 @@ public class block_arm {
     }
     public void toggle_claw(){
         claw_open = !claw_open;
-        claw = claw_open ? 0 : 1;
+        claw = claw_open ? 1 : 0;
     }
     public void toggle_claw(GamepadEx gamepadEx){
         if (gamepadEx.wasJustReleased(GamepadKeys.Button.A)){
             toggle_claw();
         }
     }
-    public void rotate_claw (GamepadEx gamepadEx){
-        if (gamepadEx.wasJustReleased(BIND_CLAW_UP)){
-            pos = Claw_pos.up;
-        } else if (gamepadEx.wasJustReleased(BIND_CLAW_DOWN)){
-            pos = Claw_pos.down;
-        } else if (gamepadEx.wasJustReleased(BIND_CLAW_LEFT)){
-            pos = Claw_pos.left;
-        } else if (gamepadEx.wasJustReleased(BIND_CLAW_RIGHT)){
-            pos = Claw_pos.right;
-        }
-        if (pos == Claw_pos.up){
-            claw_rot = .5;
-        }   else if (pos == Claw_pos.right){
-            claw_rot = .5;
-        } else if (pos == Claw_pos.left){
-            claw_rot = .5;
-        } else if (pos == Claw_pos.down){
-            claw_rot = .5;
+    public void rotate_claw(){
+        is_90 = !is_90;
+        claw_rot = is_90 ? 0 : .5;
+    }
+    public void rotate_claw(GamepadEx gamepadEx){
+        if (gamepadEx.wasJustReleased(GamepadKeys.Button.B)){
+            rotate_claw();
         }
     }
-    public void rotate_claw (Claw_pos pos) {
-        if (pos == Claw_pos.up) {
-            claw_rot = .5;
-        } else if (pos == Claw_pos.right) {
-            claw_rot = .5;
-        } else if (pos == Claw_pos.left) {
-            claw_rot = .5;
-        } else if (pos == Claw_pos.down) {
-            claw_rot = .5;
-        }
+
+    public void rotate_arm (){
+        is_180 = !is_180;
+        main_rot = is_180 ? .05 : .55;
     }
-    public void rotate_arm (GamepadEx gamepadEx){
-        main_rot += gamepadEx.getRightX();
-        main_rot = Math.min(Math.max(main_rot,0),1);
-    }
-    public void rotate_arm (Position pos){
-        if (pos == Position.wall){
-            main_rot = 0;
-        } else if (pos == Position.score){
-            main_rot = 0.5;
-        } else if (pos == Position.pickup){
-            main_rot = 1;
+    public void rotate_arm(GamepadEx gamepadEx){
+        if (gamepadEx.wasJustReleased(GamepadKeys.Button.X)){
+            rotate_arm();
         }
     }
     public void set_grab(Position pos){
         if (pos == Position.pickup){
             slides.setTarget(Slides.Position.DOWN);
             main_rot = 1;
-            this.rotate_claw(Claw_pos.up);
+            rotate_claw();
             if (!claw_open){
-                this.toggle_claw();
+                toggle_claw();
             }
         } else if (pos == Position.wall){
             slides.setTarget(Slides.Position.DOWN);
@@ -109,14 +82,14 @@ public class block_arm {
         }
         update_claws();
     }
-    public void clip(GamepadEx gamepadEx){
+    /*public void clip(GamepadEx gamepadEx){
         if (gamepadEx.wasJustPressed(GamepadKeys.Button.B)){
             set_grab(Position.postclip);
         } else if (gamepadEx.wasJustReleased(GamepadKeys.Button.B)){
             toggle_claw();
         }
         update_claws();
-    }
+    }*/
     public void update_claws(){
         Claw.setPosition(claw);
         Claw_rot.setPosition(claw_rot);

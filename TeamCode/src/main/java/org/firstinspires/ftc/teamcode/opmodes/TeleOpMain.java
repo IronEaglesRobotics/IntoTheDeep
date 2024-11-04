@@ -33,7 +33,7 @@ public class TeleOpMain extends OpMode {
 
         robot.getBlockarm().rotate_arm(controller2);
         robot.getBlockarm().rotate_claw(controller2);
-        robot.getBlockarm().clip(controller2);
+        //robot.getBlockarm().clip(controller2);
         robot.getBlockarm().toggle_claw(controller2);
         robot.pullup(controller2.getRightY());
 

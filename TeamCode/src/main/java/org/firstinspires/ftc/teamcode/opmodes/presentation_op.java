@@ -45,15 +45,10 @@ public class presentation_op extends OpMode {
         bl.setDirection(DcMotor.Direction.FORWARD);
         br.setDirection(DcMotor.Direction.REVERSE);
 
-        Motor1 = hardwareMap.get(DcMotor.class,"motor1");
-        Motor2 = hardwareMap.get(DcMotor.class,"motor2");
-        Servo1 = hardwareMap.get(Servo.class,"rot1");
-        Servo2 = hardwareMap.get(Servo.class,"rot2");
+        Motor1 = hardwareMap.get(DcMotor.class,"slides_front");
+        Motor2 = hardwareMap.get(DcMotor.class,"slides_back");
         Motor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         Motor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        Servo2.setDirection(Servo.Direction.REVERSE);
-        Servo1.setPosition(servo1);
-        Servo2.setPosition(servo2);
         //drive = new Drive().Init(hardwareMap);
         slides = new Slides(hardwareMap);
     }
@@ -67,11 +62,6 @@ public class presentation_op extends OpMode {
         bl.setPower(((-x + y + z)));
         br.setPower(((x + y - z)));
 
-        servo1 += gamepad2.left_stick_x;
-        servo2 += gamepad2.left_stick_x;
-        //target_pos += (int) (gamepad2.right_stick_y  * 50);
-        servo1 = Math.max(Math.min(servo1,1),0);
-        servo2 = Math.max(Math.min(servo2,1),0);
         target_pos = Math.max(Math.min(target_pos,60000),0);
 
         if (gamepad1.dpad_down) {
@@ -84,7 +74,7 @@ public class presentation_op extends OpMode {
             slides.setTarget(Slides.Position.TIER1);
         }
 
-        if (gamepad1.a && !buttonADown) {
+        /*if (gamepad1.a && !buttonADown) {
             buttonADown = true;
             slides.controller.setP(slides.controller.getP()+increment);
         } else if (!gamepad1.a) {
@@ -110,7 +100,7 @@ public class presentation_op extends OpMode {
             increment = -increment;
         } else if (!gamepad1.right_bumper) {
             rightBumperDown = false;
-        }
+        }*/
 
         slides.update(System.currentTimeMillis());
         //Servo1.setPosition(servo1);
@@ -135,12 +125,8 @@ public class presentation_op extends OpMode {
         }*/
 
         telemetry.addData("encoder",Motor1.getCurrentPosition());
-        telemetry.addData("target",target_pos);
-        telemetry.addData("servo1",servo1);
-        telemetry.addData("servo2",servo2);
-        telemetry.addData("motor1",motor1);
-        telemetry.addData("motor2", motor2);
-        telemetry.addData("motor2", slides.controller.calculate(Motor2.getCurrentPosition(), slides.target));
+        telemetry.addData("target",slides.getTarget());
+        telemetry.addData("motor2", slides.controller.calculate(-Motor2.getCurrentPosition(), slides.target));
         telemetry.addData("increment", increment);
         telemetry.addData("PID", slides.controller.getP()+"", slides.controller.getI()+"", slides.controller.getD()+"");
         telemetry.update();

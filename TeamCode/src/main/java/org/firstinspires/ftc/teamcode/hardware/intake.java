@@ -31,7 +31,6 @@ public class intake {
     private boolean pickingUp = false;
     private AnalogInput beat_bar_pos;
 
-
     public intake Init(HardwareMap HardwareMap){
         Rot1 = HardwareMap.get(Servo.class,"intake_left");
         Rot2 = HardwareMap.get(Servo.class,"intake_right");
@@ -40,8 +39,8 @@ public class intake {
         c_sensor = HardwareMap.get(ColorSensor.class,"c_sensor");
         beat_bar_pos = HardwareMap.get(AnalogInput.class,"servo_encoder");
         Rot2.setDirection(Servo.Direction.REVERSE);
-        Rot1.scaleRange(0,.5);
-        Rot2.scaleRange(0,.5);
+        Rot1.scaleRange(0,.6);
+        Rot2.scaleRange(0,.6);
 
         return this;
     }
@@ -78,7 +77,7 @@ public class intake {
 
         if (pickingUp) {
             if (currentTime - pickupTime < 1000) {
-                color_check.check(c_input);
+               // color_check.check(c_input);
             } else {
                 pickingUp = false;
             }

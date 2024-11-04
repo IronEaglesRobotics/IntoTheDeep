@@ -51,11 +51,8 @@ public class Drive {
         double turnMod = speedDown ? SLOW_TURN : DEFAULT_TURN;
 
         // interpolate instead of instant to fix jitter maybe, idk if ftc already has something for this...
-        double step = 1-Math.exp(-LERP_SPEED * deltaTime);
-        curSpeed = Math.min(lerp(curSpeed, speedMod, step), 1);
-        curTurn = Math.min(lerp(curTurn, turnMod, step), 1);
 
-        double x = gamepad.getLeftX() * curSpeed, y = -gamepad.getLeftY() * curSpeed, z = gamepad.getRightX() * curTurn;
+        double x = gamepad.getLeftX() * speedMod, y = -gamepad.getLeftY() * speedMod, z = gamepad.getRightX() * speedMod;
         double max = Math.max(Math.abs(y)+Math.abs(x)+Math.abs(z),1);
 
         fl.setPower(((x + y + z)/max));

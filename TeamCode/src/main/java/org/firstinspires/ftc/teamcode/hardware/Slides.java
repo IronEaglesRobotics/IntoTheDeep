@@ -15,9 +15,9 @@ public class Slides {
     public static double i = 0.02;
     public static double d = 0;
     public static double f = 0.01;*/
-    private double p = 0.000009;
-    private double i = 0;
-    private double d = 0;
+    public static double p = 0.000009;
+    public static double i = 0;
+    public static double d = 0;
     private double f = 0;
     private double pTolerance = 20;
     public PIDController controller = new PIDController(p, i, d);
@@ -111,7 +111,7 @@ public class Slides {
         controller.setPID(p, i, d);
         controller.setTolerance(pTolerance);
 
-        pid = controller.calculate(slide.getCurrentPosition(), target);
+        pid = controller.calculate(-slide.getCurrentPosition(), target);
         pid = Math.min(Math.max(pid,-1),1);
         ff = f;
         slide.setPower((pid + ff));
