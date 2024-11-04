@@ -13,7 +13,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 
-import org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.MecanumDrive;
 import org.firstinspires.ftc.teamcode.hardware.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
 
 import java.security.SecurityPermission;
@@ -27,7 +27,7 @@ public class Robot {
     @Getter
     public Wrist wrist;
     @Getter
-    private SampleMecanumDrive drive;
+    private MecanumDrive drive;
     @Getter
     public Arm arm;
     @Getter
@@ -44,7 +44,7 @@ public class Robot {
 
     //Init Hardwaremap
     public Robot init(HardwareMap hardwareMap) {
-        this.drive = new SampleMecanumDrive(hardwareMap);
+        this.drive = new MecanumDrive(hardwareMap);
         this.wrist = new Wrist().init(hardwareMap);
         this.arm = new Arm().init(hardwareMap);
         this.claw = new Claw().init(hardwareMap);
@@ -491,18 +491,18 @@ public class Robot {
                 if (Y) { //High Bucket
                     bucketStep = 0;
                     outtakeDelay = runtime + .75; //Delay for slides after grabbing
-                    claw.passiveclose();
+                    claw.close();
                     bucketH = true;
                     scoringState = scoringStates.BUCKET;
                 } else if (X) { //Low Bucket
                     bucketStep = 0;
                     outtakeDelay = runtime + .75; //Delay for slides after grabbing
-                    claw.passiveclose();
+                    claw.close();
                     bucketH = false;
                     scoringState = scoringStates.BUCKET;
                 } else if (A) { //Intake Spec
                     specStep = 0;
-                    claw.passiveclose();
+                    claw.close();
                     outtakeDelay = runtime + .5; //Delay for slides after grabbing
                     scoringState = scoringStates.SPECIMENGRAB;
                 }
@@ -705,7 +705,9 @@ public class Robot {
                 //Switch States
                 if (intake.getAlpha() > Intake.ALPHA) {
                     intakeState = intakeStates.DETECT;
-                }
+                } else if (controller1.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
+                intakeState = intakeStates.HASSAMPLE;
+            }
                 break;
             case DETECT:
                 //Actions
@@ -717,7 +719,7 @@ public class Robot {
                     intakeDelay = runtime + 1.5;
                 } else {
                     intakeState = intakeStates.HASSAMPLE;
-                    intakeDelay = runtime + 1;
+                    intakeDelay = runtime + .3;
                 }
                 break;
             case HASSAMPLE:

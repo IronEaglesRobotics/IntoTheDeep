@@ -1,12 +1,10 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.hardware.Robot;
-
-import java.util.zip.CheckedOutputStream;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOp")
 public class TeleOp extends LinearOpMode {
@@ -48,6 +46,7 @@ public class TeleOp extends LinearOpMode {
             telemetry.addData("INTAKEMACRO:", robot.intakeState);
             telemetry.addData("SCORING STATE: ", robot.scoringState);
             telemetry.addData("SpecStates: ", robot.specStep);
+            telemetry.addData("Pos Estimate", (robot.getDrive().getPoseEstimate()));
             telemetry.update();
 
             //Intake color    R2
