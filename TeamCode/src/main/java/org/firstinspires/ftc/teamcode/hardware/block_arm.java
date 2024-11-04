@@ -1,9 +1,16 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
-import static org.firstinspires.ftc.teamcode.lib.Config.BIND_CLAW_DOWN;
-import static org.firstinspires.ftc.teamcode.lib.Config.BIND_CLAW_LEFT;
-import static org.firstinspires.ftc.teamcode.lib.Config.BIND_CLAW_RIGHT;
-import static org.firstinspires.ftc.teamcode.lib.Config.BIND_CLAW_UP;
+import static org.firstinspires.ftc.teamcode.lib.Config.BIND_CLIP;
+import static org.firstinspires.ftc.teamcode.lib.Config.BIND_GRAB_PRESET;
+import static org.firstinspires.ftc.teamcode.lib.Config.BIND_ROTATE_ARM;
+import static org.firstinspires.ftc.teamcode.lib.Config.BIND_ROTATE_CLAW;
+import static org.firstinspires.ftc.teamcode.lib.Config.BIND_SCORE_PRESET;
+import static org.firstinspires.ftc.teamcode.lib.Config.BIND_SLIDES_CLIP;
+import static org.firstinspires.ftc.teamcode.lib.Config.BIND_SLIDES_DOWN;
+import static org.firstinspires.ftc.teamcode.lib.Config.BIND_SLIDES_HIGH;
+import static org.firstinspires.ftc.teamcode.lib.Config.BIND_SLIDES_WALL;
+import static org.firstinspires.ftc.teamcode.lib.Config.BIND_TOGGLE_CLAW;
+import static org.firstinspires.ftc.teamcode.lib.Config.BIND_WALL_PRESET;
 import static org.firstinspires.ftc.teamcode.lib.Config.BLOCK_CLAW;
 import static org.firstinspires.ftc.teamcode.lib.Config.CLAW_ROT;
 import static org.firstinspires.ftc.teamcode.lib.Config.LEFT_ARM;
@@ -36,7 +43,7 @@ public class block_arm {
         claw = claw_open ? 1 : 0;
     }
     public void toggle_claw(GamepadEx gamepadEx){
-        if (gamepadEx.wasJustReleased(GamepadKeys.Button.A)){
+        if (gamepadEx.wasJustReleased(BIND_TOGGLE_CLAW)){
             toggle_claw();
         }
     }
@@ -45,7 +52,7 @@ public class block_arm {
         claw_rot = is_90 ? 0 : .5;
     }
     public void rotate_claw(GamepadEx gamepadEx){
-        if (gamepadEx.wasJustReleased(GamepadKeys.Button.B)){
+        if (gamepadEx.wasJustReleased(BIND_ROTATE_CLAW)){
             rotate_claw();
         }
     }
@@ -55,15 +62,15 @@ public class block_arm {
         main_rot = is_180 ? .05 : .55;
     }
     public void rotate_arm(GamepadEx gamepadEx){
-        if (gamepadEx.wasJustReleased(GamepadKeys.Button.X)){
+        if (gamepadEx.wasJustReleased(BIND_ROTATE_ARM)){
             rotate_arm();
         }
     }
     public void set_grab(Position pos){
         if (pos == Position.pickup){
             slides.setTarget(Slides.Position.DOWN);
-            main_rot = 1;
-            rotate_claw();
+            main_rot = .05;
+            claw_rot = .5;
             if (!claw_open){
                 toggle_claw();
             }
@@ -86,14 +93,34 @@ public class block_arm {
         }
         update_claws();
     }
-    /*public void clip(GamepadEx gamepadEx){
-        if (gamepadEx.wasJustPressed(GamepadKeys.Button.B)){
+    public void set_grab(GamepadEx gamepadEx){
+        if (gamepadEx.wasJustReleased(BIND_WALL_PRESET)){
+            set_grab(Position.wall);
+        } else if (gamepadEx.wasJustReleased(BIND_GRAB_PRESET)) {
+            set_grab(Position.pickup);
+        } else if (gamepadEx.wasJustReleased(BIND_SCORE_PRESET)) {
+            set_grab(Position.score);
+        }
+    }
+    public void set_slides(GamepadEx gamepadEx){
+        if (gamepadEx.wasJustReleased(BIND_SLIDES_HIGH)){
+            slides.setTarget(Slides.Position.TIER4);
+        } else if (gamepadEx.wasJustReleased(BIND_SLIDES_CLIP)){
+            slides.setTarget(Slides.Position.PRECLIP);
+        } else if (gamepadEx.wasJustReleased(BIND_SLIDES_DOWN)){
+            slides.setTarget(Slides.Position.DOWN);
+        } else if (gamepadEx.wasJustReleased(BIND_SLIDES_WALL)){
+            slides.setTarget(Slides.Position.WALL);
+        }
+    }
+    public void clip(GamepadEx gamepadEx){
+        if (gamepadEx.wasJustPressed(BIND_CLIP)){
             set_grab(Position.postclip);
-        } else if (gamepadEx.wasJustReleased(GamepadKeys.Button.B)){
+        } else if (gamepadEx.wasJustReleased(BIND_CLIP)){
             toggle_claw();
         }
         update_claws();
-    }*/
+    }
     public void update_claws(){
         Claw.setPosition(claw);
         Claw_rot.setPosition(claw_rot);

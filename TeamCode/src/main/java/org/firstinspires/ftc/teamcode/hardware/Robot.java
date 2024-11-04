@@ -35,7 +35,7 @@ public class Robot {
         hang_motor.setPower(speed);
     }
 
-    public void Block_Macro(GamepadEx gamepadEx, double curtime,Block_macro_state temp_macro){
+    /*public void Block_Macro(GamepadEx gamepadEx, double curtime,Block_macro_state temp_macro){
         if (temp_macro != Block_macro_state.Null){
             block_macro_state = temp_macro;
         }
@@ -65,7 +65,7 @@ public class Robot {
         }
         block_arm.update_claws();
         intake.update_servo();
-    }
+    }*/
 
     public void update(){
         block_arm.update_claws();

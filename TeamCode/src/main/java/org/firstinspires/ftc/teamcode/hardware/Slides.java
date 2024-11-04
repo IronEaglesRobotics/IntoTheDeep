@@ -29,6 +29,7 @@ public class Slides {
     public int targetMax = 60000;
 
     public int down = 0;
+    public int wall = 2500;
     public int postclip = 7500;
     public int preclip = 10000;
     public int tier1 = 20000;
@@ -40,7 +41,7 @@ public class Slides {
 
     public int manualSpeed = 20;
 
-    public enum Position { DOWN, PRECLIP, POSTCLIP, TIER1, TIER2, TIER3,TIER4 }
+    public enum Position { DOWN, WALL, PRECLIP, POSTCLIP, TIER1, TIER2, TIER3,TIER4 }
 
     public Slides(HardwareMap hardwareMap) {
         slide = hardwareMap.get(DcMotor.class, SLIDES_FRONT);
@@ -63,6 +64,7 @@ public class Slides {
         int value = 0;
         switch (pos) {
             case DOWN: value = down; break;
+            case WALL: value = wall; break;
             case PRECLIP: value = preclip; break;
             case POSTCLIP: value = postclip; break;
             case TIER1: value = tier1; break;

@@ -49,7 +49,9 @@ public class basket_auto extends LinearOpMode {
                 .build();
         drive.followTrajectory(traj2);
         //bot.getIntake().toggle_beatbar();
-        bot.Block_Macro(controller,cur_time,Robot.Block_macro_state.grab);
+        bot.getBlockarm().set_grab(block_arm.Position.pickup);
+        bot.getBlockarm().toggle_claw();
+        bot.getBlockarm().set_grab(block_arm.Position.score);
         drive.followTrajectory(traj3);
         bot.getBlockarm().toggle_claw();
         pickup1.plus(new Pose2d(0,-12,0));
@@ -65,7 +67,7 @@ public class basket_auto extends LinearOpMode {
                 .build();
         drive.followTrajectory(traj2);
         //bot.getIntake().toggle_beatbar();
-        bot.Block_Macro(controller,cur_time,Robot.Block_macro_state.grab);
+
         drive.followTrajectory(traj3);
         bot.getBlockarm().toggle_claw();
     }
@@ -81,6 +83,8 @@ public class basket_auto extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         double time = System.currentTimeMillis();
         clip();
+        wait(20);
+        pickup(time);
         wait(20);
         pickup(time);
         wait(20);

@@ -52,13 +52,21 @@ public class Config {
     public static final GamepadKeys.Button BIND_SPEED = GamepadKeys.Button.X;
     public static final GamepadKeys.Button BIND_INTAKE_PICKUP = GamepadKeys.Button.A;
     public static final GamepadKeys.Button BIND_INTAKE_LOWER = GamepadKeys.Button.B;
+    public static final GamepadKeys.Button BIND_INTAKE_EJECT = GamepadKeys.Button.Y;
     public static final GamepadKeys.Button BIND_COLOR_BLUE = GamepadKeys.Button.DPAD_RIGHT;
     public static final GamepadKeys.Button BIND_COLOR_RED = GamepadKeys.Button.DPAD_LEFT;
     public static final GamepadKeys.Button BIND_COLOR_YELLOW = GamepadKeys.Button.DPAD_UP;
 
     // gamepad2
-    public static final GamepadKeys.Button BIND_CLAW_UP = GamepadKeys.Button.DPAD_UP;
-    public static final GamepadKeys.Button BIND_CLAW_DOWN = GamepadKeys.Button.DPAD_DOWN;
-    public static final GamepadKeys.Button BIND_CLAW_LEFT = GamepadKeys.Button.DPAD_LEFT;
-    public static final GamepadKeys.Button BIND_CLAW_RIGHT = GamepadKeys.Button.DPAD_RIGHT;
+    public static final GamepadKeys.Button BIND_TOGGLE_CLAW = GamepadKeys.Button.A;
+    public static final GamepadKeys.Button BIND_ROTATE_CLAW = GamepadKeys.Button.B;
+    public static final GamepadKeys.Button BIND_ROTATE_ARM = GamepadKeys.Button.X;
+    public static final GamepadKeys.Button BIND_SLIDES_CLIP = GamepadKeys.Button.DPAD_RIGHT;
+    public static final GamepadKeys.Button BIND_SLIDES_WALL = GamepadKeys.Button.DPAD_LEFT;
+    public static final GamepadKeys.Button BIND_SLIDES_HIGH = GamepadKeys.Button.DPAD_UP;
+    public static final GamepadKeys.Button BIND_SLIDES_DOWN = GamepadKeys.Button.DPAD_DOWN;
+    public static final GamepadKeys.Button BIND_GRAB_PRESET = GamepadKeys.Button.LEFT_BUMPER;
+    public static final GamepadKeys.Button BIND_SCORE_PRESET = GamepadKeys.Button.RIGHT_BUMPER;
+    public static final GamepadKeys.Button BIND_WALL_PRESET = GamepadKeys.Button.Y;
+    public static final GamepadKeys.Button BIND_CLIP = GamepadKeys.Button.LEFT_STICK_BUTTON;
 }

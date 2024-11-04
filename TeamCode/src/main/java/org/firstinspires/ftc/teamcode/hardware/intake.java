@@ -6,6 +6,7 @@ import static org.firstinspires.ftc.teamcode.lib.Config.BEAT_BAR;
 import static org.firstinspires.ftc.teamcode.lib.Config.BIND_COLOR_BLUE;
 import static org.firstinspires.ftc.teamcode.lib.Config.BIND_COLOR_RED;
 import static org.firstinspires.ftc.teamcode.lib.Config.BIND_COLOR_YELLOW;
+import static org.firstinspires.ftc.teamcode.lib.Config.BIND_INTAKE_EJECT;
 import static org.firstinspires.ftc.teamcode.lib.Config.BIND_INTAKE_LOWER;
 import static org.firstinspires.ftc.teamcode.lib.Config.BIND_INTAKE_PICKUP;
 import static org.firstinspires.ftc.teamcode.lib.Config.COLOR_SENSOR;
@@ -30,11 +31,11 @@ public class intake {
     boolean beatbar_flipped;
     boolean in_lower = false;
     double rot1,rot2,eject = 0;
-    Color_check color_check = new Color_check();
     color c_input = color.yellow;
     private double pickupTime = 0;
     private boolean pickingUp = false;
     private AnalogInput beat_bar_pos;
+    public enum color { red,blue,yellow}
 
     public intake Init(HardwareMap HardwareMap){
         Rot1 = HardwareMap.get(Servo.class,INTAKE_LEFT);
@@ -74,7 +75,7 @@ public class intake {
         if (gamepadEx.wasJustReleased(BIND_INTAKE_LOWER)) toggle_lower();
         update_servo();
     }
-    public void pickup(GamepadEx gamepadEx, double currentTime) throws InterruptedException {
+    public void pickup(GamepadEx gamepadEx, double currentTime){
         if (gamepadEx.wasJustReleased(BIND_INTAKE_PICKUP)){
             pickingUp = true;
             pickupTime = currentTime;
@@ -82,7 +83,6 @@ public class intake {
 
         if (pickingUp) {
             if (currentTime - pickupTime < 1000) {
-               // color_check.check(c_input);
             } else {
                 pickingUp = false;
             }
@@ -95,8 +95,10 @@ public class intake {
         sleep(1000);
         eject = 1;
     }
-    public void setEject(double target){
-        eject = target;
+    public void setEject(GamepadEx gamepad1) throws InterruptedException{
+        if (gamepad1.wasJustReleased(BIND_INTAKE_EJECT) && !(getcolor() == c_input)){
+            eject();
+        }
         update_servo();
     }
     void update_servo(){
@@ -106,5 +108,14 @@ public class intake {
     }
     public double getBeatBarPos(){
         return beat_bar_pos.getVoltage();
+    }
+    public color getcolor(){
+        int sensitivity = 30;
+        color temp_color = color.yellow;
+        if (c_sensor.blue()>c_sensor.red()+sensitivity) temp_color = color.blue;
+        else if (c_sensor.green()>c_sensor.red()) temp_color = color.yellow;
+        else if (c_sensor.red()>c_sensor.blue()+sensitivity) temp_color = color.red;
+
+        return temp_color;
     }
 }
