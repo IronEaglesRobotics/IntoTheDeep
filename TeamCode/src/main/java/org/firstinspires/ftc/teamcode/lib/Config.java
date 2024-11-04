@@ -46,6 +46,15 @@ public class Config {
 
     public static final double HSpos = 1;
 
+    // random configs
+    public static final double BEATBAR_CHANGE = 1;
+
+    /* Servo ranges
+    * block claw 0,.5
+    * clow rot 0,.4
+    * main_rot .05,.55
+    * */
+
     // keybinds
 
     // gamepad1

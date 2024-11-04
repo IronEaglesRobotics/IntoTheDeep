@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
-import static org.firstinspires.ftc.teamcode.lib.Config.HSpos;
 import org.firstinspires.ftc.teamcode.hardware.Robot;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -38,8 +37,13 @@ public class TeleOpMain extends OpMode {
 
         robot.getIntake().setColor(controller1);
         robot.getIntake().Lower(controller1);
-        robot.getIntake().toggle_beatbar(controller2);
-        robot.getIntake().pickup(controller1, currentTime);
+        robot.getIntake().control_beatbar(controller2);
+        robot.getIntake().toggle_beatbar(controller1);
+        try {
+            robot.getIntake().setEject(controller2);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
 
         telemetry.addData("pos",robot.getIntake().getBeatBarPos());
         telemetry.update();

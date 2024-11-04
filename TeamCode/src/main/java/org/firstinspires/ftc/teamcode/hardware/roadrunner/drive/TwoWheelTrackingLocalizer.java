@@ -51,8 +51,6 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
     // Parallel wheel is parallel to the forward axis
     // Perpendicular is perpendicular to the forward axis
     public final GoBildaPinpointDriver odo;
-    private final Encoder parallelEncoder;
-    private final Encoder perpendicularEncoder;
 
     private final MecanumDrive drive;
 
@@ -65,8 +63,6 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
         this.drive = drive;
 
         odo = hardwareMap.get(GoBildaPinpointDriver.class,"odo");
-        parallelEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "leftFront"));
-        perpendicularEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "rightRear"));
 
         // TODO: reverse any encoders using Encoder.setDirection(Encoder.Direction.REVERSE)
 //        parallelEncoder.setDirection(Encoder.Direction.REVERSE);

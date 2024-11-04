@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad1;
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
+import static org.firstinspires.ftc.teamcode.lib.Config.BEATBAR_CHANGE;
 import static org.firstinspires.ftc.teamcode.lib.Config.BEAT_BAR;
 import static org.firstinspires.ftc.teamcode.lib.Config.BIND_COLOR_BLUE;
 import static org.firstinspires.ftc.teamcode.lib.Config.BIND_COLOR_RED;
@@ -16,8 +15,6 @@ import static org.firstinspires.ftc.teamcode.lib.Config.INTAKE_RIGHT;
 import static java.lang.Thread.sleep;
 
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
-import com.arcrobotics.ftclib.gamepad.GamepadKeys;
-import com.arcrobotics.ftclib.hardware.ServoEx;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -30,7 +27,7 @@ public class intake {
     ColorSensor c_sensor;
     boolean beatbar_flipped;
     boolean in_lower = false;
-    double rot1,rot2,eject = 0;
+    double rot1,rot2,eject,target_pos = 0;
     color c_input = color.yellow;
     private double pickupTime = 0;
     private boolean pickingUp = false;
@@ -59,12 +56,16 @@ public class intake {
             c_input = color.yellow;
         }
     }
-    public void toggle_beatbar (GamepadEx gamepad){
+    public void control_beatbar(GamepadEx gamepad){
         Beat_bar.setPower(gamepad.getRightX());
     }
-
-    public boolean getbeatbar_pos(){
-        return beatbar_flipped;
+    public void toggle_beatbar(){
+        target_pos += BEATBAR_CHANGE;
+    }
+    public void toggle_beatbar(GamepadEx gamepadEx){
+        if (gamepadEx.wasJustReleased(BIND_INTAKE_PICKUP)){
+            toggle_beatbar();
+        }
     }
     public void toggle_lower(){
         in_lower = !in_lower;
@@ -73,20 +74,6 @@ public class intake {
     }
     public void Lower(GamepadEx gamepadEx){
         if (gamepadEx.wasJustReleased(BIND_INTAKE_LOWER)) toggle_lower();
-        update_servo();
-    }
-    public void pickup(GamepadEx gamepadEx, double currentTime){
-        if (gamepadEx.wasJustReleased(BIND_INTAKE_PICKUP)){
-            pickingUp = true;
-            pickupTime = currentTime;
-        }
-
-        if (pickingUp) {
-            if (currentTime - pickupTime < 1000) {
-            } else {
-                pickingUp = false;
-            }
-        }
         update_servo();
     }
     void eject() throws InterruptedException {
@@ -105,6 +92,7 @@ public class intake {
         Rot1.setPosition(rot1);
         Rot2.setPosition(rot2);
         Eject.setPosition(eject);
+        //if (pos_filler != target_pos) Beat_bar.setPower(-1);
     }
     public double getBeatBarPos(){
         return beat_bar_pos.getVoltage();
