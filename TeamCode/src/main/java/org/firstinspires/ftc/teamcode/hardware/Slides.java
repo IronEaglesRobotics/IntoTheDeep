@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
+import static org.firstinspires.ftc.teamcode.lib.Config.SLIDES_BACK;
+import static org.firstinspires.ftc.teamcode.lib.Config.SLIDES_FRONT;
+
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -40,13 +43,13 @@ public class Slides {
     public enum Position { DOWN, PRECLIP, POSTCLIP, TIER1, TIER2, TIER3,TIER4 }
 
     public Slides(HardwareMap hardwareMap) {
-        slide = hardwareMap.get(DcMotor.class, "slides_front");
+        slide = hardwareMap.get(DcMotor.class, SLIDES_FRONT);
         slide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         slide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 //        slide.setDirection(DcMotorSimple.Direction.REVERSE);
         slide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        slide2 = hardwareMap.get(DcMotor.class, "slides_back");
+        slide2 = hardwareMap.get(DcMotor.class, SLIDES_BACK);
         slide2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         slide2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         slide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

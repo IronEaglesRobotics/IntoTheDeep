@@ -13,7 +13,6 @@ import static org.firstinspires.ftc.teamcode.lib.Config.SLOW_TURN;
 import static org.firstinspires.ftc.teamcode.lib.Config.LERP_SPEED;
 
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
-import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.DcMotor;
 

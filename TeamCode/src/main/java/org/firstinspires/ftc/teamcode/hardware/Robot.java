@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
-import androidx.annotation.Nullable;
+import static org.firstinspires.ftc.teamcode.lib.Config.HANG;
 
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
@@ -21,7 +21,7 @@ public class Robot {
         drive = new Drive().Init(hardwareMap);
         intake = new intake().Init(hardwareMap);
         block_arm = new block_arm().Init(hardwareMap);
-        hang_motor = hardwareMap.get(DcMotor.class,"hang");
+        hang_motor = hardwareMap.get(DcMotor.class,HANG);
 
         return this;
     }
