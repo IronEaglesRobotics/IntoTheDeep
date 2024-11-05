@@ -8,6 +8,7 @@ import static org.firstinspires.ftc.teamcode.lib.Config.BIND_COLOR_YELLOW;
 import static org.firstinspires.ftc.teamcode.lib.Config.BIND_INTAKE_EJECT;
 import static org.firstinspires.ftc.teamcode.lib.Config.BIND_INTAKE_LOWER;
 import static org.firstinspires.ftc.teamcode.lib.Config.BIND_INTAKE_PICKUP;
+import static org.firstinspires.ftc.teamcode.lib.Config.BIND_ROTATE_ARM;
 import static org.firstinspires.ftc.teamcode.lib.Config.COLOR_SENSOR;
 import static org.firstinspires.ftc.teamcode.lib.Config.EJECT;
 import static org.firstinspires.ftc.teamcode.lib.Config.INTAKE_LEFT;
@@ -15,6 +16,7 @@ import static org.firstinspires.ftc.teamcode.lib.Config.INTAKE_RIGHT;
 import static java.lang.Thread.sleep;
 
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -27,7 +29,9 @@ public class intake {
     ColorSensor c_sensor;
     boolean beatbar_flipped;
     boolean in_lower = false;
-    double rot1,rot2,eject,target_pos = 0;
+    boolean is_180 = false;
+    double eject,target_pos = 0;
+    double rot1 = .57;
     color c_input = color.yellow;
     private double pickupTime = 0;
     private boolean pickingUp = false;
@@ -42,8 +46,6 @@ public class intake {
         c_sensor = HardwareMap.get(ColorSensor.class,COLOR_SENSOR);
         beat_bar_pos = HardwareMap.get(AnalogInput.class,"servo_encoder");
         Rot2.setDirection(Servo.Direction.REVERSE);
-        Rot1.scaleRange(0,.6);
-        Rot2.scaleRange(0,.6);
 
         return this;
     }
@@ -55,6 +57,7 @@ public class intake {
         } else if (gamepadEx.wasJustReleased(BIND_COLOR_YELLOW)) {
             c_input = color.yellow;
         }
+        update_servo();
     }
     public void control_beatbar(GamepadEx gamepad){
         Beat_bar.setPower(gamepad.getRightX());
@@ -69,18 +72,20 @@ public class intake {
     }
     public void toggle_lower(){
         in_lower = !in_lower;
-        rot1 = in_lower ? 1 : 0;
-        rot2 = rot1;
+        rot1 = in_lower ? .57 : .145;
+    }// .98
+    public String getstring(){
+        return in_lower + " , " + rot1;
     }
     public void Lower(GamepadEx gamepadEx){
         if (gamepadEx.wasJustReleased(BIND_INTAKE_LOWER)) toggle_lower();
         update_servo();
     }
-    void eject() throws InterruptedException {
-        eject = 0;
+    public void eject() throws InterruptedException {
+        eject = .02;
         update_servo();
-        sleep(1000);
-        eject = 1;
+        sleep(500);
+        eject = .55;
     }
     public void setEject(GamepadEx gamepad1) throws InterruptedException{
         if (gamepad1.wasJustReleased(BIND_INTAKE_EJECT) && !(getcolor() == c_input)){
@@ -88,11 +93,14 @@ public class intake {
         }
         update_servo();
     }
-    void update_servo(){
+    public void update_servo(){
         Rot1.setPosition(rot1);
-        Rot2.setPosition(rot2);
+        Rot2.setPosition(rot1);
         Eject.setPosition(eject);
         //if (pos_filler != target_pos) Beat_bar.setPower(-1);
+    }
+    public void update_servo(GamepadEx gamepadEx){
+        if (gamepadEx.wasJustReleased(GamepadKeys.Button.RIGHT_BUMPER)) update_servo();
     }
     public double getBeatBarPos(){
         return beat_bar_pos.getVoltage();

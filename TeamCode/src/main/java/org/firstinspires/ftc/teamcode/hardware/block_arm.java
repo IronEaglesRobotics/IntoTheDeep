@@ -24,7 +24,9 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class block_arm {
     boolean claw_open,is_90,is_180 = false;
     Servo Claw, Claw_rot, Main_rot1, Main_rot2;
-    double claw, claw_rot, main_rot = 0;
+    double claw = .05;
+    double claw_rot = .38;
+    double main_rot = .05;
     public Slides slides;
     public enum Position {pickup,score,wall, preclip,postclip}
 
@@ -40,7 +42,7 @@ public class block_arm {
     }
     public void toggle_claw(){
         claw_open = !claw_open;
-        claw = claw_open ? 1 : 0;
+        claw = claw_open ? .25 : .05;
     }
     public void toggle_claw(GamepadEx gamepadEx){
         if (gamepadEx.wasJustReleased(BIND_TOGGLE_CLAW)){
@@ -49,7 +51,7 @@ public class block_arm {
     }
     public void rotate_claw(){
         is_90 = !is_90;
-        claw_rot = is_90 ? 0 : .5;
+        claw_rot = is_90 ? 0.04 : .38;
     }
     public void rotate_claw(GamepadEx gamepadEx){
         if (gamepadEx.wasJustReleased(BIND_ROTATE_CLAW)){

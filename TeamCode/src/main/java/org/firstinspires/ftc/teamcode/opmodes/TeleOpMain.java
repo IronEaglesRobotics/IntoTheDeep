@@ -44,8 +44,10 @@ public class TeleOpMain extends OpMode {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+        robot.getIntake().update_servo(controller1);
 
         telemetry.addData("pos",robot.getIntake().getBeatBarPos());
+        telemetry.addData("is_lower",robot.getIntake().getstring());
         telemetry.update();
     }
 }
