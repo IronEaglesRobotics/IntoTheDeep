@@ -49,18 +49,26 @@ public class Config {
     // random configs
     public static final double BEATBAR_CHANGE = 1;
 
-    /* Servo ranges
-    * block claw 0,.5
-    * clow rot 0,.4
-    * main_rot .05,.55
-    * */
+    // Servo ranges
+    public static final double block_claw_closed = 0;
+    public static final double block_claw_open = .25;
+    public static final double claw_rot_flat = .04;
+    public static final double claw_rot_90 = .38;
+    public static final double main_rot_in = .04;
+    public static final double main_rot_out = .55;
+    public static final double main_rot_score = .3;
+    public static final double lower_rot_in = .5;
+    public static final double lower_rot_out = .3;
+    public static final double eject_rot_in = .02;
+    public static final double eject_rot_out = .55;
 
     // keybinds
 
     // gamepad1
     public static final GamepadKeys.Button BIND_SPEED = GamepadKeys.Button.X;
     public static final GamepadKeys.Button BIND_INTAKE_PICKUP = GamepadKeys.Button.A;
-    public static final GamepadKeys.Button BIND_INTAKE_LOWER = GamepadKeys.Button.B;
+    public static final GamepadKeys.Button BIND_INTAKE_UP = GamepadKeys.Button.RIGHT_BUMPER;
+    public static final GamepadKeys.Button BIND_INTAKE_LOWER = GamepadKeys.Button.LEFT_BUMPER;
     public static final GamepadKeys.Button BIND_INTAKE_EJECT = GamepadKeys.Button.Y;
     public static final GamepadKeys.Button BIND_COLOR_BLUE = GamepadKeys.Button.DPAD_RIGHT;
     public static final GamepadKeys.Button BIND_COLOR_RED = GamepadKeys.Button.DPAD_LEFT;

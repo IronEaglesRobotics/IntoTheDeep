@@ -8,11 +8,15 @@ import static org.firstinspires.ftc.teamcode.lib.Config.BIND_COLOR_YELLOW;
 import static org.firstinspires.ftc.teamcode.lib.Config.BIND_INTAKE_EJECT;
 import static org.firstinspires.ftc.teamcode.lib.Config.BIND_INTAKE_LOWER;
 import static org.firstinspires.ftc.teamcode.lib.Config.BIND_INTAKE_PICKUP;
-import static org.firstinspires.ftc.teamcode.lib.Config.BIND_ROTATE_ARM;
+import static org.firstinspires.ftc.teamcode.lib.Config.BIND_INTAKE_UP;
 import static org.firstinspires.ftc.teamcode.lib.Config.COLOR_SENSOR;
 import static org.firstinspires.ftc.teamcode.lib.Config.EJECT;
 import static org.firstinspires.ftc.teamcode.lib.Config.INTAKE_LEFT;
 import static org.firstinspires.ftc.teamcode.lib.Config.INTAKE_RIGHT;
+import static org.firstinspires.ftc.teamcode.lib.Config.eject_rot_in;
+import static org.firstinspires.ftc.teamcode.lib.Config.eject_rot_out;
+import static org.firstinspires.ftc.teamcode.lib.Config.lower_rot_in;
+import static org.firstinspires.ftc.teamcode.lib.Config.lower_rot_out;
 import static java.lang.Thread.sleep;
 
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
@@ -28,10 +32,11 @@ public class intake {
     CRServo Beat_bar;
     ColorSensor c_sensor;
     boolean beatbar_flipped;
-    boolean in_lower = false;
+    boolean in_lower = true;
     boolean is_180 = false;
-    double eject,target_pos = 0;
-    double rot1 = .57;
+    double eject = eject_rot_out;
+    double target_pos = 0;
+    double rot1 = lower_rot_in;
     color c_input = color.yellow;
     private double pickupTime = 0;
     private boolean pickingUp = false;
@@ -70,22 +75,34 @@ public class intake {
             toggle_beatbar();
         }
     }
-    public void toggle_lower(){
-        in_lower = !in_lower;
-        rot1 = in_lower ? .57 : .145;
-    }// .98
+    public void intake_up() throws InterruptedException {
+        rot1 = lower_rot_in;
+        update_servo();
+        sleep(1000);
+        rot1 = .58;
+    }
     public String getstring(){
         return in_lower + " , " + rot1;
     }
-    public void Lower(GamepadEx gamepadEx){
-        if (gamepadEx.wasJustReleased(BIND_INTAKE_LOWER)) toggle_lower();
+    public void intake_up(GamepadEx gamepadEx) throws InterruptedException {
+        if (gamepadEx.wasJustReleased(BIND_INTAKE_UP)) intake_up();
+        update_servo();
+    }
+    public void intake_lower() throws InterruptedException {
+        rot1 = lower_rot_out;
+        update_servo();
+        sleep(500);
+        rot1 = .2;
+    }
+    public void intake_lower(GamepadEx gamepadEx) throws InterruptedException {
+        if (gamepadEx.wasJustReleased(BIND_INTAKE_LOWER)) intake_lower();
         update_servo();
     }
     public void eject() throws InterruptedException {
-        eject = .02;
+        eject = eject_rot_in;
         update_servo();
         sleep(500);
-        eject = .55;
+        eject = eject_rot_out;
     }
     public void setEject(GamepadEx gamepad1) throws InterruptedException{
         if (gamepad1.wasJustReleased(BIND_INTAKE_EJECT) && !(getcolor() == c_input)){

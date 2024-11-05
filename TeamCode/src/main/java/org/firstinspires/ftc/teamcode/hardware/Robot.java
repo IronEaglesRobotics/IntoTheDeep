@@ -49,7 +49,7 @@ public class Robot {
                 break;
             case take:
                 if (intake.getbeatbar_pos()) {
-                    intake.toggle_lower();
+                    intake.intake_up();
                 }
                 block_arm.set_grab(Position.pickup);
                 delay = curtime + 300;
@@ -67,8 +67,9 @@ public class Robot {
         intake.update_servo();
     }*/
 
-    public void update(){
+    public void update(double cur_time){
         block_arm.update_claws();
         intake.update_servo();
+        block_arm.slides.update(cur_time);
     }
 }

@@ -33,21 +33,26 @@ public class TeleOpMain extends OpMode {
         robot.getBlockarm().rotate_claw(controller2);
         robot.getBlockarm().clip(controller2);
         robot.getBlockarm().toggle_claw(controller2);
+        robot.getBlockarm().set_grab(controller2);
+        robot.getBlockarm().set_slides(controller2);
         robot.pullup(controller2.getRightY());
 
         robot.getIntake().setColor(controller1);
-        robot.getIntake().Lower(controller1);
+
         robot.getIntake().control_beatbar(controller2);
         robot.getIntake().toggle_beatbar(controller1);
         try {
             robot.getIntake().setEject(controller2);
+            robot.getIntake().intake_up(controller1);
+            robot.getIntake().intake_lower(controller1);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        robot.getIntake().update_servo(controller1);
+        robot.update(time);
 
         telemetry.addData("pos",robot.getIntake().getBeatBarPos());
         telemetry.addData("is_lower",robot.getIntake().getstring());
+        telemetry.addData("slides",robot.getBlockarm().slides.getTarget());
         telemetry.update();
     }
 }

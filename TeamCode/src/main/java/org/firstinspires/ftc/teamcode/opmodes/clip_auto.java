@@ -25,7 +25,7 @@ public class clip_auto extends LinearOpMode {
     Pose2d grab = new Pose2d(24,5,Math.toRadians(180));
 
 
-    protected void clip(Pose2d start) throws InterruptedException{
+    protected void clip(Pose2d start,double cur_time) throws InterruptedException{
         traj1 = drive.trajectoryBuilder(start)
                 .lineToSplineHeading(clip)
                 .build();
@@ -34,10 +34,10 @@ public class clip_auto extends LinearOpMode {
         bot.getBlockarm().set_grab(block_arm.Position.postclip);
         wait(500);
         bot.getBlockarm().toggle_claw();
-        bot.update();
+        bot.update(cur_time);
         wait(100);
     }
-    protected void push(){
+    protected void push(double cur_time){
         traj2 = drive.trajectoryBuilder(isFirst ? traj1.end() : traj2.end()) //makes sure it has right start pos
                 .lineToSplineHeading(reset)
                 .back(24)
@@ -47,32 +47,33 @@ public class clip_auto extends LinearOpMode {
         drive.followTrajectory(traj2);
         reset.plus(change);
         isFirst = false;
-        bot.update();
+        bot.update(cur_time);
     }
-    protected void Clip2() throws InterruptedException{
+    protected void Clip2(double cur_time) throws InterruptedException{
         traj3 = drive.trajectoryBuilder(traj2.end())
                 .lineToSplineHeading(grab)
                 .build();
         drive.followTrajectory(traj3);
         bot.getBlockarm().toggle_claw();
         wait(20);
-        clip(traj3.end());
-        bot.update();
+        clip(traj3.end(),cur_time);
+        bot.update(cur_time);
     }
 
     @Override
     public void runOpMode() throws InterruptedException {
-        clip(start);
+        double time = System.currentTimeMillis();
+        clip(start,time);
         wait(20);
-        push();
+        push(time);
         wait(20);
-        push();
+        push(time);
         wait(20);
-        push();
+        push(time);
         wait(20);
-        Clip2();
+        Clip2(time);
         wait(20);
-        Clip2();
-        bot.update();
+        Clip2(time);
+        bot.update(time);
     }
 }

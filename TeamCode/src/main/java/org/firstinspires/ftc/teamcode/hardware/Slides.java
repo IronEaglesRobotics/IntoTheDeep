@@ -18,17 +18,17 @@ public class Slides {
     public static double i = 0.02;
     public static double d = 0;
     public static double f = 0.01;*/
-    public static double p = 0.000009;
+    public static double p = 0.0003;
     public static double i = 0;
     public static double d = 0;
     private double f = 0;
-    private double pTolerance = 20;
+    private double pTolerance = 200;
     public PIDController controller = new PIDController(p, i, d);
 
     public int targetMin = -60000;
     public int targetMax = 60000;
 
-    public int down = 0;
+    public int down = 2000;
     public int wall = 2500;
     public int postclip = 7500;
     public int preclip = 10000;

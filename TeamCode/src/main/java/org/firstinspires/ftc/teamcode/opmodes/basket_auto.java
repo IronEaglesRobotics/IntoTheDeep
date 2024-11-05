@@ -25,7 +25,7 @@ public class basket_auto extends LinearOpMode {
     Pose2d drop = new Pose2d(5,-53,Math.toRadians(45));
     Pose2d pickup3 = new Pose2d(36,-24,Math.toRadians(-90));
     Pose2d park = new Pose2d(36,24,Math.toRadians(270));
-    protected void clip() throws InterruptedException{
+    protected void clip(double cur_time) throws InterruptedException{
         traj1 = drive.trajectoryBuilder(start)
                 .lineToSplineHeading(clip)
                 .build();
@@ -34,12 +34,12 @@ public class basket_auto extends LinearOpMode {
         bot.getBlockarm().set_grab(block_arm.Position.postclip);
         wait(500);
         bot.getBlockarm().toggle_claw();
-        bot.update();
+        bot.update(cur_time);
         wait(100);
     }
 
-    protected void pickup(double cur_time){
-        bot.getIntake().toggle_lower();
+    protected void pickup(double cur_time) throws InterruptedException{
+        bot.getIntake().intake_up();
         traj2 = drive.trajectoryBuilder(traj1.end())
                 .lineToSplineHeading(pickup1)
                 .back(5)
@@ -49,7 +49,7 @@ public class basket_auto extends LinearOpMode {
                 .build();
         drive.followTrajectory(traj2);
         //bot.getIntake().toggle_beatbar();
-        bot.getIntake().toggle_lower();
+        bot.getIntake().intake_up();
         bot.getBlockarm().set_grab(block_arm.Position.pickup);
         bot.getBlockarm().toggle_claw();
         bot.getBlockarm().set_grab(block_arm.Position.score);
@@ -57,8 +57,8 @@ public class basket_auto extends LinearOpMode {
         bot.getBlockarm().toggle_claw();
         pickup1.plus(new Pose2d(0,-12,0));
     }
-    protected void pickup2(double cur_time){
-        bot.getIntake().toggle_lower();
+    protected void pickup2(double cur_time)throws InterruptedException{
+        bot.getIntake().intake_up();
         traj2 = drive.trajectoryBuilder(traj1.end())
                 .lineToSplineHeading(pickup3)
                 .back(5)
@@ -68,25 +68,25 @@ public class basket_auto extends LinearOpMode {
                 .build();
         drive.followTrajectory(traj2);
         //bot.getIntake().toggle_beatbar();
-        bot.getIntake().toggle_lower();
+        bot.getIntake().intake_up();
         bot.getBlockarm().set_grab(block_arm.Position.pickup);
         bot.getBlockarm().toggle_claw();
         bot.getBlockarm().set_grab(block_arm.Position.score);
         drive.followTrajectory(traj3);
         bot.getBlockarm().toggle_claw();
     }
-    protected void park(){
+    protected void park()throws InterruptedException{
         traj4 = drive.trajectoryBuilder(traj3.end())
                 .lineToSplineHeading(park)
                 .build();
-        bot.getIntake().toggle_lower();
+        bot.getIntake().intake_up();
         bot.getBlockarm().set_grab(block_arm.Position.preclip);
         drive.followTrajectory(traj4);
     }
     @Override
     public void runOpMode() throws InterruptedException {
         double time = System.currentTimeMillis();
-        clip();
+        clip(time);
         wait(20);
         pickup(time);
         wait(20);
