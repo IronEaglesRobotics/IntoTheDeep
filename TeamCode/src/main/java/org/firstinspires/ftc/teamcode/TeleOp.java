@@ -53,7 +53,6 @@ public class TeleOp extends OpMode {
             robot.cjoint3.setPosition(0);
         }
 
-        if
     }
 
 
