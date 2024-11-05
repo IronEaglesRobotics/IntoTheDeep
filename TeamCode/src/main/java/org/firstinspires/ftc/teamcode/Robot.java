@@ -8,11 +8,13 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public class Robot {
     Drive drive;
-    Extendo extendo;
+    ExtendoRight extendoRight;
+    ExtendoLeft extendoLeft;
     Lift lift;
     Claw claw;
     Intake intake;
-    Tilt tilt;
+    TiltRight tiltRight;
+    TiltLeft tiltLeft;
     Cjoint1 cjoint1;
     Cjoint2 cjoint2;
     Cjoint3 cjoint3;
@@ -21,20 +23,35 @@ public class Robot {
         this.drive = new Drive(hardwareMap);
         this.claw = new Claw(hardwareMap);
         this.intake = new Intake(hardwareMap);
-        this.tilt = new Tilt(hardwareMap);
+        this.tiltRight = new TiltRight(hardwareMap);
+        this.tiltLeft = new TiltLeft(hardwareMap);
         this.lift = new Lift(hardwareMap);
-        this.extendo = new Extendo(hardwareMap);
+        this.extendoRight = new ExtendoRight(hardwareMap);
+        this.extendoLeft = new ExtendoLeft(hardwareMap);
     }
 
-    public static class Extendo {
-        private Servo extendo;
-        public void setPosition(double position) {
-            this.extendo.setPosition(position);
-        }
-        public Extendo(HardwareMap hardwareMap) {
+    public static class ExtendoRight {
+        private Servo extendoRight;
 
-            extendo = hardwareMap.servo.get("e");
+        public void setPosition(double position) {
+            this.extendoRight.setPosition(position);
         }
+        public ExtendoRight(HardwareMap hardwareMap) {
+
+            extendoRight = hardwareMap.servo.get("eR");
+        }
+    }
+
+    public static class ExtendoLeft {
+        private Servo extendoLeft;
+
+        public void setPosition(double position) {
+            this.extendoLeft.setPosition(position);
+        }
+        public ExtendoLeft(HardwareMap hardwareMap) {
+            extendoLeft = hardwareMap.servo.get("eL");
+        }
+
     }
 
     public static class Lift {
@@ -113,16 +130,23 @@ public class Robot {
         }
     }
 
-    public static class Tilt {
-        private Servo tilt1;
-        private Servo tilt2;
+    public static class TiltRight {
+        private Servo tiltRight;
         public void setPosition(double position) {
-            this.tilt1.setPosition(position);
-            this.tilt2.setPosition(position);
+            this.tiltRight.setPosition(position);
         }
-        public Tilt(HardwareMap hardwareMap) {
-            tilt1 = hardwareMap.servo.get("t1");
-            tilt2 = hardwareMap.servo.get("t2");
+        public TiltRight(HardwareMap hardwareMap) {
+            tiltRight = hardwareMap.servo.get("tR");
+        }
+    }
+
+    public static class TiltLeft {
+        private Servo tiltLeft;
+        public void setPosition(double position) {
+            this.tiltLeft.setPosition(position);
+        }
+        public TiltLeft(HardwareMap hardwareMap) {
+            tiltLeft = hardwareMap.servo.get("tL");
         }
     }
 
