@@ -19,6 +19,8 @@ import static org.firstinspires.ftc.teamcode.lib.Config.lower_rot_in;
 import static org.firstinspires.ftc.teamcode.lib.Config.lower_rot_out;
 import static java.lang.Thread.sleep;
 
+import com.acmerobotics.dashboard.config.Config;
+import com.arcrobotics.ftclib.controller.PController;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.hardware.AnalogInput;
@@ -27,6 +29,7 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+@Config
 public class intake {
     Servo Rot1,Rot2,Eject;
     CRServo Beat_bar;
@@ -42,6 +45,12 @@ public class intake {
     private boolean pickingUp = false;
     private AnalogInput beat_bar_pos;
     public enum color { red,blue,yellow}
+    public static double DIFFY_KP = 0.1;
+    public static double DIFFY_TOL = 0.01;
+    public static double ARM_MAX_DELTA = 0.02;
+    //PControler
+    public PController armPController;
+    public double armTarget;
 
     public intake Init(HardwareMap HardwareMap){
         Rot1 = HardwareMap.get(Servo.class,INTAKE_LEFT);
@@ -51,6 +60,7 @@ public class intake {
         c_sensor = HardwareMap.get(ColorSensor.class,COLOR_SENSOR);
         beat_bar_pos = HardwareMap.get(AnalogInput.class,"servo_encoder");
         Rot2.setDirection(Servo.Direction.REVERSE);
+        this.armPController = new PController(DIFFY_KP);
 
         return this;
     }
@@ -76,10 +86,12 @@ public class intake {
         }
     }
     public void intake_up() throws InterruptedException {
-        rot1 = lower_rot_in;
+        /*rot1 = lower_rot_in;
         update_servo();
         sleep(1000);
-        rot1 = .58;
+        rot1 = .58;*/
+        this.armTarget = .8;
+        this.armPController.setSetPoint(this.armTarget);
     }
     public String getstring(){
         return in_lower + " , " + rot1;
@@ -89,10 +101,12 @@ public class intake {
         update_servo();
     }
     public void intake_lower() throws InterruptedException {
-        rot1 = lower_rot_out;
+        /*rot1 = lower_rot_out;
         update_servo();
         sleep(500);
-        rot1 = .2;
+        rot1 = .2;*/
+        this.armTarget = .2;
+        this.armPController.setSetPoint(this.armTarget);
     }
     public void intake_lower(GamepadEx gamepadEx) throws InterruptedException {
         if (gamepadEx.wasJustReleased(BIND_INTAKE_LOWER)) intake_lower();
@@ -110,11 +124,27 @@ public class intake {
         }
         update_servo();
     }
-    public void update_servo(){
+    public boolean isAtTarget() {
+        return this.armPController.atSetPoint();
+    }
+
+    public void update_servo() {
         Rot1.setPosition(rot1);
         Rot2.setPosition(rot1);
         Eject.setPosition(eject);
         //if (pos_filler != target_pos) Beat_bar.setPower(-1);
+        this.armPController.setSetPoint(this.armTarget);
+        this.armPController.setTolerance(DIFFY_TOL);
+        this.armPController.setP(DIFFY_KP);
+
+        if (!isAtTarget()) {
+            double armDelta = this.armPController.calculate(Rot1.getPosition());
+            if (Math.abs(this.armPController.getPositionError()) > 0.1) {
+                armDelta = Math.copySign(ARM_MAX_DELTA, armDelta);
+            }
+            this.Rot1.setPosition(Rot1.getPosition() + armDelta);
+            this.Rot2.setPosition(Rot2.getPosition() + armDelta);
+        }
     }
     public void update_servo(GamepadEx gamepadEx){
         if (gamepadEx.wasJustReleased(GamepadKeys.Button.RIGHT_BUMPER)) update_servo();
