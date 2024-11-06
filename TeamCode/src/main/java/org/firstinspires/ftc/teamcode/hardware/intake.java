@@ -20,7 +20,7 @@ import static org.firstinspires.ftc.teamcode.lib.Config.lower_rot_out;
 import static java.lang.Thread.sleep;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.arcrobotics.ftclib.controller.PController;
+import com.arcrobotics.ftclib.controller.PDController;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.hardware.AnalogInput;
@@ -34,22 +34,18 @@ public class intake {
     Servo Rot1,Rot2,Eject;
     CRServo Beat_bar;
     ColorSensor c_sensor;
-    boolean beatbar_flipped;
-    boolean in_lower = true;
-    boolean is_180 = false;
     double eject = eject_rot_out;
     double target_pos = 0;
     double rot1 = lower_rot_in;
     color c_input = color.yellow;
-    private double pickupTime = 0;
-    private boolean pickingUp = false;
     private AnalogInput beat_bar_pos;
     public enum color { red,blue,yellow}
-    public static double DIFFY_KP = 0.1;
-    public static double DIFFY_TOL = 0.01;
-    public static double ARM_MAX_DELTA = 0.02;
+    public static double KP = 0.1;
+    public static double TOL = 0.01;
+    public static double KD = 0.1;
+    public static double MAX_DELTA = 0.75;
     //PControler
-    public PController armPController;
+    public PDController armPDcontroller;
     public double armTarget;
 
     public intake Init(HardwareMap HardwareMap){
@@ -60,7 +56,7 @@ public class intake {
         c_sensor = HardwareMap.get(ColorSensor.class,COLOR_SENSOR);
         beat_bar_pos = HardwareMap.get(AnalogInput.class,"servo_encoder");
         Rot2.setDirection(Servo.Direction.REVERSE);
-        this.armPController = new PController(DIFFY_KP);
+        this.armPDcontroller = new PDController(KP,KD);
 
         return this;
     }
@@ -86,27 +82,27 @@ public class intake {
         }
     }
     public void intake_up() throws InterruptedException {
-        /*rot1 = lower_rot_in;
+        rot1 = lower_rot_in;
         update_servo();
         sleep(1000);
-        rot1 = .58;*/
-        this.armTarget = .8;
-        this.armPController.setSetPoint(this.armTarget);
+        rot1 = .58;
+       // this.armTarget = .8;
+       // this.armPDcontroller.setSetPoint(this.armTarget);
     }
     public String getstring(){
-        return in_lower + " , " + rot1;
+        return armTarget + " , " + Rot1.getPosition() + " , " + armPDcontroller.calculate(Rot1.getPosition());
     }
     public void intake_up(GamepadEx gamepadEx) throws InterruptedException {
         if (gamepadEx.wasJustReleased(BIND_INTAKE_UP)) intake_up();
         update_servo();
     }
     public void intake_lower() throws InterruptedException {
-        /*rot1 = lower_rot_out;
+        rot1 = lower_rot_out;
         update_servo();
         sleep(500);
-        rot1 = .2;*/
-        this.armTarget = .2;
-        this.armPController.setSetPoint(this.armTarget);
+        rot1 = .2;
+        //this.armTarget = .2;
+        //this.armPDcontroller.setSetPoint(this.armTarget);
     }
     public void intake_lower(GamepadEx gamepadEx) throws InterruptedException {
         if (gamepadEx.wasJustReleased(BIND_INTAKE_LOWER)) intake_lower();
@@ -125,25 +121,26 @@ public class intake {
         update_servo();
     }
     public boolean isAtTarget() {
-        return this.armPController.atSetPoint();
+        return this.armPDcontroller.atSetPoint();
     }
 
     public void update_servo() {
         Rot1.setPosition(rot1);
         Rot2.setPosition(rot1);
         Eject.setPosition(eject);
-        //if (pos_filler != target_pos) Beat_bar.setPower(-1);
-        this.armPController.setSetPoint(this.armTarget);
-        this.armPController.setTolerance(DIFFY_TOL);
-        this.armPController.setP(DIFFY_KP);
+        if (beat_bar_pos.getVoltage() != target_pos) Beat_bar.setPower(-1);
+        armPDcontroller.setSetPoint(armTarget);
+        armPDcontroller.setTolerance(TOL);
+        armPDcontroller.setP(KP);
+        armPDcontroller.setD(KD);
 
         if (!isAtTarget()) {
-            double armDelta = this.armPController.calculate(Rot1.getPosition());
-            if (Math.abs(this.armPController.getPositionError()) > 0.1) {
-                armDelta = Math.copySign(ARM_MAX_DELTA, armDelta);
+            double delta = armPDcontroller.calculate(Rot1.getPosition());
+            if (Math.abs(armPDcontroller.getPositionError()) > .1) {
+                delta = Math.min(Math.copySign(MAX_DELTA, delta), delta);
             }
-            this.Rot1.setPosition(Rot1.getPosition() + armDelta);
-            this.Rot2.setPosition(Rot2.getPosition() + armDelta);
+            Rot1.setPosition(Rot1.getPosition() + delta);
+            Rot2.setPosition(Rot1.getPosition() + delta);
         }
     }
     public void update_servo(GamepadEx gamepadEx){

@@ -8,7 +8,6 @@ import static org.firstinspires.ftc.teamcode.lib.Config.FR_WHEEL;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.hardware.Slides;
 
@@ -16,22 +15,12 @@ import org.firstinspires.ftc.teamcode.hardware.Slides;
 public class presentation_op extends OpMode {
     //Drive drive;
     private DcMotor fl, fr, bl, br;
-    Servo Servo1;
-    Servo Servo2;
-    double servo1 = .7;
-    double servo2 = .7;
     DcMotor Motor1;
     DcMotor Motor2;
     int target_pos = 0;
-    int motor1;
-    int motor2;
     Slides slides;
 
     private double increment = 0.000001;
-    private boolean buttonADown = false;
-    private boolean buttonBDown = false;
-    private boolean buttonXDown = false;
-    private boolean rightBumperDown = false;
 
     @Override
     public void init(){
@@ -64,65 +53,8 @@ public class presentation_op extends OpMode {
 
         target_pos = Math.max(Math.min(target_pos,60000),0);
 
-        if (gamepad1.dpad_down) {
-            slides.setTarget(Slides.Position.DOWN);
-        } else if (gamepad1.dpad_up){
-            slides.setTarget(Slides.Position.TIER3);
-        } else if (gamepad1.dpad_left){
-            slides.setTarget(Slides.Position.TIER2);
-        } else if (gamepad1.dpad_right){
-            slides.setTarget(Slides.Position.TIER1);
-        }
-
-        /*if (gamepad1.a && !buttonADown) {
-            buttonADown = true;
-            slides.controller.setP(slides.controller.getP()+increment);
-        } else if (!gamepad1.a) {
-            buttonADown = false;
-        }
-
-        if (gamepad1.b && !buttonBDown) {
-            buttonBDown = true;
-            slides.controller.setI(slides.controller.getI()+increment);
-        } else if (!gamepad1.b) {
-            buttonBDown = false;
-        }
-
-        if (gamepad1.x && !buttonXDown) {
-            buttonXDown = true;
-            slides.controller.setD(slides.controller.getD()+increment);
-        } else if (!gamepad1.x) {
-            buttonXDown = false;
-        }
-
-        if (gamepad1.right_bumper && !rightBumperDown) {
-            rightBumperDown = true;
-            increment = -increment;
-        } else if (!gamepad1.right_bumper) {
-            rightBumperDown = false;
-        }*/
-
-        slides.update(System.currentTimeMillis());
-        //Servo1.setPosition(servo1);
-        //Servo2.setPosition(servo2);
-
-        /*if (target_pos > bl.getCurrentPosition() && bl.getCurrentPosition() > 0) {
-            motor1 = 1;
-            motor2 = 1;
-            Motor1.setPower(.7);
-            Motor2.setPower(.7);
-        }
-        else if(target_pos < bl.getCurrentPosition()){
-            motor1 = 1;
-            motor2 = 1;
-            Motor1.setPower(-.7);
-            Motor2.setPower(-.7);
-        } else {
-            motor1 = 0;
-            motor2 = 0;
-            Motor1.setPower(0);
-            Motor2.setPower(0);
-        }*/
+        Motor1.setPower(gamepad1.left_stick_y);
+        Motor2.setPower(gamepad1.left_stick_y);
 
         telemetry.addData("encoder",Motor1.getCurrentPosition());
         telemetry.addData("target",slides.getTarget());

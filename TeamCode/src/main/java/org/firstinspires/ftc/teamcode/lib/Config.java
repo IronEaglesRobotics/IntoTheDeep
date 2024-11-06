@@ -56,7 +56,7 @@ public class Config {
     public static final double claw_rot_90 = .38;
     public static final double main_rot_in = .04;
     public static final double main_rot_out = .55;
-    public static final double main_rot_score = .3;
+    public static final double main_rot_score = .25;
     public static final double lower_rot_in = .5;
     public static final double lower_rot_out = .3;
     public static final double eject_rot_in = .02;
