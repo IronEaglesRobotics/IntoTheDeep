@@ -36,22 +36,21 @@ public class Drive {
         bl.setDirection(DcMotor.Direction.FORWARD);
         br.setDirection(DcMotor.Direction.REVERSE);
 
+        fl.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        fr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        bl.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        br.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         lastTime = System.currentTimeMillis();
 
         return  this;
     }
 
     public void setDrive(GamepadEx gamepad, double currentTime) {
-        // if not using dt lerp speed is dependent on loop freq... not good this fix.
-        double deltaTime = (currentTime - lastTime);
-
         boolean speedDown = gamepad.getButton(BIND_SPEED);
         double speedMod = speedDown ? SLOW_SPEED : DEFAULT_SPEED;
-        double turnMod = speedDown ? SLOW_TURN : DEFAULT_TURN;
 
-        // interpolate instead of instant to fix jitter maybe, idk if ftc already has something for this...
-
-        double x = gamepad.getLeftX() * speedMod, y = -gamepad.getLeftY() * speedMod, z = gamepad.getRightX() * speedMod;
+        double x = gamepad.getLeftX() * speedMod, y = -gamepad.getLeftY() * speedMod, z = -gamepad.getRightX() * speedMod;
         double max = Math.max(Math.abs(y)+Math.abs(x)+Math.abs(z),1);
 
         fl.setPower(((x + y + z)/max));
