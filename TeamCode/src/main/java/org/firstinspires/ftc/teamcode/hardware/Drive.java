@@ -50,7 +50,7 @@ public class Drive {
         boolean speedDown = gamepad.getButton(BIND_SPEED);
         double speedMod = speedDown ? SLOW_SPEED : DEFAULT_SPEED;
 
-        double x = gamepad.getLeftX() * speedMod, y = -gamepad.getLeftY() * speedMod, z = gamepad.getRightX() * speedMod;
+        double x = gamepad.getLeftX() * speedMod, y = -gamepad.getLeftY() * speedMod, z = -gamepad.getRightX() * speedMod;
         double max = Math.max(Math.abs(y)+Math.abs(x)+Math.abs(z),1);
 
         fl.setPower(((x + y + z)/max));
