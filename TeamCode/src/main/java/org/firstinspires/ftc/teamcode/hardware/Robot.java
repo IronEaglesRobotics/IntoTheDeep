@@ -19,6 +19,7 @@ import org.firstinspires.ftc.teamcode.hardware.roadrunner.trajectorysequence.Tra
 import java.security.SecurityPermission;
 
 import lombok.Getter;
+import lombok.Setter;
 
 @Config
 public class Robot {
@@ -101,7 +102,7 @@ public class Robot {
         public static double INTAKE = .7;
         public static double INTAKESPEC = .475;
         public static double OUTTAKESPEC = .2;
-        public static double OUTTAKESAMPLE = .1;
+        public static double OUTTAKESAMPLE = .05;
         //PController
         public static double KP = 1.2;
         public static double KD = 0;
@@ -120,9 +121,9 @@ public class Robot {
             this.armR = hardwareMap.get(Servo.class, "armR");
             this.armPDcontroller = new PDController(KP, KD);
 //            this.armL.setDirection(Servo.Direction.REVERSE);
-            this.armL.setPosition(INTAKE);
-            this.armR.setPosition(INTAKE);
-            this.armPDcontroller.setSetPoint(INTAKE);
+            this.armL.setPosition(INTAKESPEC);
+            this.armR.setPosition(INTAKESPEC);
+            this.armPDcontroller.setSetPoint(INTAKESPEC);
             return this;
         }
 
@@ -173,7 +174,7 @@ public class Robot {
     public static class Wrist {
         //variables
         public static double INTAKE = .4;
-        public static double OUTTAKESAMPLE = .5;
+        public static double OUTTAKESAMPLE = .52;
         public static double INTAKESPEC = .33;
         public static double OUTTAKESPEC = .6;
         //PController
@@ -247,9 +248,9 @@ public class Robot {
         public DcMotorEx slidesR;
         //Variables
 //        public static int SLIDESPOWER = 1;
-        public static int SLIDEUP = 850;
+        public static int SLIDEUP = 900;
         public static int SLIDEHSPEC = 450;
-        public static int SLIDELSPEC = 300;
+//        public static int SLIDELSPEC = 300;
         public static int SLIDELBUCKET = 350;
         public static int SLIDEDOWN = 0;
         public static int SLIDEREST = 100;
@@ -333,15 +334,15 @@ public class Robot {
         private ServoImplEx extendoR;
 
         //Variables
-        public static double retract = .5;
+        public static double retract = .52;
         public static double extend = .25;
 
         public Extendo init(HardwareMap hardwareMap) {
             this.extendoL = hardwareMap.get(ServoImplEx.class, "extendoL");
             this.extendoL.setDirection(Servo.Direction.REVERSE);
             this.extendoR = hardwareMap.get(ServoImplEx.class, "extendoR");
-//            this.armL.setDirection(Servo.Direction.REVERSE);
-//            this.armPDcontroller.setSetPoint(INTAKE);
+            this.extendoL.setPosition(retract);
+            this.extendoR.setPosition(retract);
             return this;
         }
 
@@ -367,7 +368,7 @@ public class Robot {
 
 
         //Variables
-        public static double up = .39;
+        public static double up = .37;
         public static double spit = .7;
         public static double down = .84;
         public static double INTAKE = .75;
@@ -399,6 +400,8 @@ public class Robot {
             this.intakeL.setDirection(Servo.Direction.REVERSE);
             this.intakeSensor = hardwareMap.colorSensor.get("colorSensor");
             this.intakeSensor.enableLed(true);
+            this.intakeL.setPosition(up);
+            this.intakeR.setPosition(up);
             return this;
         }
 
@@ -459,6 +462,7 @@ public class Robot {
 
     //Scoring Macro
     public int bucketStep;
+    public boolean AUTO;
     public int specStep;
     boolean bucketH;
     boolean specH;
@@ -469,7 +473,7 @@ public class Robot {
         IDLE, BUCKET, SPECIMENGRAB, BUCKETR, SPECIMENR
     }
 
-    public void scoringMacro(GamepadEx controller1, double runtime) {
+    public void scoringMacro(GamepadEx controller1, double runtime, boolean auto) {
 
         boolean Y = controller1.wasJustPressed(GamepadKeys.Button.Y); //BUCKETH
         boolean X = controller1.wasJustPressed(GamepadKeys.Button.X); // BUCKETL
@@ -488,7 +492,7 @@ public class Robot {
                 wrist.intake();
 
                 //switch states
-                if (Y) { //High Bucket
+                if (Y || AUTO) { //High Bucket
                     bucketStep = 0;
                     outtakeDelay = runtime + .75; //Delay for slides after grabbing
                     claw.close();
@@ -546,12 +550,13 @@ public class Robot {
                             bucketStep = 0;
                         }
                         break;
+
                 }
                 break;
             case BUCKETR:
                 switch (bucketStep) {
                     case 0:
-                        claw.passiveclose();
+                        claw.close();
                         outtakeDelay = runtime + .2;
                         bucketStep++;
                         break;
@@ -593,32 +598,24 @@ public class Robot {
                         if (runtime > outtakeDelay && L1) { //open claw if open button pressed
                             claw.open();
                             specStep++;
+                        } else if (auto){
+                            specStep++;
                         }
                         break;
                     case 3:
                         if (L2) {
                             scoringState = scoringStates.SPECIMENR;
                             specStep = 0;
-                        } else if (D1) {
-                            specH = true;
-                            outtakeDelay = runtime + .75;
-                            claw.passiveclose();
-                            specStep++;
-                        } else if (D2) {
-                            specH = false;
-                            outtakeDelay = runtime + .75;
+                        } else if (D1 || auto) {
+                            outtakeDelay = runtime + .4;
                             claw.passiveclose();
                             specStep++;
                         }
                         break;
                     case 4:
                         if (runtime > outtakeDelay) {
-                            if (specH) {
-                                slides.slidesTo(Slides.SLIDEHSPEC);
-                            } else {
-                                slides.slidesTo(Slides.SLIDELSPEC);
-                            }
-                            outtakeDelay = runtime + .5;
+                            slides.slidesTo(Slides.SLIDEHSPEC);
+                            outtakeDelay = runtime + .3;
                             specStep++;
                         }
                         break;
@@ -626,11 +623,18 @@ public class Robot {
                         if (runtime > outtakeDelay) {
                             arm.outtakeSpecimen();
                             wrist.outtakeSpec();
-                            specStep++;
+                            if (!auto) {
+                                specStep++;
+                            }
                         }
                         break;
                     case 6:
                         if (L1) {
+                            slides.slidesTo(slides.getPosition() - 400);
+                            scoringState = scoringStates.SPECIMENR;
+                            specStep = 0;
+                        }
+                        if (auto){
                             slides.slidesTo(slides.getPosition() - 400);
                             scoringState = scoringStates.SPECIMENR;
                             specStep = 0;
@@ -641,10 +645,13 @@ public class Robot {
             case SPECIMENR:
                 switch (specStep) {
                     case 0:
-                        if (L2) {
-                            claw.close();
+                        if (L2 || auto) {
                             outtakeDelay = runtime + .2;
                             specStep++;
+                        } else if (D1){
+                            outtakeDelay = runtime + .1;
+                            scoringState = scoringStates.SPECIMENGRAB;
+                            specStep = 3;
                         }
                         break;
                     case 1:
@@ -678,7 +685,7 @@ public class Robot {
         IDLE, EXTENDED, INTAKING, DETECT, OUTTAKE, HASSAMPLE
     }
 
-    public void intakeMacro(GamepadEx controller1, double runtime) {
+    public void intakeMacro(GamepadEx controller1, double runtime, boolean auto) {
         switch (intakeState) {
             case IDLE:
                 //Actions
@@ -694,7 +701,7 @@ public class Robot {
                 //Actions
                 extendo.extend();
                 //Switch States
-                if (controller1.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > .3 && runtime > intakeDelay) {
+                if ((controller1.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > .3 && runtime > intakeDelay ) || auto) {
                     intakeState = intakeStates.INTAKING;
                 }
                 break;
@@ -750,6 +757,7 @@ public class Robot {
     public void update() {
         wrist.update();
         arm.update();
+        drive.update();
 //        slides.update();
     }
 }

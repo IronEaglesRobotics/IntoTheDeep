@@ -30,8 +30,8 @@ public class TeleOp extends LinearOpMode {
             robot.getDrive().update();
             controller1.readButtons();
 
-            robot.intakeMacro(controller1,getRuntime());
-            robot.scoringMacro(controller1,getRuntime());
+            robot.intakeMacro(controller1,getRuntime(),false);
+            robot.scoringMacro(controller1,getRuntime(),false);
 
             robot.update();
 
@@ -76,4 +76,3 @@ public class TeleOp extends LinearOpMode {
         }
     }
 }
-//tino was here, now youll never know if i changed your code or not he he he
