@@ -36,7 +36,7 @@ public class TeleOpMain extends OpMode {
         robot.pullup(controller2.getRightY());
 
         robot.getIntake().setColor(controller1);
-        robot.getIntake().Lower(controller1);
+        //robot.getIntake().Lower(controller1);
         robot.getIntake().control_beatbar(controller2);
         robot.getIntake().toggle_beatbar(controller1);
         try {
