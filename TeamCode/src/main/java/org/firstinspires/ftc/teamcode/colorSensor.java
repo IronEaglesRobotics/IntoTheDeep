@@ -17,15 +17,19 @@ public class colorSensor extends LinearOpMode{
 
     public void runOpMode() {
 
-        runOpMode();
-
         yeah = hardwareMap.get(ColorSensor.class, "test");
 
         telemetry.addData("Status:", "Hi, this is functioning");
         telemetry.update();
+        waitForStart();
         while (opModeIsActive()) {
             int b = yeah.blue();
-            telemetry.addData("ColorInfo:", b);
+            int r = yeah.red();
+            int g = yeah.green();
+            telemetry.addData("Blue:", b);
+            telemetry.addData("\nRed:", r);
+            telemetry.addData("\nGreen:", g);
+            telemetry.update();
         }
     }
 }
