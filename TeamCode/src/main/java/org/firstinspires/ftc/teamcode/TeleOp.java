@@ -81,12 +81,12 @@ public class TeleOp extends OpMode {
             STATE = true;
         }
         if(gamepad2.y){
-            robot.lift.setTargetPosition();
-            robot.lift.setPower();
+            robot.lift.setTargetPosition(105;
+            robot.lift.setPower(.5);
         }
         if(gamepad2.a){
-            robot.lift.setTargetPosition();
-            robot.lift.setPower();
+            robot.lift.setTargetPosition(0);
+            robot.lift.setPower(.5);
         }
         if(gamepad2.b) {
             robot.arm.setPosition(1);
