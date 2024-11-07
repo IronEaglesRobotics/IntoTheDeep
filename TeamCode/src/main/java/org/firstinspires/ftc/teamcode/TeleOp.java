@@ -20,38 +20,38 @@ public class TeleOp extends OpMode {
     public void loop() {
 //        robot.drive.handleInput(this.gamepad1, this.gamepad2);
 
-//        if (gamepad1.y) {
-//            //extendo out
-//            robot.extendo.moveTo(0.4);
-//            robot.tiltRight.setPosition(0); //0.5
-//            robot.tiltLeft.setPosition(0);
-//
-//        }
-//
-//        if (gamepad1.a) {
-//            //extendo in & intake tilt up
-//            robot.tiltRight.setPosition(0); //0
-//            robot.tiltLeft.setPosition(0);
-//            robot.extendo.moveTo(0);
-//        }
-//
-//        if(gamepad1.left_trigger > 0) {
-//            //intake tilt down & spin
-//            robot.tiltRight.setPosition(0.18); //0
-//            robot.tiltLeft.setPosition(0.18);
-//            robot.intake.setSpin(1);
-//        }
-//
-//        else {
-//            //when doing nothing intake doesn't spin & tilts up
-//            robot.intake.setSpin(0);
-//            robot.tiltRight.setPosition(0);
-//            robot.tiltLeft.setPosition(0); //0.5
-//        }
+        if (gamepad1.y) {
+            //extendo out
+            robot.extendo.moveTo(0.4);
+            robot.tiltRight.setPosition(0); //0.5
+            robot.tiltLeft.setPosition(0);
+
+        }
+
+        if (gamepad1.a) {
+            //extendo in & intake tilt up
+            robot.tiltRight.setPosition(0); //0
+            robot.tiltLeft.setPosition(0);
+            robot.extendo.moveTo(0);
+        }
+
+        if(gamepad1.left_trigger > 0) {
+            //intake tilt down & spin
+            robot.tiltRight.setPosition(0.18); //0
+            robot.tiltLeft.setPosition(0.18);
+            robot.intake.setSpin(1);
+        }
+
+        else {
+            //when doing nothing intake doesn't spin & tilts up
+            robot.intake.setSpin(0);
+            robot.tiltRight.setPosition(0);
+            robot.tiltLeft.setPosition(0); //0.5
+        }
 
         if(gamepad1.b){
             robot.lift.setTargetPosition(50);
-        //    robot.lift.setPower(0.1);
+            robot.lift.setPower(0.1);
 
         }
 

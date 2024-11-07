@@ -91,15 +91,16 @@ public class Robot {
             liftLeft = hardwareMap.get(DcMotor.class, "liftL");
             liftLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             liftLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            liftLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
             liftLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
         }
 
         public void setTargetPosition(int i) {
             this.liftRight.setTargetPosition(i);
+            liftRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             this.liftLeft.setTargetPosition(i);
-
+            liftLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
 
         public void setPower(double v) {
@@ -107,12 +108,6 @@ public class Robot {
             this.liftLeft.setPower(v);
         }
 
-        //public void encoder(int turn){
-         //   Lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-         //   newTarget = ticks/turn;
-          //  Lift.setTargetPosition((int)newTarget);
-          //  Lift.setPower(0.5);
-          //  Lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
     public static class Claw {
