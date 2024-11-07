@@ -11,6 +11,10 @@ import static org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.DriveCons
 import static org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.DriveConstants.kA;
 import static org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.DriveConstants.kStatic;
 import static org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.DriveConstants.kV;
+import static org.firstinspires.ftc.teamcode.lib.Config.BL_WHEEL;
+import static org.firstinspires.ftc.teamcode.lib.Config.BR_WHEEL;
+import static org.firstinspires.ftc.teamcode.lib.Config.FL_WHEEL;
+import static org.firstinspires.ftc.teamcode.lib.Config.FR_WHEEL;
 
 import androidx.annotation.NonNull;
 
@@ -105,10 +109,10 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
         imu.initialize(parameters);*/
 
 
-        leftFront = hardwareMap.get(DcMotorEx.class, "left_front");
-        leftRear = hardwareMap.get(DcMotorEx.class, "left_rear");
-        rightRear = hardwareMap.get(DcMotorEx.class, "right_rear");
-        rightFront = hardwareMap.get(DcMotorEx.class, "right_front");
+        leftFront = hardwareMap.get(DcMotorEx.class, FL_WHEEL);
+        leftRear = hardwareMap.get(DcMotorEx.class, BL_WHEEL);
+        rightRear = hardwareMap.get(DcMotorEx.class, BR_WHEEL);
+        rightFront = hardwareMap.get(DcMotorEx.class, FR_WHEEL);
 
 
         this.leftFront.setDirection(DcMotor.Direction.REVERSE);
@@ -277,6 +281,9 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
 
         setDrivePower(vel);
     }
+    public double mm_to_in(double mm){
+        return mm = mm*0.03937008;
+    }
 
     @NonNull
     @Override
@@ -284,11 +291,11 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
         lastEncPositions.clear();
 
         List<Double> wheelPositions = new ArrayList<>();
-        for (DcMotorEx motor : motors) {
-            int position = motor.getCurrentPosition();
+            int position = odo.getEncoderX();
+            int position2 = odo.getEncoderY();
             lastEncPositions.add(position);
-            wheelPositions.add(encoderTicksToInches(position));
-        }
+            wheelPositions.add(mm_to_in(odo.getPosX()));
+            wheelPositions.add(mm_to_in(odo.getPosY()));
         return wheelPositions;
     }
 
@@ -297,11 +304,12 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
         lastEncVels.clear();
 
         List<Double> wheelVelocities = new ArrayList<>();
-        for (DcMotorEx motor : motors) {
-            int vel = (int) motor.getVelocity();
+            int vel = (int) odo.getVelX();
+            int vel2 = (int) odo.getVelX();
             lastEncVels.add(vel);
-            wheelVelocities.add(encoderTicksToInches(vel));
-        }
+            lastEncVels.add(vel2);
+            wheelVelocities.add(mm_to_in(odo.getVelX()));
+            wheelVelocities.add(mm_to_in(odo.getVelY()));
         return wheelVelocities;
     }
 

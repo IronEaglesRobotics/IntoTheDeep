@@ -40,7 +40,6 @@ public class TeleOpMain extends OpMode {
         robot.getIntake().setColor(controller1);
 
         robot.getIntake().control_beatbar(controller2);
-        robot.getIntake().toggle_beatbar(controller1);
         try {
             robot.getIntake().setEject(controller2);
             robot.getIntake().intake_up(controller1);

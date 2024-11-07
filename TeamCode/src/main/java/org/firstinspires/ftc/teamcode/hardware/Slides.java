@@ -6,7 +6,6 @@ import static org.firstinspires.ftc.teamcode.lib.Config.SLIDES_FRONT;
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 @Config
@@ -29,10 +28,10 @@ public class Slides {
     public int targetMax = 60000;
 
     public int down = 2000;
-    public int wall = 2500;
-    public int postclip = 7500;
-    public int preclip = 10000;
-    public int tier1 = 20000;
+    public int wall = 2000;
+    public int postclip = 28500;
+    public int preclip = 35000;
+    public int init = 3000;
     public int tier2 = 35000;
     public int tier3 = 50000;
     public int tier4 = 60000;
@@ -41,7 +40,7 @@ public class Slides {
 
     public int manualSpeed = 20;
 
-    public enum Position { DOWN, WALL, PRECLIP, POSTCLIP, TIER1, TIER2, TIER3,TIER4 }
+    public enum Position { DOWN, WALL, PRECLIP, POSTCLIP, INIT, TIER2, TIER3,TIER4 }
 
     public Slides(HardwareMap hardwareMap) {
         slide = hardwareMap.get(DcMotor.class, SLIDES_FRONT);
@@ -67,7 +66,7 @@ public class Slides {
             case WALL: value = wall; break;
             case PRECLIP: value = preclip; break;
             case POSTCLIP: value = postclip; break;
-            case TIER1: value = tier1; break;
+            case INIT: value = init; break;
             case TIER2: value = tier2; break;
             case TIER3: value = tier3; break;
             case TIER4: value = tier4; break;

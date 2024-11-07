@@ -20,8 +20,9 @@ public class clip_auto extends LinearOpMode {
 
     Pose2d start = new Pose2d(0,0,0);
     Pose2d clip = new Pose2d(0,27,0);
-    Pose2d reset = new Pose2d(24,24,Math.toRadians(180));
+    Pose2d reset = new Pose2d(24,24,Math.toRadians(225));
     Pose2d change = new Pose2d(10,0,0);
+    Pose2d drop = new Pose2d(24,12,Math.toRadians(-90));
     Pose2d grab = new Pose2d(24,5,Math.toRadians(180));
 
 
@@ -29,6 +30,10 @@ public class clip_auto extends LinearOpMode {
         traj1 = drive.trajectoryBuilder(start)
                 .lineToSplineHeading(clip)
                 .build();
+        bot.getBlockarm().set_grab(block_arm.Position.init);
+        wait(500);
+        bot.getBlockarm().toggle_claw();
+        wait(20);
         bot.getBlockarm().set_grab(block_arm.Position.preclip);
         drive.followTrajectory(traj1);
         bot.getBlockarm().set_grab(block_arm.Position.postclip);
@@ -40,9 +45,17 @@ public class clip_auto extends LinearOpMode {
     protected void push(double cur_time){
         traj2 = drive.trajectoryBuilder(isFirst ? traj1.end() : traj2.end()) //makes sure it has right start pos
                 .lineToSplineHeading(reset)
-                .back(24)
-                .strafeLeft(10)
-                .forward(36)
+                .addDisplacementMarker(bot.getIntake()::beatbar_on)
+                .forward(5)
+                .lineToSplineHeading(drop)
+                .addDisplacementMarker(() -> {
+                    try {
+                        bot.getIntake().eject();
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                })
+                .addDisplacementMarker(bot.getIntake()::beatbar_off)
                 .build();
         drive.followTrajectory(traj2);
         reset.plus(change);

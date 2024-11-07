@@ -48,7 +48,7 @@ public class basket_auto extends LinearOpMode {
                 .lineToSplineHeading(drop)
                 .build();
         drive.followTrajectory(traj2);
-        //bot.getIntake().toggle_beatbar();
+        //bot.getIntake().beatbar();
         bot.getIntake().intake_up();
         bot.getBlockarm().set_grab(block_arm.Position.pickup);
         bot.getBlockarm().toggle_claw();
@@ -67,7 +67,7 @@ public class basket_auto extends LinearOpMode {
                 .lineToSplineHeading(drop)
                 .build();
         drive.followTrajectory(traj2);
-        //bot.getIntake().toggle_beatbar();
+        //bot.getIntake().beatbar();
         bot.getIntake().intake_up();
         bot.getBlockarm().set_grab(block_arm.Position.pickup);
         bot.getBlockarm().toggle_claw();

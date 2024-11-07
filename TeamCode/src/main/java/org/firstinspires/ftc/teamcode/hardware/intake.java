@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
-import static org.firstinspires.ftc.teamcode.lib.Config.BEATBAR_CHANGE;
 import static org.firstinspires.ftc.teamcode.lib.Config.BEAT_BAR;
 import static org.firstinspires.ftc.teamcode.lib.Config.BIND_COLOR_BLUE;
 import static org.firstinspires.ftc.teamcode.lib.Config.BIND_COLOR_RED;
@@ -36,7 +35,7 @@ public class intake {
     ColorSensor c_sensor;
     double eject = eject_rot_out;
     double target_pos = 0;
-    double rot1 = lower_rot_in;
+    public static double rot1 = .58;
     color c_input = color.yellow;
     private AnalogInput beat_bar_pos;
     public enum color { red,blue,yellow}
@@ -73,21 +72,17 @@ public class intake {
     public void control_beatbar(GamepadEx gamepad){
         Beat_bar.setPower(gamepad.getRightX());
     }
-    public void toggle_beatbar(){
-        target_pos += BEATBAR_CHANGE;
+    public void beatbar_on(){
+        Beat_bar.setPower(1);
     }
-    public void toggle_beatbar(GamepadEx gamepadEx){
-        if (gamepadEx.wasJustReleased(BIND_INTAKE_PICKUP)){
-            toggle_beatbar();
-        }
+    public void beatbar_off(){
+        Beat_bar.setPower(0);
     }
     public void intake_up() throws InterruptedException {
         rot1 = lower_rot_in;
         update_servo();
         sleep(1000);
         rot1 = .58;
-       // this.armTarget = .8;
-       // this.armPDcontroller.setSetPoint(this.armTarget);
     }
     public String getstring(){
         return armTarget + " , " + Rot1.getPosition() + " , " + armPDcontroller.calculate(Rot1.getPosition());
@@ -100,9 +95,7 @@ public class intake {
         rot1 = lower_rot_out;
         update_servo();
         sleep(500);
-        rot1 = .2;
-        //this.armTarget = .2;
-        //this.armPDcontroller.setSetPoint(this.armTarget);
+        rot1 = 0.12;
     }
     public void intake_lower(GamepadEx gamepadEx) throws InterruptedException {
         if (gamepadEx.wasJustReleased(BIND_INTAKE_LOWER)) intake_lower();
@@ -128,7 +121,7 @@ public class intake {
         Rot1.setPosition(rot1);
         Rot2.setPosition(rot1);
         Eject.setPosition(eject);
-        if (beat_bar_pos.getVoltage() != target_pos) Beat_bar.setPower(-1);
+       /*if (beat_bar_pos.getVoltage() != target_pos) Beat_bar.setPower(-1);
         armPDcontroller.setSetPoint(armTarget);
         armPDcontroller.setTolerance(TOL);
         armPDcontroller.setP(KP);
@@ -141,7 +134,7 @@ public class intake {
             }
             Rot1.setPosition(Rot1.getPosition() + delta);
             Rot2.setPosition(Rot1.getPosition() + delta);
-        }
+        }*/
     }
     public void update_servo(GamepadEx gamepadEx){
         if (gamepadEx.wasJustReleased(GamepadKeys.Button.RIGHT_BUMPER)) update_servo();

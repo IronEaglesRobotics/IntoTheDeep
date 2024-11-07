@@ -35,7 +35,7 @@ public class block_arm {
     double claw_rot = claw_rot_flat;
     double main_rot = main_rot_out;
     public Slides slides;
-    public enum Position {pickup,score,wall, preclip,postclip}
+    public enum Position {pickup,score,wall, preclip,postclip, init}
 
     public block_arm Init(HardwareMap HardwareMap){
         Claw = HardwareMap.get(Servo.class,BLOCK_CLAW);
@@ -99,6 +99,13 @@ public class block_arm {
             slides.setTarget(Slides.Position.POSTCLIP);
             main_rot = main_rot_out;
             claw_rot = claw_rot_flat;
+        } else if (pos == Position.init){
+            slides.setTarget(Slides.Position.INIT);
+            main_rot = .8;
+            claw_rot = claw_rot_flat;
+            if (!claw_open){
+                toggle_claw();
+            }
         }
         update_claws();
     }
