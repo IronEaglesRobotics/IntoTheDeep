@@ -78,24 +78,28 @@ public class Robot {
     public static class Lift {
         private DcMotor liftRight;
         private DcMotor liftLeft;
-        double ticks = 384.5;
-        double newTarget;
+       // double ticks = 384.5;
+       // double newTarget;
 
         public Lift(HardwareMap hardwareMap) {
             liftRight = hardwareMap.get(DcMotor.class, "liftR");
             liftRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             liftRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            liftRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             liftRight.setDirection(DcMotorSimple.Direction.FORWARD);
 
             liftLeft = hardwareMap.get(DcMotor.class, "liftL");
             liftLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             liftLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            liftLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             liftLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+
         }
 
         public void setTargetPosition(int i) {
             this.liftRight.setTargetPosition(i);
             this.liftLeft.setTargetPosition(i);
+
         }
 
         public void setPower(double v) {
@@ -103,10 +107,6 @@ public class Robot {
             this.liftLeft.setPower(v);
         }
 
-        public void setMode(DcMotor.RunMode runMode) {
-            this.liftRight.setMode(runMode);
-            this.liftLeft.setMode(runMode);
-        }
         //public void encoder(int turn){
          //   Lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
          //   newTarget = ticks/turn;
