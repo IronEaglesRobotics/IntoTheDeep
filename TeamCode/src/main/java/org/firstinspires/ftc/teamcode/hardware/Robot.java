@@ -65,7 +65,8 @@ public class Robot {
     @Config
     public static class Claw {
         //Variables
-        public static double OPEN = .8;
+        public static double OPEN = 1;
+        public static double OPENSMALL = .8;
         public static double CLOSE = .57;
         //Servo
         public ServoImplEx claw;
@@ -73,7 +74,6 @@ public class Robot {
         //init
         public Claw init(HardwareMap hardwareMap) {
             this.claw = hardwareMap.get(ServoImplEx.class, "claw");
-            this.claw.setPosition(CLOSE);
             return this;
         }
 
@@ -81,6 +81,11 @@ public class Robot {
         public void open() {
             claw.setPosition(OPEN);
         }
+
+        public void openSmall() {
+            claw.setPosition(OPENSMALL);
+        }
+
 
         public void close() {
             claw.setPosition(CLOSE);
@@ -248,7 +253,7 @@ public class Robot {
         public DcMotorEx slidesR;
         //Variables
 //        public static int SLIDESPOWER = 1;
-        public static int SLIDEUP = 900;
+        public static int SLIDEUP = 860;
         public static int SLIDEHSPEC = 450;
 //        public static int SLIDELSPEC = 300;
         public static int SLIDELBUCKET = 350;
@@ -336,6 +341,8 @@ public class Robot {
         //Variables
         public static double retract = .52;
         public static double extend = .25;
+        public static double mini = .425;
+
 
         public Extendo init(HardwareMap hardwareMap) {
             this.extendoL = hardwareMap.get(ServoImplEx.class, "extendoL");
@@ -351,11 +358,15 @@ public class Robot {
             extendoR.setPosition(extend);
         }
 
+        public void mini() {
+            extendoL.setPosition(mini);
+            extendoR.setPosition(mini);
+        }
+
         public void retract() {
             extendoR.setPosition(retract);
             extendoL.setPosition(retract);
         }
-
     }
 
     @Config
@@ -488,7 +499,7 @@ public class Robot {
                 //Idle Actions
                 slides.slideDown();
                 arm.intake();
-                claw.open();
+                claw.openSmall();
                 wrist.intake();
 
                 //switch states
@@ -534,7 +545,7 @@ public class Robot {
                         break;
                     case 2:
                         if (L1) { //open claw if open button pressed
-                            claw.open();
+                            claw.openSmall();
                             bucketStep++;
                         } else if (Y) {
                             bucketH = true;
@@ -564,14 +575,14 @@ public class Robot {
                         if (runtime > outtakeDelay) {
                             arm.intake();
                             wrist.intake();
-                            outtakeDelay = runtime + .4;
+                            outtakeDelay = runtime + .5;
                             bucketStep++;
                         }
                         break;
                     case 2:
                         if (runtime > outtakeDelay) {
                             slides.slideDown();
-                            claw.open();
+                            claw.openSmall();
                             scoringState = scoringStates.IDLE;
                         }
                         break;
@@ -595,10 +606,8 @@ public class Robot {
                         }
                         break;
                     case 2:
-                        if (runtime > outtakeDelay && L1) { //open claw if open button pressed
+                        if (runtime > outtakeDelay && L1 || auto) { //open claw if open button pressed
                             claw.open();
-                            specStep++;
-                        } else if (auto){
                             specStep++;
                         }
                         break;
@@ -606,15 +615,16 @@ public class Robot {
                         if (L2) {
                             scoringState = scoringStates.SPECIMENR;
                             specStep = 0;
-                        } else if (D1 || auto) {
+                        } else if (D1 || AUTO) {
                             outtakeDelay = runtime + .4;
-                            claw.passiveclose();
+                            claw.close();
                             specStep++;
                         }
                         break;
                     case 4:
                         if (runtime > outtakeDelay) {
                             slides.slidesTo(Slides.SLIDEHSPEC);
+                            claw.passiveclose();
                             outtakeDelay = runtime + .3;
                             specStep++;
                         }
@@ -658,7 +668,7 @@ public class Robot {
                         if (runtime > outtakeDelay) {
                             arm.intake();
                             wrist.intake();
-                            claw.passiveclose();
+                            claw.close();
                             outtakeDelay = runtime + .5;
                             specStep++;
                         }
@@ -666,7 +676,7 @@ public class Robot {
                     case 2:
                         if (runtime > outtakeDelay) {
                             slides.slideDown();
-                            claw.open();
+                            claw.openSmall();
                             scoringState = scoringStates.IDLE;
                             specStep = 0;
                         }
@@ -679,6 +689,9 @@ public class Robot {
     }
 
     //Intake Macro
+    private boolean mini;
+
+
     public intakeStates intakeState = intakeStates.IDLE;
 
     public enum intakeStates {
@@ -686,6 +699,7 @@ public class Robot {
     }
 
     public void intakeMacro(GamepadEx controller1, double runtime, boolean auto) {
+
         switch (intakeState) {
             case IDLE:
                 //Actions
@@ -694,22 +708,42 @@ public class Robot {
                 //Switch states
                 if (controller1.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > .3) {
                     intakeState = intakeStates.EXTENDED;
+                    mini = false;
                     intakeDelay = runtime + 1;
+                } else if (controller1.wasJustPressed(GamepadKeys.Button.B)) {
+                    intakeState = intakeStates.EXTENDED;
+                    intakeDelay = runtime + 1;
+                    mini = true;
                 }
                 break;
             case EXTENDED:
                 //Actions
-                extendo.extend();
+                if(mini){
+                    extendo.mini();
+                } else {
+                    extendo.extend();
+                }
                 //Switch States
-                if ((controller1.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > .3 && runtime > intakeDelay ) || auto) {
+                if (((controller1.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > .3 || controller1.wasJustPressed(GamepadKeys.Button.B)) && runtime > intakeDelay ) || auto) {
                     intakeState = intakeStates.INTAKING;
+                    intakeDelay = runtime + .25;
                 }
                 break;
             case INTAKING:
                 //Actions
                 intake.down();
-                intake.intake();
+                if (runtime>intakeDelay) {
+                    intake.intake();
+                }
+
+                if (controller1.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > .3) {
+                    extendo.extend();
+                } else if (controller1.wasJustPressed(GamepadKeys.Button.B)) {
+                    extendo.mini();
+                }
+
                 //Switch States
+
                 if (intake.getAlpha() > Intake.ALPHA) {
                     intakeState = intakeStates.DETECT;
                 } else if (controller1.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
