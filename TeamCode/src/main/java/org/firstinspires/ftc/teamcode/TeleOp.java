@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -7,10 +9,13 @@ import com.qualcomm.robotcore.hardware.Servo;
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp
 public class TeleOp extends OpMode {
     Robot robot;
+    GamepadEx controller1;
+    boolean STATE = true;
 
     @Override
     public void init() {
         this.robot = new Robot(this.hardwareMap);
+        controller1=new GamepadEx(gamepad2);
     }
 
 
@@ -18,11 +23,11 @@ public class TeleOp extends OpMode {
 
 
     public void loop() {
-//        robot.drive.handleInput(this.gamepad1, this.gamepad2);
+        controller1.readButtons();
 
         if (gamepad1.y) {
             //extendo out
-            robot.extendo.moveTo(0.4);
+            robot.extendo.moveTo( 0.4);
             robot.tiltRight.setPosition(0); //0.5
             robot.tiltLeft.setPosition(0);
 
@@ -68,5 +73,31 @@ public class TeleOp extends OpMode {
         if(gamepad1.dpad_left){
             robot.elbow.setPosition(1);
         }
+        if (controller1.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER) && STATE) {
+            robot.claw.setPosition(.2);
+            STATE = false;
+        } else if (controller1.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
+            robot.claw.setPosition(0);
+            STATE = true;
+        }
+        if(gamepad2.y){
+            robot.lift.setTargetPosition(105;
+            robot.lift.setPower(.5);
+        }
+        if(gamepad2.a){
+            robot.lift.setTargetPosition(0);
+            robot.lift.setPower(.5);
+        }
+        if(gamepad2.b) {
+            robot.arm.setPosition(1);
+            robot.elbow.setPosition(1);
+            robot.wrist.setPosition(0);
+        }
+        if(gamepad2.x){
+            robot.claw.setPosition(0);
+            robot.elbow.setPosition(0);
+            robot.wrist.setPosition(0);
+        }
+
     }
 }

@@ -85,7 +85,7 @@ public class Robot {
             liftRight = hardwareMap.get(DcMotor.class, "liftR");
             liftRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             liftRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            liftRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+           // liftRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             liftRight.setDirection(DcMotorSimple.Direction.FORWARD);
 
             liftLeft = hardwareMap.get(DcMotor.class, "liftL");
@@ -101,6 +101,7 @@ public class Robot {
             liftRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             this.liftLeft.setTargetPosition(i);
             liftLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
         }
 
         public void setPower(double v) {
