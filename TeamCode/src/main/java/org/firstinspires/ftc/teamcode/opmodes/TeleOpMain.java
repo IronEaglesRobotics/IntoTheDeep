@@ -1,21 +1,25 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
+import org.firstinspires.ftc.teamcode.hardware.GoBildaPinpointDriver;
 import org.firstinspires.ftc.teamcode.hardware.Robot;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
 @TeleOp(name="Basic: Iterative OpMode", group="Iterative OpMode")
 public class TeleOpMain extends OpMode {
     private Robot robot;
     private GamepadEx controller1;
     private GamepadEx controller2;
+    private GoBildaPinpointDriver odo;
 
     @Override
     public void init() {
         controller1 = new GamepadEx(gamepad1);
         controller2 = new GamepadEx(gamepad2);
         robot = new Robot().init(hardwareMap);
+        odo = hardwareMap.get(GoBildaPinpointDriver.class,"odo");
     }
 
     @Override
@@ -52,6 +56,7 @@ public class TeleOpMain extends OpMode {
         telemetry.addData("pos",robot.getIntake().getBeatBarPos());
         telemetry.addData("is_lower",robot.getIntake().getstring());
         telemetry.addData("slides",robot.getBlockarm().slides.getTarget());
+        telemetry.addData("pos",odo.getVelX());
         telemetry.update();
     }
 }

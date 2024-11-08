@@ -63,6 +63,8 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
         this.drive = drive;
 
         odo = hardwareMap.get(GoBildaPinpointDriver.class,"odo");
+        odo.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_SWINGARM_POD);
+        odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.FORWARD);
 
         // TODO: reverse any encoders using Encoder.setDirection(Encoder.Direction.REVERSE)
 //        parallelEncoder.setDirection(Encoder.Direction.REVERSE);
@@ -88,6 +90,7 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
     @NonNull
     @Override
     public List<Double> getWheelPositions() {
+        odo.update();
         return Arrays.asList(
                 mm_to_in(odo.getPosX()),
                 mm_to_in(odo.getPosY())
@@ -100,6 +103,7 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
         // TODO: If your encoder velocity can exceed 32767 counts / second (such as the REV Through Bore and other
         //  competing magnetic encoders), change Encoder.getRawVelocity() to Encoder.getCorrectedVelocity() to enable a
         //  compensation method
+        odo.update();
 
         return Arrays.asList(
                 mm_to_in(odo.getVelX()),

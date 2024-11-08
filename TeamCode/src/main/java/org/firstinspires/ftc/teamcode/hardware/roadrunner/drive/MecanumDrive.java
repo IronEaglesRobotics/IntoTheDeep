@@ -124,6 +124,9 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
         this.leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         this.rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        odo = hardwareMap.get(GoBildaPinpointDriver.class,"odo");
+        odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.FORWARD);
+
         motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
 
         for (DcMotorEx motor : motors) {
@@ -289,6 +292,7 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
     @Override
     public List<Double> getWheelPositions() {
         lastEncPositions.clear();
+        odo.update();
 
         List<Double> wheelPositions = new ArrayList<>();
             int position = odo.getEncoderX();
@@ -302,6 +306,7 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
     @Override
     public List<Double> getWheelVelocities() {
         lastEncVels.clear();
+        odo.update();
 
         List<Double> wheelVelocities = new ArrayList<>();
             int vel = (int) odo.getVelX();
