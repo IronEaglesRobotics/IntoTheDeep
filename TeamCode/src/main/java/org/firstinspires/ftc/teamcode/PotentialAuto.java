@@ -27,23 +27,69 @@ public class PotentialAuto extends LinearOpMode {
         leftBackDrive  = hardwareMap.get(DcMotor.class, "lb");
         rightFrontDrive = hardwareMap.get(DcMotor.class, "rf");
         rightBackDrive = hardwareMap.get(DcMotor.class, "rb");
-        leftHand = hardwareMap.servo.get("aS");
-        leftHand.scaleRange(0,2);
-        extendo = hardwareMap.servo.get("eX");
-        arm1 = hardwareMap.servo.get("a1");
-        arm2 = hardwareMap.servo.get("a2");
-        arm3 = hardwareMap.servo.get("a3");
+        //leftHand = hardwareMap.servo.get("aS");
+        //leftHand.scaleRange(0,2);
+        //extendo = hardwareMap.servo.get("eX");
+        //arm1 = hardwareMap.servo.get("a1");
+        //arm2 = hardwareMap.servo.get("a2");
+        //arm3 = hardwareMap.servo.get("a3");
 
         waitForStart();
-        if (opModeIsActive()) {
 
-            while (opModeIsActive()) {
+            leftFrontDrive.setPower(.6);
+            leftBackDrive.setPower(.6);
+            rightFrontDrive.setPower(.5);
+            rightBackDrive.setPower(.5);
 
+            sleep(2500);
 
+            leftFrontDrive.setPower(0);
+            leftBackDrive.setPower(0);
+            rightFrontDrive.setPower(0);
+            rightBackDrive.setPower(0);
 
+            leftFrontDrive.setPower(.75);
+            leftBackDrive.setPower(-.75);
+            rightFrontDrive.setPower(-.75);
+            rightBackDrive.setPower(.75);
 
-            }
-        }
+            sleep(500);
+
+            leftFrontDrive.setPower(0);
+            leftBackDrive.setPower(0);
+            rightFrontDrive.setPower(0);
+            rightBackDrive.setPower(0);
+
+            leftFrontDrive.setPower(-.65);
+            leftBackDrive.setPower(-.65);
+            rightFrontDrive.setPower(-.5);
+            rightBackDrive.setPower(-.5);
+
+            sleep(2300);
+
+            leftFrontDrive.setPower(0);
+            leftBackDrive.setPower(0);
+            rightFrontDrive.setPower(0);
+            rightBackDrive.setPower(0);
+
+        leftFrontDrive.setPower(.5);
+        leftBackDrive.setPower(.5);
+        rightFrontDrive.setPower(.5);
+        rightBackDrive.setPower(.5);
+
+        sleep(250);
+
+        leftFrontDrive.setPower(0);
+        leftBackDrive.setPower(0);
+        rightFrontDrive.setPower(0);
+        rightBackDrive.setPower(0);
+
+            /*leftFrontDrive.setPower(.5);
+            leftBackDrive.setPower(.5);
+            rightFrontDrive.setPower(.5);
+            rightBackDrive.setPower(.5);
+            */
+            //sleep(250)
     }
 
 }
