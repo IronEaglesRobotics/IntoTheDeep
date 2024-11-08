@@ -26,7 +26,7 @@ public class Robot {
         this.intake = new Intake(hardwareMap);
         this.tiltRight = new TiltRight(hardwareMap);
         this.tiltLeft = new TiltLeft(hardwareMap);
-        this.lift = new Lift(hardwareMap);
+       // this.lift = new Lift(hardwareMap);
         this.lift = new Lift(hardwareMap);
         this.extendo = new Extendo(hardwareMap);
         this.topExtendo = new TopExtendo(hardwareMap);
@@ -70,9 +70,8 @@ public class Robot {
         }
         public TopExtendo(HardwareMap hardwareMap) {
             topExtendoRight = hardwareMap.servo.get("TeR");
-            topExtendoLeft = hardwareMap.servo.get("TeR");
+            topExtendoLeft = hardwareMap.servo.get("TeL");
         }
-
     }
 
     public static class Lift {
@@ -83,14 +82,14 @@ public class Robot {
 
         public Lift(HardwareMap hardwareMap) {
             liftRight = hardwareMap.get(DcMotor.class, "liftR");
-            liftRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             liftRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-           // liftRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            liftRight.setDirection(DcMotorSimple.Direction.FORWARD);
+            liftRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            liftRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
             liftLeft = hardwareMap.get(DcMotor.class, "liftL");
-            liftLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             liftLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            liftLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
 
             liftLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
@@ -98,15 +97,17 @@ public class Robot {
 
         public void setTargetPosition(int i) {
             this.liftRight.setTargetPosition(i);
-            liftRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             this.liftLeft.setTargetPosition(i);
-            liftLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         }
 
         public void setPower(double v) {
             this.liftRight.setPower(v);
             this.liftLeft.setPower(v);
+        }
+        public void setMode(DcMotor.RunMode mode){
+            this.liftRight.setMode(mode);
+            this.liftLeft.setMode(mode);
         }
 
     }
@@ -145,13 +146,14 @@ public class Robot {
     public static class Arm {
         private Servo leftArm;
         private Servo rightArm;
+
         public void setPosition(double position){
             this.leftArm.setPosition(position);
-            this.rightArm.setPosition(position);
+           // this.rightArm.setPosition(position);
         }
         public Arm(HardwareMap hardwareMap){
             leftArm = hardwareMap.servo.get("j3L");
-            rightArm = hardwareMap.servo.get("j3R");
+          //  rightArm = hardwareMap.servo.get("j3R");
             leftArm.setDirection(Servo.Direction.REVERSE);
         }
     }
@@ -176,6 +178,7 @@ public class Robot {
         }
         public TiltRight(HardwareMap hardwareMap) {
             tiltRight = hardwareMap.servo.get("tR");
+
         }
 
     }
@@ -203,25 +206,23 @@ public class Robot {
             FR = hardwareMap.dcMotor.get("frontRight");
             BR = hardwareMap.dcMotor.get("backRight");
 
-            FL.setDirection(DcMotor.Direction.REVERSE);
-            BL.setDirection(DcMotor.Direction.REVERSE);
-            FR.setDirection(DcMotor.Direction.FORWARD);
-            BR.setDirection(DcMotor.Direction.FORWARD);
+            FR.setDirection(DcMotorSimple.Direction.REVERSE);
+            BR.setDirection(DcMotorSimple.Direction.REVERSE);
         }
 
-        public void handleInput(Gamepad gamepad1, Gamepad gamepad2) {
+        public void handleInput(Gamepad gamepad1) {
             //defines inputs
-            double lsy = -gamepad1.left_stick_y;
+            double y = gamepad1.left_stick_y;
             double x = gamepad1.left_stick_x;
             double rx = gamepad1.right_stick_x;
 
-            double denominator = Math.max(Math.abs(lsy)+ Math.abs(x) + Math.abs(rx), 1);
+            double denominator = Math.max(Math.abs(y)+ Math.abs(x) + Math.abs(rx), 1);
 
             //sets motor power based on input
-            double FLPower = (lsy + x + rx / denominator);
-            double BLPower = (lsy - x + rx / denominator);
-            double FRPower = (lsy - x - rx / denominator);
-            double BRPower = (lsy + x - rx / denominator);
+            double FLPower = (y - x + rx / denominator);
+            double BLPower = (y - x + rx / denominator);
+            double FRPower = (y - x - rx / denominator);
+            double BRPower = (y - x - rx / denominator);
 
             FL.setPower(FLPower);
             BL.setPower(BLPower);
@@ -229,6 +230,49 @@ public class Robot {
             BR.setPower(BRPower);
 
             }
+
+
         }
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
