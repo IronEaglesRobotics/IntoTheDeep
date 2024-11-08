@@ -61,8 +61,8 @@ import java.util.List;
  */
 @Config
 public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive {
-    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(5, 0, 4);
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(10, 0, 2.5);
+    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(0, 0, 0);
+    public static PIDCoefficients HEADING_PID = new PIDCoefficients(0, 0, 0);
 
     public static double LATERAL_MULTIPLIER = 1;
 
@@ -125,7 +125,7 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
         this.rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         odo = hardwareMap.get(GoBildaPinpointDriver.class,"odo");
-        odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.FORWARD);
+        odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.REVERSED, GoBildaPinpointDriver.EncoderDirection.REVERSED);
 
         motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
 
@@ -298,6 +298,7 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
             int position = odo.getEncoderX();
             int position2 = odo.getEncoderY();
             lastEncPositions.add(position);
+            lastEncPositions.add(position2);
             wheelPositions.add(mm_to_in(odo.getPosX()));
             wheelPositions.add(mm_to_in(odo.getPosY()));
         return wheelPositions;
@@ -310,7 +311,7 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
 
         List<Double> wheelVelocities = new ArrayList<>();
             int vel = (int) odo.getVelX();
-            int vel2 = (int) odo.getVelX();
+            int vel2 = (int) odo.getVelY();
             lastEncVels.add(vel);
             lastEncVels.add(vel2);
             wheelVelocities.add(mm_to_in(odo.getVelX()));
@@ -328,11 +329,13 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
 
     @Override
     public double getRawExternalHeading() {
+        odo.update();
         return odo.getHeading();
     }
 
     @Override
     public Double getExternalHeadingVelocity() {
+        odo.update();
         return odo.getHeadingVelocity();
     }
 

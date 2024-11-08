@@ -76,11 +76,13 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
 
     @Override
     public double getHeading() {
+        odo.update();
         return odo.getHeading();
     }
 
     @Override
     public Double getHeadingVelocity() {
+        odo.update();
         return odo.getHeadingVelocity();
     }
     public double mm_to_in(double mm){
