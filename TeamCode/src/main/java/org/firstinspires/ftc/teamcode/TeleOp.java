@@ -1,85 +1,72 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOp", group = "Dev")
-public class TeleOp extends LinearOpMode {
-
-    //define DC Motors
-    public DcMotor FL;
-    public DcMotor BL;
-    public DcMotor FR;
-    public DcMotor BR;
-
-    //define Color Sensor
-    public ColorSensor yeah;
-
-    //Mechanicum Drive Function
-    public void updateMove() {
-        //defines inputs
-        double y = -gamepad1.left_stick_y;
-        double x = gamepad1.left_stick_x;
-        double rx = gamepad1.right_stick_x;
-
-        double denominator = Math.max(Math.abs(y) + Math.abs(x) +Math.abs(rx), 1);
-
-        //sets motor power based on input
-        double FLPower = ((y + x + rx) / denominator);
-        double BLPower = ((y - x + rx) / denominator);
-        double FRPower = ((y - x - rx) / denominator);
-        double BRPower = ((y + x - rx) / denominator);
-
-        FL.setPower(FLPower);
-        BL.setPower(BLPower);
-        FR.setPower(FRPower);
-        BR.setPower(BRPower);
-    }
-
-    //Color Sensor Function
-    public void colorGet() {
-
-        telemetry.addData("Status:", "Hi, this is functioning");
-        telemetry.update();
-        waitForStart();
-        while (opModeIsActive()) {
-            int b = yeah.blue();
-            int r = yeah.red();
-            int g = yeah.green();
-            telemetry.addData("Blue:", b);
-            telemetry.addData("\nRed:", r);
-            telemetry.addData("\nGreen:", g);
-            telemetry.update();
-        }
-    }
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp
+public class TeleOp extends OpMode {
+    Robot robot;
 
     @Override
-    public void runOpMode() throws InterruptedException {
+    public void init() {
+        this.robot = new Robot(this.hardwareMap);
+    }
 
-        //hardware mapping
-        //dcMotor
-        FL = hardwareMap.dcMotor.get("frontLeft");
-        BL = hardwareMap.dcMotor.get("backLeft");
-        FR = hardwareMap.dcMotor.get("frontRight");
-        BR = hardwareMap.dcMotor.get("backRight");
-        //colorSensor
-        yeah = hardwareMap.get(ColorSensor.class, "test");
 
-        //direction setting
-        FL.setDirection(DcMotor.Direction.REVERSE);
-        BL.setDirection(DcMotor.Direction.REVERSE);
-        FR.setDirection(DcMotor.Direction.FORWARD);
-        BR.setDirection(DcMotor.Direction.FORWARD);
+    @Override
 
-        //runs when start
-        waitForStart();
 
-        //running loop
-        while (opModeIsActive()) {
-            updateMove();
-            colorGet();
+    public void loop() {
+//        robot.drive.handleInput(this.gamepad1, this.gamepad2);
+
+        if (gamepad1.y) {
+            //extendo out
+            robot.extendo.moveTo(0.4);
+            robot.tiltRight.setPosition(0); //0.5
+            robot.tiltLeft.setPosition(0);
+
         }
 
+        if (gamepad1.a) {
+            //extendo in & intake tilt up
+            robot.tiltRight.setPosition(0); //0
+            robot.tiltLeft.setPosition(0);
+            robot.extendo.moveTo(0);
+        }
+
+        if(gamepad1.left_trigger > 0) {
+            //intake tilt down & spin
+            robot.tiltRight.setPosition(0.18); //0
+            robot.tiltLeft.setPosition(0.18);
+            robot.intake.setSpin(1);
+        }
+
+        else {
+            //when doing nothing intake doesn't spin & tilts up
+            robot.intake.setSpin(0);
+            robot.tiltRight.setPosition(0);
+            robot.tiltLeft.setPosition(0); //0.5
+        }
+
+        if(gamepad1.b){
+            robot.lift.setTargetPosition(50);
+            robot.lift.setPower(0.1);
+
+        }
+
+        if(gamepad1.dpad_up){
+            robot.arm.setPosition(1);
+        }
+
+        if(gamepad1.dpad_down){
+            robot.elbow.setPosition(0);
+        }
+        if(gamepad1.dpad_right){
+            robot.wrist.setPosition(0);
+        }
+        if(gamepad1.dpad_left){
+            robot.elbow.setPosition(1);
+        }
     }
 }
