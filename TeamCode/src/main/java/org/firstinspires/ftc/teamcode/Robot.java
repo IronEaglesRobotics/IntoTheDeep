@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 public class Robot {
+
     Drive drive;
     Extendo extendo;
     TopExtendo topExtendo;
@@ -98,13 +99,14 @@ public class Robot {
         public void setTargetPosition(int i) {
             this.liftRight.setTargetPosition(i);
             this.liftLeft.setTargetPosition(i);
+            this.liftRight.setPower(1);
+            this.liftLeft.setPower(1);
 
         }
 
         public void setPower(double v) {
-            this.liftRight.setPower(v);
-            this.liftLeft.setPower(v);
         }
+
         public void setMode(DcMotor.RunMode mode){
             this.liftRight.setMode(mode);
             this.liftLeft.setMode(mode);

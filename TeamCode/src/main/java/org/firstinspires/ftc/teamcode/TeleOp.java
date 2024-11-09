@@ -7,6 +7,8 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
+import java.security.PublicKey;
+
 @Config
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp
 public class TeleOp extends OpMode {
@@ -20,9 +22,24 @@ public class TeleOp extends OpMode {
     //get specimen scoring working
     //auto (only after everything else)
 
+
+    public int intakeSteps = 0;
+    public int scoreSteps = 0;
+//    public double intakeTimer;
+
+
     public static double arm;
     public static double elbow;
     public static double tilt;
+
+    public static double EXTENDO_EXTEND = 0;
+    public static double EXTENDO_RETRACT = .26;
+
+
+
+    public static double TILTUP = .2;
+    public static double TILTDOWN = .395;
+
 
     @Override
     public void init() {
@@ -50,45 +67,51 @@ public class TeleOp extends OpMode {
 
         robot.drive.handleInput(gamepad1);
 
-        if (gamepad1.y) {
-            //extendo out
-            robot.extendo.moveTo( 0);
-            robot.tiltRight.setPosition(0.2); //0.5
-            robot.tiltLeft.setPosition(0.2);
+        intakeMacro(controller1);
 
-        } else if (gamepad1.a) {
-            //extendo in & intake tilt up
-            robot.tiltRight.setPosition(0.2); //0
-            robot.tiltLeft.setPosition(0.2);
-            robot.extendo.moveTo(0.26);
-        } else if(gamepad1.left_trigger > 0) {
-            //intake tilt down & spin
-            robot.tiltRight.setPosition(.395); //0
-            robot.tiltLeft.setPosition(.395);
-            robot.intake.setSpin(-1);
-        } else if(gamepad1.right_trigger > 0) {
-            //intake tilt down & spinout
-            robot.tiltRight.setPosition(.395); //0
-            robot.tiltLeft.setPosition(.395);
-            robot.intake.setSpin(1);
-        }  else {
-            //when doing nothing intake doesn't spin & tilts up
-            robot.tiltRight.setPosition(0.2); //0.5
-            robot.tiltLeft.setPosition(0.2);
-            robot.intake.setSpin(0);
 
-        }
+//        if (gamepad1.y) {
+//            //extendo out
+//            robot.extendo.moveTo( 0);
+//            robot.tiltRight.setPosition(0.2); //0.5
+//            robot.tiltLeft.setPosition(0.2);
+//
+//        } else if (gamepad1.a) {
+//            //extendo in & intake tilt up
+//            robot.tiltRight.setPosition(0.2); //0
+//            robot.tiltLeft.setPosition(0.2);
+//            robot.extendo.moveTo(0.26);
+//        } else if(gamepad1.left_trigger > 0) {
+//            //intake tilt down & spin
+//            robot.tiltRight.setPosition(.395); //0
+//            robot.tiltLeft.setPosition(.395);
+//            robot.intake.setSpin(-1);
+//        } else if(gamepad1.right_trigger > 0) {
+//            //intake tilt down & spinout
+//            robot.tiltRight.setPosition(.395); //0
+//            robot.tiltLeft.setPosition(.395);
+//            robot.intake.setSpin(1);
+//        }  else {
+//            //when doing nothing intake doesn't spin & tilts up
+//            robot.tiltRight.setPosition(0.2); //0.5
+//            robot.tiltLeft.setPosition(0.2);
+//            robot.intake.setSpin(0);
+//
+//        }
 
         if(gamepad1.dpad_up){
+            //extend arm
             robot.arm.setPosition(0.9);
             robot.claw.setPosition(0);
 
+            //lift slides
             robot.lift.setTargetPosition(600);
             robot.lift.setMode(RUN_TO_POSITION);
             robot.lift.setPower(0.25);
         }
 
         if(gamepad1.dpad_down){
+            //lowers slides?
             robot.arm.setPosition(0.9);
 
             robot.lift.setTargetPosition(250);
@@ -102,6 +125,7 @@ public class TeleOp extends OpMode {
 
         }
         if(gamepad1.dpad_right){
+            //
             robot.arm.setPosition(0.9);
             robot.elbow.setPosition(0);
             robot.claw.setPosition(0);
@@ -150,5 +174,74 @@ public class TeleOp extends OpMode {
             robot.wrist.setPosition(0);
         }
 
+
     }
+
+    public void intakeMacro(GamepadEx controller1) {
+        switch (intakeSteps){
+            case 1: //Idle state
+                //Actions
+                robot.tiltRight.setPosition(TILTUP); //0.5
+                robot.tiltLeft.setPosition(TILTUP);
+                robot.extendo.moveTo(EXTENDO_RETRACT);
+
+                //switch to extended state
+                if(controller1.wasJustPressed(GamepadKeys.Button.Y)){ //BUTTON
+                    intakeSteps ++;
+                } else if(controller1.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.3){ //BUTTON
+                    robot.intake.setSpin(1);
+                } else {
+                    robot.intake.setSpin(0);
+                }
+                break;
+            case 2: // Extended state
+                //Actions
+                robot.extendo.moveTo(EXTENDO_EXTEND);
+
+                //Switch to intaking state
+                if(controller1.wasJustPressed(GamepadKeys.Button.Y)){ //BUTTON
+                    intakeSteps ++;
+                }
+                break;
+            case 3: //Intaking
+                //actions
+                robot.tiltRight.setPosition(TILTDOWN); //0.5
+                robot.tiltLeft.setPosition(TILTDOWN);
+
+                if(controller1.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.3){ //BUTTON
+                    robot.intake.setSpin(1);
+                } else {
+                    robot.intake.setSpin(-1);
+                }
+
+                if(controller1.wasJustPressed(GamepadKeys.Button.Y)){ //BUTTON
+                    intakeSteps = 0;
+                }
+                break;
+        }
+
+    }
+
+    public void scoreMacro(GamepadEx controller1) {
+        switch (scoreSteps){
+            case 1: //Idle state
+                //Actions
+
+                //put retracted normal positions here
+
+                break;
+            case 2: // Extended state
+                //Actions
+
+                //
+
+                break;
+            case 3: //Intaking
+                //actions
+
+                break;
+        }
+
+    }
+
 }
