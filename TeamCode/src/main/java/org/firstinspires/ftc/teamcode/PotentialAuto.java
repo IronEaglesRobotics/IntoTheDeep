@@ -23,10 +23,10 @@ public class PotentialAuto extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        leftFrontDrive  = hardwareMap.get(DcMotor.class, "lf");
-        leftBackDrive  = hardwareMap.get(DcMotor.class, "lb");
-        rightFrontDrive = hardwareMap.get(DcMotor.class, "rf");
-        rightBackDrive = hardwareMap.get(DcMotor.class, "rb");
+        leftFrontDrive  = hardwareMap.get(DcMotor.class, "frontLeft");
+        leftBackDrive  = hardwareMap.get(DcMotor.class, "backLeft");
+        rightFrontDrive = hardwareMap.get(DcMotor.class, "frontRight");
+        rightBackDrive = hardwareMap.get(DcMotor.class, "backRight");
         //leftHand = hardwareMap.servo.get("aS");
         //leftHand.scaleRange(0,2);
         //extendo = hardwareMap.servo.get("eX");
@@ -36,41 +36,41 @@ public class PotentialAuto extends LinearOpMode {
 
         waitForStart();
 
-            leftFrontDrive.setPower(.6);
-            leftBackDrive.setPower(.6);
-            rightFrontDrive.setPower(.5);
-            rightBackDrive.setPower(.5);
+        leftFrontDrive.setPower(.6);
+        leftBackDrive.setPower(.6);
+        rightFrontDrive.setPower(.5);
+        rightBackDrive.setPower(.5);
 
-            sleep(2500);
+        sleep(2500);
 
-            leftFrontDrive.setPower(0);
-            leftBackDrive.setPower(0);
-            rightFrontDrive.setPower(0);
-            rightBackDrive.setPower(0);
+        leftFrontDrive.setPower(0);
+        leftBackDrive.setPower(0);
+        rightFrontDrive.setPower(0);
+        rightBackDrive.setPower(0);
 
-            leftFrontDrive.setPower(.75);
-            leftBackDrive.setPower(-.75);
-            rightFrontDrive.setPower(-.75);
-            rightBackDrive.setPower(.75);
+        leftFrontDrive.setPower(.75);
+        leftBackDrive.setPower(-.75);
+        rightFrontDrive.setPower(-.75);
+        rightBackDrive.setPower(.75);
 
-            sleep(500);
+        sleep(500);
 
-            leftFrontDrive.setPower(0);
-            leftBackDrive.setPower(0);
-            rightFrontDrive.setPower(0);
-            rightBackDrive.setPower(0);
+        leftFrontDrive.setPower(0);
+        leftBackDrive.setPower(0);
+        rightFrontDrive.setPower(0);
+        rightBackDrive.setPower(0);
 
-            leftFrontDrive.setPower(-.65);
-            leftBackDrive.setPower(-.65);
-            rightFrontDrive.setPower(-.5);
-            rightBackDrive.setPower(-.5);
+        leftFrontDrive.setPower(-.65);
+        leftBackDrive.setPower(-.65);
+        rightFrontDrive.setPower(-.5);
+        rightBackDrive.setPower(-.5);
 
-            sleep(2300);
+        sleep(2300);
 
-            leftFrontDrive.setPower(0);
-            leftBackDrive.setPower(0);
-            rightFrontDrive.setPower(0);
-            rightBackDrive.setPower(0);
+        leftFrontDrive.setPower(0);
+        leftBackDrive.setPower(0);
+        rightFrontDrive.setPower(0);
+        rightBackDrive.setPower(0);
 
         leftFrontDrive.setPower(.5);
         leftBackDrive.setPower(.5);
@@ -89,7 +89,6 @@ public class PotentialAuto extends LinearOpMode {
             rightFrontDrive.setPower(.5);
             rightBackDrive.setPower(.5);
             */
-            //sleep(250)
+        //sleep(250)
     }
-
 }

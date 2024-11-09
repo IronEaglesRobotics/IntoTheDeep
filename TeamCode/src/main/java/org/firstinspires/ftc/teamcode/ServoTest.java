@@ -29,6 +29,11 @@
 
 package org.firstinspires.ftc.teamcode;
 
+
+import android.graphics.Path;
+
+import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -60,32 +65,40 @@ import com.qualcomm.robotcore.util.Range;
 public class ServoTest extends LinearOpMode{
 
     public Servo leftHand;
-    public double OPEN = 2;
+    public double OPEN = .5;
     public double CLOSE =0;
-    public double CLAW_MIN = 0.3;
-    public double CLAW_MAX = 0.5;
+    public boolean STATE = true;
+    GamepadEx controller1;
+
 
     @Override
 public void runOpMode() throws InterruptedException{
         leftHand = hardwareMap.servo.get("aS");
-        leftHand.scaleRange(CLAW_MIN, CLAW_MAX);
-
-        waitForStart();
+//        leftHand.scaleRange(OPEN, CLOSE);
+        controller1=new GamepadEx(gamepad1);
+    waitForStart();
 
         while (opModeIsActive()) {
+            controller1.readButtons();
 
 //            if (gamepad1.
 //                OPEN += .05;
 //            } else if (gamepad1.dpad_down) {
-//                OPEN -= .05;
+//                OPEN -= .05;a
 //            }
 
-            if (gamepad1.right_bumper) {
-                leftHand.setPosition(OPEN);
-            }
-            else {
+            if (controller1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER) && STATE) {
+                leftHand.setPosition(0);
+                STATE = false;
+            } else if (controller1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
                 leftHand.setPosition(CLOSE);
+                STATE = true;
             }
+//
+//            else {
+//                stop();
+//            }
+            telemetry.addData("STATE",STATE);
             telemetry.update();
             telemetry.addData("open",OPEN);
     }
