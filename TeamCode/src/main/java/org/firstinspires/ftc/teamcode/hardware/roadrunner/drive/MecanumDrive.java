@@ -28,6 +28,8 @@ import com.acmerobotics.roadrunner.trajectory.constraints.MinVelocityConstraint;
 import com.acmerobotics.roadrunner.trajectory.constraints.ProfileAccelerationConstraint;
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryAccelerationConstraint;
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
+import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -65,6 +67,8 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
 
     public static double VY_WEIGHT = 1;
     public static double OMEGA_WEIGHT = 1;
+
+    boolean slowmo = false;
 
     private TrajectorySequenceRunner trajectorySequenceRunner;
 
@@ -332,15 +336,23 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
         return new ProfileAccelerationConstraint(maxAccel);
     }
 
-    public void setInput(Gamepad gamepad1) {
-        double speedScale = gamepad1.right_bumper ? .3 : .85;
-        double turnScale = gamepad1.right_bumper ? .3 : .75;
+    public void setInput(GamepadEx controller1) {
+
+        if(controller1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER) && slowmo){
+            slowmo = !slowmo;
+        } else if(controller1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER) && !slowmo){
+            slowmo = !slowmo;
+
+        }
+
+        double speedScale = slowmo ? .3 : 1;
+        double turnScale = slowmo ? .3 : .8;
 
         this.setWeightedDrivePower(
                 new Pose2d(
-                        -gamepad1.left_stick_y * speedScale,
-                        -gamepad1.left_stick_x * speedScale,
-                        -gamepad1.right_stick_x * turnScale
+                        controller1.getLeftY() * speedScale,
+                        -controller1.getLeftX() * speedScale,
+                        -controller1.getRightX() * turnScale
                 ));
     }
 }

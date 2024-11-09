@@ -26,7 +26,7 @@ public class TeleOp extends LinearOpMode {
 
         while (opModeIsActive()){
             //drive
-            robot.getDrive().setInput(gamepad1);
+            robot.getDrive().setInput(controller1);
             robot.getDrive().update();
             controller1.readButtons();
 
@@ -40,13 +40,14 @@ public class TeleOp extends LinearOpMode {
             telemetry.addData("Slide Pos L", (PositionLeft));
             int PositionRight = this.robot.getSlides().slidesR.getCurrentPosition();
             telemetry.addData("Slide Pos R", (PositionRight));
-            telemetry.addData("Claw", this.robot.claw.isPWMEnabled());
-            telemetry.addData("Extended?", EXTENDED);
             telemetry.addData("alpha:", robot.intake.getAlpha());
             telemetry.addData("INTAKEMACRO:", robot.intakeState);
             telemetry.addData("SCORING STATE: ", robot.scoringState);
             telemetry.addData("SpecStates: ", robot.specStep);
-            telemetry.addData("Pos Estimate", (robot.getDrive().getPoseEstimate()));
+            telemetry.addData("R", (robot.getIntake().getR()));
+            telemetry.addData("G", (robot.getIntake().getG()));
+            telemetry.addData("B", (robot.getIntake().getB()));
+
             telemetry.update();
 
             //Intake color    R2

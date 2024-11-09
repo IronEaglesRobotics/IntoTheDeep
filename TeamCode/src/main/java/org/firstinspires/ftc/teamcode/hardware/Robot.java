@@ -67,7 +67,7 @@ public class Robot {
         //Variables
         public static double OPEN = 1;
         public static double OPENSMALL = .8;
-        public static double CLOSE = .57;
+        public static double CLOSE = .63;
         //Servo
         public ServoImplEx claw;
 
@@ -126,9 +126,9 @@ public class Robot {
             this.armR = hardwareMap.get(Servo.class, "armR");
             this.armPDcontroller = new PDController(KP, KD);
 //            this.armL.setDirection(Servo.Direction.REVERSE);
-            this.armL.setPosition(INTAKESPEC);
-            this.armR.setPosition(INTAKESPEC);
-            this.armPDcontroller.setSetPoint(INTAKESPEC);
+//            this.armL.setPosition(INTAKE);
+//            this.armR.setPosition(INTAKE);
+//            this.armPDcontroller.setSetPoint(INTAKE);
             return this;
         }
 
@@ -179,7 +179,7 @@ public class Robot {
     public static class Wrist {
         //variables
         public static double INTAKE = .4;
-        public static double OUTTAKESAMPLE = .52;
+        public static double OUTTAKESAMPLE = .58;
         public static double INTAKESPEC = .33;
         public static double OUTTAKESPEC = .6;
         //PController
@@ -258,7 +258,7 @@ public class Robot {
 //        public static int SLIDELSPEC = 300;
         public static int SLIDELBUCKET = 350;
         public static int SLIDEDOWN = 0;
-        public static int SLIDEREST = 100;
+        public static int SLIDEREST = 110;
         //PID
 //        private static int TARGET = 20;
         public static double KP = 0.0014;
@@ -340,7 +340,7 @@ public class Robot {
 
         //Variables
         public static double retract = .52;
-        public static double extend = .25;
+        public static double extend = .22;
         public static double mini = .425;
 
 
@@ -379,10 +379,10 @@ public class Robot {
 
 
         //Variables
-        public static double up = .37;
-        public static double spit = .7;
-        public static double down = .84;
-        public static double INTAKE = .75;
+        public static double up = .34;
+        public static double spit = .65;
+        public static double down = .8;
+        public static double INTAKE = 1;
         public static double OUTTAKE = -.3;
 
         public static int ALPHA = 100;
@@ -450,13 +450,13 @@ public class Robot {
             r = intakeSensor.red();
             a = intakeSensor.alpha();
 
-            if (r + b + g < 200) {
+            if (r + b + g < 190) {
                 color = colors.NULL;
-            } else if (b > g && b > r) {
+            } else if (b > g+10 && b > r+10) {
                 color = colors.BLUE;
-            } else if (g > b && g > r) {
+            } else if (g > b+25 && g > r+25) {
                 color = colors.YELLOW;
-            } else if (r > b && r > g) {
+            } else if (r > b+50 && r > g+50) {
                 color = colors.RED;
             } else {
                 color = colors.NULL;
@@ -501,6 +501,7 @@ public class Robot {
                 arm.intake();
                 claw.openSmall();
                 wrist.intake();
+//                intake.pause();
 
                 //switch states
                 if (Y || AUTO) { //High Bucket
@@ -518,7 +519,7 @@ public class Robot {
                 } else if (A) { //Intake Spec
                     specStep = 0;
                     claw.close();
-                    outtakeDelay = runtime + .5; //Delay for slides after grabbing
+                    outtakeDelay = runtime + .3; //Delay for slides after grabbing
                     scoringState = scoringStates.SPECIMENGRAB;
                 }
                 break;
@@ -528,7 +529,8 @@ public class Robot {
                     case 0: // Slides go somewhere
                         if (runtime > outtakeDelay) {
                             if (bucketH) {
-                                slides.slideUp(); //slides to high bucket
+                                slides.slideUp();//slides to high bucket
+                                claw.close();
                             } else {
                                 slides.slidesTo(Slides.SLIDELBUCKET); //slides to low bucket
                             }
@@ -593,7 +595,7 @@ public class Robot {
                     case 0: // Slides go somewhere
                         if (runtime > outtakeDelay) {
                             slides.slideRest();
-                            outtakeDelay = runtime + .25; // delay for slides to clear hopper
+                            outtakeDelay = runtime + .4; // delay for slides to clear hopper
                             specStep++;
                         }
                         break;
@@ -662,6 +664,10 @@ public class Robot {
                             outtakeDelay = runtime + .1;
                             scoringState = scoringStates.SPECIMENGRAB;
                             specStep = 3;
+                        } else if (A){
+                            outtakeDelay = runtime + .051;
+                            scoringState = scoringStates.SPECIMENGRAB;
+                            specStep = 1;
                         }
                         break;
                     case 1:
@@ -705,6 +711,7 @@ public class Robot {
                 //Actions
                 extendo.retract();
                 intake.up();
+                intake.pause();
                 //Switch states
                 if (controller1.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > .3) {
                     intakeState = intakeStates.EXTENDED;
@@ -769,7 +776,7 @@ public class Robot {
                 extendo.retract();
                 //Switch States
                 if (runtime > intakeDelay) {
-                    intake.pause();
+                    intake.outtake();
                     intakeState = intakeStates.IDLE;
                 }
                 break;
