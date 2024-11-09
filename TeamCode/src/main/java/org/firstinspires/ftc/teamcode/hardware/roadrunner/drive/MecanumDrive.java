@@ -44,7 +44,6 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.hardware.GoBildaPinpointDriver;
 import org.firstinspires.ftc.teamcode.hardware.roadrunner.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.hardware.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
 import org.firstinspires.ftc.teamcode.hardware.roadrunner.trajectorysequence.TrajectorySequenceRunner;
@@ -61,8 +60,8 @@ import java.util.List;
  */
 @Config
 public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive {
-    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(0, 0, 0);
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(0, 0, 0);
+    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(2.5, 0, 0);
+    public static PIDCoefficients HEADING_PID = new PIDCoefficients(6, 0, 0.02);
 
     public static double LATERAL_MULTIPLIER = 1;
 
@@ -83,7 +82,6 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
 
     private IMU imu;
     private VoltageSensor batteryVoltageSensor;
-    public GoBildaPinpointDriver odo;
 
     private List<Integer> lastEncPositions = new ArrayList<>();
     private List<Integer> lastEncVels = new ArrayList<>();
@@ -103,10 +101,10 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
         }
 
         // TODO: adjust the names of the following hardware devices to match your configuration
-        /*imu = hardwareMap.get(IMU.class, "imu");
+        imu = hardwareMap.get(IMU.class, "imu");
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
                 DriveConstants.LOGO_FACING_DIR, DriveConstants.USB_FACING_DIR));
-        imu.initialize(parameters);*/
+        imu.initialize(parameters);
 
 
         leftFront = hardwareMap.get(DcMotorEx.class, FL_WHEEL);
@@ -123,9 +121,6 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
         this.rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         this.leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         this.rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        odo = hardwareMap.get(GoBildaPinpointDriver.class,"odo");
-        odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.REVERSED, GoBildaPinpointDriver.EncoderDirection.REVERSED);
 
         motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
 
@@ -151,8 +146,7 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
         List<Integer> lastTrackingEncVels = new ArrayList<>();
 
         // TODO: if desired, use setLocalizer() to change the localization method
-         setLocalizer(new TwoWheelTrackingLocalizer(hardwareMap, this));
-
+        setLocalizer(new TwoWheelTrackingLocalizer(hardwareMap, this));
 
         trajectorySequenceRunner = new TrajectorySequenceRunner(
                 follower, HEADING_PID, batteryVoltageSensor,
@@ -284,38 +278,31 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
 
         setDrivePower(vel);
     }
-    public double mm_to_in(double mm){
-        return mm = mm*0.03937008;
-    }
 
     @NonNull
     @Override
     public List<Double> getWheelPositions() {
         lastEncPositions.clear();
-        odo.update();
 
         List<Double> wheelPositions = new ArrayList<>();
-            int position = odo.getEncoderX();
-            int position2 = odo.getEncoderY();
+        for (DcMotorEx motor : motors) {
+            int position = motor.getCurrentPosition();
             lastEncPositions.add(position);
-            lastEncPositions.add(position2);
-            wheelPositions.add(mm_to_in(odo.getPosX()));
-            wheelPositions.add(mm_to_in(odo.getPosY()));
+            wheelPositions.add(encoderTicksToInches(position));
+        }
         return wheelPositions;
     }
 
     @Override
     public List<Double> getWheelVelocities() {
         lastEncVels.clear();
-        odo.update();
 
         List<Double> wheelVelocities = new ArrayList<>();
-            int vel = (int) odo.getVelX();
-            int vel2 = (int) odo.getVelY();
+        for (DcMotorEx motor : motors) {
+            int vel = (int) motor.getVelocity();
             lastEncVels.add(vel);
-            lastEncVels.add(vel2);
-            wheelVelocities.add(mm_to_in(odo.getVelX()));
-            wheelVelocities.add(mm_to_in(odo.getVelY()));
+            wheelVelocities.add(encoderTicksToInches(vel));
+        }
         return wheelVelocities;
     }
 
@@ -329,14 +316,12 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
 
     @Override
     public double getRawExternalHeading() {
-        odo.update();
-        return odo.getHeading();
+        return imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
     }
 
     @Override
     public Double getExternalHeadingVelocity() {
-        odo.update();
-        return odo.getHeadingVelocity();
+        return (double) imu.getRobotAngularVelocity(AngleUnit.RADIANS).xRotationRate;
     }
 
     public static TrajectoryVelocityConstraint getVelocityConstraint(double maxVel, double maxAngularVel, double trackWidth) {
@@ -349,8 +334,7 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
     public static TrajectoryAccelerationConstraint getAccelerationConstraint(double maxAccel) {
         return new ProfileAccelerationConstraint(maxAccel);
     }
-
-    /*public void setInput(Gamepad gamepad1, Gamepad gamepad2) {
+   /* public void setInput(Gamepad gamepad1, Gamepad gamepad2) {
         double speedScale = gamepad1.y || gamepad1.right_bumper ? SLOWMODE_SPEED : SPEED;
         double turnScale = gamepad1.y || gamepad1.right_bumper ? SLOWMODE_TURN : TURN;
 

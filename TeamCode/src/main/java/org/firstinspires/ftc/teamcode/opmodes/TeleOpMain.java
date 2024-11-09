@@ -19,7 +19,6 @@ public class TeleOpMain extends OpMode {
         controller1 = new GamepadEx(gamepad1);
         controller2 = new GamepadEx(gamepad2);
         robot = new Robot().init(hardwareMap);
-        odo = hardwareMap.get(GoBildaPinpointDriver.class,"odo");
     }
 
     @Override
@@ -56,7 +55,6 @@ public class TeleOpMain extends OpMode {
         telemetry.addData("pos",robot.getIntake().getBeatBarPos());
         telemetry.addData("is_lower",robot.getIntake().getstring());
         telemetry.addData("slides",robot.getBlockarm().slides.getTarget());
-        telemetry.addData("pos",odo.getVelX());
         telemetry.update();
     }
 }

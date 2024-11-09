@@ -46,6 +46,7 @@ public class intake {
     //PControler
     public PDController armPDcontroller;
     public double armTarget;
+    private boolean intakeToggle = false;
 
     public intake Init(HardwareMap HardwareMap){
         Rot1 = HardwareMap.get(Servo.class,INTAKE_LEFT);
@@ -73,7 +74,7 @@ public class intake {
         Beat_bar.setPower(gamepad.getRightX());
     }
     public void beatbar_on(){
-        Beat_bar.setPower(1);
+        Beat_bar.setPower(-1);
     }
     public void beatbar_off(){
         Beat_bar.setPower(0);
@@ -87,6 +88,11 @@ public class intake {
     public String getstring(){
         return armTarget + " , " + Rot1.getPosition() + " , " + armPDcontroller.calculate(Rot1.getPosition());
     }
+
+    public void intakeToggle(GamepadEx gamepadEx) throws InterruptedException {
+
+    }
+
     public void intake_up(GamepadEx gamepadEx) throws InterruptedException {
         if (gamepadEx.wasJustReleased(BIND_INTAKE_UP)) intake_up();
         update_servo();
@@ -108,7 +114,7 @@ public class intake {
         eject = eject_rot_out;
     }
     public void setEject(GamepadEx gamepad1) throws InterruptedException{
-        if (gamepad1.wasJustReleased(BIND_INTAKE_EJECT) && !(getcolor() == c_input)){
+        if (gamepad1.wasJustReleased(BIND_INTAKE_EJECT)){
             eject();
         }
         update_servo();

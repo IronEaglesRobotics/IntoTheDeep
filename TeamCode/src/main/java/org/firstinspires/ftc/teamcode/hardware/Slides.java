@@ -30,7 +30,7 @@ public class Slides {
     public int down = 2000;
     public int wall = 2000;
     public int postclip = 28500;
-    public int preclip = 35000;
+    public int preclip = 37000;
     public int init = 3000;
     public int tier2 = 35000;
     public int tier3 = 50000;
