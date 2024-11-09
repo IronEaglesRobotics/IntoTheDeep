@@ -22,13 +22,14 @@ public class TeleOp extends OpMode {
 
     public static double arm;
     public static double elbow;
+    public static double tilt;
 
     @Override
     public void init() {
         this.robot = new Robot(this.hardwareMap);
         controller1=new GamepadEx(gamepad2);
 
-        robot.extendo.moveTo(0.26);
+//        robot.extendo.moveTo(0.26);
 //        robot.tiltRight.setPosition(0.1);
 //        robot.tiltLeft.setPosition(0.1);
 
@@ -55,30 +56,22 @@ public class TeleOp extends OpMode {
             robot.tiltRight.setPosition(0.2); //0.5
             robot.tiltLeft.setPosition(0.2);
 
-        }
-
-        if (gamepad1.a) {
+        } else if (gamepad1.a) {
             //extendo in & intake tilt up
             robot.tiltRight.setPosition(0.2); //0
             robot.tiltLeft.setPosition(0.2);
             robot.extendo.moveTo(0.26);
-        }
-
-        if(gamepad1.left_trigger > 0) {
+        } else if(gamepad1.left_trigger > 0) {
             //intake tilt down & spin
-            robot.tiltRight.setPosition(0.5); //0
-            robot.tiltLeft.setPosition(0.5);
-            robot.intake.setSpin(1);
-        }
-
-        if(gamepad1.right_trigger > 0) {
-            //intake tilt down & spinout
-            robot.tiltRight.setPosition(0.5); //0
-            robot.tiltLeft.setPosition(0.5);
+            robot.tiltRight.setPosition(.395); //0
+            robot.tiltLeft.setPosition(.395);
             robot.intake.setSpin(-1);
-        }
-
-        else {
+        } else if(gamepad1.right_trigger > 0) {
+            //intake tilt down & spinout
+            robot.tiltRight.setPosition(.395); //0
+            robot.tiltLeft.setPosition(.395);
+            robot.intake.setSpin(1);
+        }  else {
             //when doing nothing intake doesn't spin & tilts up
             robot.tiltRight.setPosition(0.2); //0.5
             robot.tiltLeft.setPosition(0.2);
@@ -87,7 +80,7 @@ public class TeleOp extends OpMode {
         }
 
         if(gamepad1.dpad_up){
-            robot.arm.setPosition(1);
+            robot.arm.setPosition(0.9);
             robot.claw.setPosition(0);
 
             robot.lift.setTargetPosition(600);
@@ -96,20 +89,20 @@ public class TeleOp extends OpMode {
         }
 
         if(gamepad1.dpad_down){
-            robot.arm.setPosition(1);
+            robot.arm.setPosition(0.9);
 
-            robot.lift.setTargetPosition(200);
+            robot.lift.setTargetPosition(250);
             robot.lift.setMode(RUN_TO_POSITION);
-            robot.lift.setPower(0.25);
-           // robot.claw.setPosition(.2);
+            robot.lift.setPower(0.75);
+            // robot.claw.setPosition(.2);
 
-           // robot.lift.setTargetPosition(100);
-           // robot.lift.setMode(RUN_TO_POSITION);
-          //  robot.lift.setPower(0.25);
+            // robot.lift.setTargetPosition(100);
+            // robot.lift.setMode(RUN_TO_POSITION);
+            //  robot.lift.setPower(0.25);
 
         }
         if(gamepad1.dpad_right){
-            robot.arm.setPosition(1);
+            robot.arm.setPosition(0.9);
             robot.elbow.setPosition(0);
             robot.claw.setPosition(0);
 

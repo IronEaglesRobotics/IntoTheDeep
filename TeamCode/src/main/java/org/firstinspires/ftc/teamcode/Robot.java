@@ -26,7 +26,7 @@ public class Robot {
         this.intake = new Intake(hardwareMap);
         this.tiltRight = new TiltRight(hardwareMap);
         this.tiltLeft = new TiltLeft(hardwareMap);
-       // this.lift = new Lift(hardwareMap);
+        // this.lift = new Lift(hardwareMap);
         this.lift = new Lift(hardwareMap);
         this.extendo = new Extendo(hardwareMap);
         this.topExtendo = new TopExtendo(hardwareMap);
@@ -77,8 +77,8 @@ public class Robot {
     public static class Lift {
         private DcMotor liftRight;
         private DcMotor liftLeft;
-       // double ticks = 384.5;
-       // double newTarget;
+        // double ticks = 384.5;
+        // double newTarget;
 
         public Lift(HardwareMap hardwareMap) {
             liftRight = hardwareMap.get(DcMotor.class, "liftR");
@@ -149,11 +149,11 @@ public class Robot {
 
         public void setPosition(double position){
             this.leftArm.setPosition(position);
-           // this.rightArm.setPosition(position);
+            // this.rightArm.setPosition(position);
         }
         public Arm(HardwareMap hardwareMap){
             leftArm = hardwareMap.servo.get("j3L");
-          //  rightArm = hardwareMap.servo.get("j3R");
+            //  rightArm = hardwareMap.servo.get("j3R");
             leftArm.setDirection(Servo.Direction.REVERSE);
         }
     }
@@ -178,7 +178,7 @@ public class Robot {
         }
         public TiltRight(HardwareMap hardwareMap) {
             tiltRight = hardwareMap.servo.get("tR");
-
+            tiltRight.setDirection(Servo.Direction.FORWARD);
         }
 
     }
@@ -201,13 +201,16 @@ public class Robot {
         private DcMotor BR;
 
         public Drive(HardwareMap hardwareMap) {
-            FL = hardwareMap.dcMotor.get("frontLeft");
+                FL = hardwareMap.dcMotor.get("frontLeft");
             BL = hardwareMap.dcMotor.get("backLeft");
             FR = hardwareMap.dcMotor.get("frontRight");
             BR = hardwareMap.dcMotor.get("backRight");
 
-            FR.setDirection(DcMotorSimple.Direction.REVERSE);
-            BR.setDirection(DcMotorSimple.Direction.REVERSE);
+            FL.setDirection(DcMotor.Direction.FORWARD);
+            BL.setDirection(DcMotor.Direction.FORWARD);
+            FR.setDirection(DcMotor.Direction.REVERSE);
+            BR.setDirection(DcMotor.Direction.REVERSE);
+
         }
 
         public void handleInput(Gamepad gamepad1) {
@@ -224,19 +227,17 @@ public class Robot {
             double FRPower = (y - x - rx / denominator);
             double BRPower = (y - x - rx / denominator);
 
+
             FL.setPower(FLPower);
             BL.setPower(BLPower);
             FR.setPower(FRPower);
             BR.setPower(BRPower);
 
-            }
-
-
         }
+
+
     }
-
-
-
+}
 
 
 
