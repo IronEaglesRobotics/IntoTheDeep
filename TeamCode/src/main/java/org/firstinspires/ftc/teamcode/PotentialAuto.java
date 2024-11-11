@@ -15,11 +15,18 @@ public class PotentialAuto extends LinearOpMode {
     private DcMotor leftBackDrive = null;
     private DcMotor rightFrontDrive = null;
     private DcMotor rightBackDrive = null;
+    private DcMotor intake = null;
     public Servo leftHand;
+
     public Servo extendo;
     public Servo arm1;
     public Servo arm2;
     public Servo arm3;
+    private Servo tiltRight;
+    private Servo tiltLeft;
+    private Servo extendoRight;
+    private Servo extendoLeft;
+
 
     @Override
     public void runOpMode() {
@@ -27,6 +34,15 @@ public class PotentialAuto extends LinearOpMode {
         leftBackDrive  = hardwareMap.get(DcMotor.class, "backLeft");
         rightFrontDrive = hardwareMap.get(DcMotor.class, "frontRight");
         rightBackDrive = hardwareMap.get(DcMotor.class, "backRight");
+        intake = hardwareMap.dcMotor.get("s");
+        extendoRight = hardwareMap.servo.get("eR");
+        extendoLeft = hardwareMap.servo.get("eL");
+
+        tiltRight = hardwareMap.servo.get("tR");
+        tiltLeft = hardwareMap.servo.get("tL");
+
+
+
         //leftHand = hardwareMap.servo.get("aS");
         //leftHand.scaleRange(0,2);
         //extendo = hardwareMap.servo.get("eX");
@@ -36,59 +52,101 @@ public class PotentialAuto extends LinearOpMode {
 
         waitForStart();
 
-        leftFrontDrive.setPower(.6);
-        leftBackDrive.setPower(.6);
-        rightFrontDrive.setPower(.5);
-        rightBackDrive.setPower(.5);
 
-        sleep(2500);
 
-        leftFrontDrive.setPower(0);
-        leftBackDrive.setPower(0);
-        rightFrontDrive.setPower(0);
-        rightBackDrive.setPower(0);
+        extendoRight.setPosition(0);
+        extendoLeft.setPosition(0);
 
-        leftFrontDrive.setPower(.75);
-        leftBackDrive.setPower(-.75);
-        rightFrontDrive.setPower(-.75);
-        rightBackDrive.setPower(.75);
 
-        sleep(500);
+        tiltRight.setPosition(.395); //0
+        tiltLeft.setPosition(.395);
+        intake.setPower(-1);
 
-        leftFrontDrive.setPower(0);
-        leftBackDrive.setPower(0);
-        rightFrontDrive.setPower(0);
-        rightBackDrive.setPower(0);
+        sleep(1000);
 
-        leftFrontDrive.setPower(-.65);
-        leftBackDrive.setPower(-.65);
-        rightFrontDrive.setPower(-.5);
-        rightBackDrive.setPower(-.5);
+        tiltRight.setPosition(0.2); //0
+        tiltLeft.setPosition(0.2);
+        intake.setPower(0);
+        extendoRight.setPosition(0.26);
+        extendoLeft.setPosition(0.26);
+//
+//        leftFrontDrive.setPower(-.50);
+//       leftBackDrive.setPower(.50);
+//       rightFrontDrive.setPower(.50);
+//    rightBackDrive.setPower(-.50);
+//
+//    sleep(2000);
+//
+//        leftFrontDrive.setPower(0);
+//        leftBackDrive.setPower(0);
+//        rightFrontDrive.setPower(0);
+//        rightBackDrive.setPower(0);
+//sleep(250);
+//        leftFrontDrive.setPower(-.50);
+//        leftBackDrive.setPower(-.50);
+//        rightFrontDrive.setPower(-.50);
+//        rightBackDrive.setPower(-.50);
+//sleep (100);
+//        leftFrontDrive.setPower(0);
+//        leftBackDrive.setPower(0);
+//        rightFrontDrive.setPower(0);
+//        rightBackDrive.setPower(0);
 
-        sleep(2300);
-
-        leftFrontDrive.setPower(0);
-        leftBackDrive.setPower(0);
-        rightFrontDrive.setPower(0);
-        rightBackDrive.setPower(0);
-
-        leftFrontDrive.setPower(.5);
-        leftBackDrive.setPower(.5);
-        rightFrontDrive.setPower(.5);
-        rightBackDrive.setPower(.5);
-
-        sleep(250);
-
-        leftFrontDrive.setPower(0);
-        leftBackDrive.setPower(0);
-        rightFrontDrive.setPower(0);
-        rightBackDrive.setPower(0);
-
-            /*leftFrontDrive.setPower(.5);
-            leftBackDrive.setPower(.5);
-            rightFrontDrive.setPower(.5);
-            rightBackDrive.setPower(.5);
-            */
+//
+//        leftFrontDrive.setPower(.4);
+//        leftBackDrive.setPower(.4);
+//        rightFrontDrive.setPower(.4);
+//        rightBackDrive.setPower(.4);
+//
+//        sleep(2000);
+//
+//        leftFrontDrive.setPower(0);
+//        leftBackDrive.setPower(0);
+//        rightFrontDrive.setPower(0);
+//        rightBackDrive.setPower(0);
+//
+//        leftFrontDrive.setPower(-.50);
+//        leftBackDrive.setPower(.50);
+//        rightFrontDrive.setPower(.50);
+//        rightBackDrive.setPower(-.50);
+//
+//        sleep(1000);
+//
+//        leftFrontDrive.setPower(0);
+//        leftBackDrive.setPower(0);
+//        rightFrontDrive.setPower(0);
+//        rightBackDrive.setPower(0);
+//
+//        leftFrontDrive.setPower(-.4);
+//        leftBackDrive.setPower(-.4);
+//        rightFrontDrive.setPower(-.45);
+//        rightBackDrive.setPower(-.45);
+//
+//        sleep(2500);
+//
+//        leftFrontDrive.setPower(0);
+//        leftBackDrive.setPower(0);
+//
+//        rightFrontDrive.setPower(0);
+//        rightBackDrive.setPower(0);
+//
+//        leftFrontDrive.setPower(.4);
+//        leftBackDrive.setPower(.4);
+//        rightFrontDrive.setPower(.4);
+//        rightBackDrive.setPower(.4);
+//
+//        sleep(250);
+//
+//        leftFrontDrive.setPower(0);
+//        leftBackDrive.setPower(0);
+//        rightFrontDrive.setPower(0);
+//        rightBackDrive.setPower(0);
+//
+//            /*leftFrontDrive.setPower(.5);
+//            leftBackDrive.setPower(.5);
+//            rightFrontDrive.setPower(.5);
+//            rightBackDrive.setPower(.5);
+//            */
         //sleep(250)
     }
 }

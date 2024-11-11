@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.arcrobotics.ftclib.drivebase.MecanumDrive;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -85,7 +86,7 @@ public class Robot {
             liftRight = hardwareMap.get(DcMotor.class, "liftR");
             liftRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             liftRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            liftRight.setDirection(DcMotorSimple.Direction.REVERSE);
+//            liftRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
             liftLeft = hardwareMap.get(DcMotor.class, "liftL");
             liftLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -96,11 +97,13 @@ public class Robot {
 
         }
 
-        public void setTargetPosition(int i) {
-            this.liftRight.setTargetPosition(i);
-            this.liftLeft.setTargetPosition(i);
-            this.liftRight.setPower(1);
-            this.liftLeft.setPower(1);
+        public void setTargetPosition(int p) {
+            this.liftRight.setTargetPosition(p);
+            this.liftLeft.setTargetPosition(p);
+            this.liftRight.setPower(p);
+            this.liftLeft.setPower(p);
+            this.liftLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            this.liftRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         }
 
@@ -208,8 +211,8 @@ public class Robot {
             FR = hardwareMap.dcMotor.get("frontRight");
             BR = hardwareMap.dcMotor.get("backRight");
 
-            FL.setDirection(DcMotor.Direction.FORWARD);
-            BL.setDirection(DcMotor.Direction.FORWARD);
+            FL.setDirection(DcMotor.Direction.REVERSE);
+            BL.setDirection(DcMotor.Direction.REVERSE);
             FR.setDirection(DcMotor.Direction.REVERSE);
             BR.setDirection(DcMotor.Direction.REVERSE);
 
@@ -218,27 +221,39 @@ public class Robot {
         public void handleInput(Gamepad gamepad1) {
             //defines inputs
             double y = gamepad1.left_stick_y;
-            double x = gamepad1.left_stick_x;
-            double rx = gamepad1.right_stick_x;
+            double x = -gamepad1.left_stick_x;
+            double rx = -gamepad1.right_stick_x;
 
-            double denominator = Math.max(Math.abs(y)+ Math.abs(x) + Math.abs(rx), 1);
+            double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
+
+
 
             //sets motor power based on input
-            double FLPower = (y - x + rx / denominator);
-            double BLPower = (y - x + rx / denominator);
-            double FRPower = (y - x - rx / denominator);
-            double BRPower = (y - x - rx / denominator);
+            double FLPower = ((y + x + rx) / denominator);
+            double BLPower = ((y - x + rx) / denominator);
+            double FRPower = ((y - x - rx) / denominator);
+            double BRPower = ((y + x - rx) / denominator);
 
+//            double maxPower= Math.max(Math.abs(FLPower), Math.abs(FRPower)) Math.abs(BLPower), Math.abs(BRPower));
+//
+//            if
 
             FL.setPower(FLPower);
             BL.setPower(BLPower);
             FR.setPower(FRPower);
             BR.setPower(BRPower);
 
+            FL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            BL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            FR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            BR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+
         }
-
-
+//
+//
     }
+
 }
 
 
