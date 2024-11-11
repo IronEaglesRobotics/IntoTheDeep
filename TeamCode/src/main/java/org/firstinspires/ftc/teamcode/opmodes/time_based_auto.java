@@ -5,6 +5,7 @@ import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.teamcode.hardware.Slides;
 import org.firstinspires.ftc.teamcode.hardware.block_arm;
 import org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.MecanumDrive;
 
@@ -30,10 +31,9 @@ public class time_based_auto extends LinearOpMode {
 
         bot.getBlockarm().set_grab(block_arm.Position.postclip);
         bot.update(System.currentTimeMillis());
-        bot.getBlockarm().slides.update(System.currentTimeMillis());
         drive.followTrajectory(traj1);
         bot.update(System.currentTimeMillis());
-        bot.getBlockarm().slides.setTarget(0);
+        bot.getBlockarm().slides.setTarget(Slides.Position.DOWN);
         drive.followTrajectory(traj2);
         bot.update(System.currentTimeMillis());
     }

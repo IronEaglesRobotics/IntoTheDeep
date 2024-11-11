@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
 import static org.firstinspires.ftc.teamcode.lib.Config.BEAT_BAR;
+import static org.firstinspires.ftc.teamcode.lib.Config.BIND_BEATBAR_TOGGLE;
 import static org.firstinspires.ftc.teamcode.lib.Config.BIND_INTAKE_EJECT;
 import static org.firstinspires.ftc.teamcode.lib.Config.BIND_INTAKE_TOGGLE;
 import static org.firstinspires.ftc.teamcode.lib.Config.COLOR_SENSOR;
@@ -41,7 +42,7 @@ public class intake {
     //PControler
     public PDController armPDcontroller;
     public double armTarget;
-    private boolean intakeToggle = false;
+    private boolean intakeToggle, beatbarToggle = false;
 
     public intake Init(HardwareMap HardwareMap){
         Rot1 = HardwareMap.get(Servo.class,INTAKE_LEFT);
@@ -64,6 +65,17 @@ public class intake {
     public void beatbar_off(){
         Beat_bar.setPower(0);
     }
+    public void Beatbar_toggle(){
+        beatbarToggle = !beatbarToggle;
+        if (intakeToggle) {
+            beatbar_on();
+        } else beatbar_off();
+    }
+    public void Beatbar_toggle(GamepadEx gamepadEx){
+        if (gamepadEx.wasJustReleased(BIND_BEATBAR_TOGGLE)){
+            Beatbar_toggle();
+        }
+    }
     public void intake_up() throws InterruptedException {
         rot1 = lower_rot_in;
         update_servo();
@@ -81,8 +93,7 @@ public class intake {
         intakeToggle = !intakeToggle;
     }
     public void intakeToggle(GamepadEx gamepadEx) throws InterruptedException {
-        if (gamepadEx.wasJustReleased(BIND_INTAKE_TOGGLE))
-        intakeToggle();
+        if (gamepadEx.wasJustReleased(BIND_INTAKE_TOGGLE)) intakeToggle();
     }
 
     public void intake_lower() throws InterruptedException {

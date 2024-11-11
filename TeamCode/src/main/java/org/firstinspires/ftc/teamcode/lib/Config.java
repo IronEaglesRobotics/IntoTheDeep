@@ -57,6 +57,7 @@ public class Config {
     public static final double main_rot_in = .04;
     public static final double main_rot_out = .55;
     public static final double main_rot_score = .35;
+    public static final double main_rot_init = .8;
     public static final double lower_rot_in = .52;
     public static final double lower_rot_out = .3;
     public static final double eject_rot_in = .02;
@@ -66,19 +67,16 @@ public class Config {
 
     // gamepad1
     public static final GamepadKeys.Button BIND_SPEED = GamepadKeys.Button.Y;
-    public static final GamepadKeys.Button BIND_INTAKE_EJECT = GamepadKeys.Button.B;
 
     // gamepad2
     public static final GamepadKeys.Button BIND_TOGGLE_CLAW = GamepadKeys.Button.A;
-    public static final GamepadKeys.Button BIND_ROTATE_CLAW = GamepadKeys.Button.B;
+    public static final GamepadKeys.Button BIND_INTAKE_EJECT = GamepadKeys.Button.B;
     public static final GamepadKeys.Button BIND_ROTATE_ARM = GamepadKeys.Button.X;
     public static final GamepadKeys.Button BIND_SLIDES_CLIP = GamepadKeys.Button.DPAD_RIGHT;
     public static final GamepadKeys.Button BIND_SLIDES_WALL = GamepadKeys.Button.DPAD_LEFT;
     public static final GamepadKeys.Button BIND_SLIDES_HIGH = GamepadKeys.Button.DPAD_UP;
     public static final GamepadKeys.Button BIND_SLIDES_DOWN = GamepadKeys.Button.DPAD_DOWN;
-    public static final GamepadKeys.Button BIND_GRAB_PRESET = GamepadKeys.Button.LEFT_BUMPER;
-    public static final GamepadKeys.Button BIND_SCORE_PRESET = GamepadKeys.Button.RIGHT_BUMPER;
-    public static final GamepadKeys.Button BIND_WALL_PRESET = GamepadKeys.Button.Y;
-    public static final GamepadKeys.Button BIND_CLIP = GamepadKeys.Button.LEFT_STICK_BUTTON;
+    public static final GamepadKeys.Button BIND_CLIP = GamepadKeys.Button.LEFT_BUMPER;
     public static final GamepadKeys.Button BIND_INTAKE_TOGGLE = GamepadKeys.Button.RIGHT_STICK_BUTTON;
+    public static final GamepadKeys.Button BIND_BEATBAR_TOGGLE = GamepadKeys.Button.LEFT_STICK_BUTTON;
 }

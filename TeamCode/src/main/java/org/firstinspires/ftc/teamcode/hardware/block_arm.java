@@ -1,16 +1,12 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
 import static org.firstinspires.ftc.teamcode.lib.Config.BIND_CLIP;
-import static org.firstinspires.ftc.teamcode.lib.Config.BIND_GRAB_PRESET;
 import static org.firstinspires.ftc.teamcode.lib.Config.BIND_ROTATE_ARM;
-import static org.firstinspires.ftc.teamcode.lib.Config.BIND_ROTATE_CLAW;
-import static org.firstinspires.ftc.teamcode.lib.Config.BIND_SCORE_PRESET;
 import static org.firstinspires.ftc.teamcode.lib.Config.BIND_SLIDES_CLIP;
 import static org.firstinspires.ftc.teamcode.lib.Config.BIND_SLIDES_DOWN;
 import static org.firstinspires.ftc.teamcode.lib.Config.BIND_SLIDES_HIGH;
 import static org.firstinspires.ftc.teamcode.lib.Config.BIND_SLIDES_WALL;
 import static org.firstinspires.ftc.teamcode.lib.Config.BIND_TOGGLE_CLAW;
-import static org.firstinspires.ftc.teamcode.lib.Config.BIND_WALL_PRESET;
 import static org.firstinspires.ftc.teamcode.lib.Config.BLOCK_CLAW;
 import static org.firstinspires.ftc.teamcode.lib.Config.CLAW_ROT;
 import static org.firstinspires.ftc.teamcode.lib.Config.LEFT_ARM;
@@ -20,11 +16,11 @@ import static org.firstinspires.ftc.teamcode.lib.Config.block_claw_open;
 import static org.firstinspires.ftc.teamcode.lib.Config.claw_rot_90;
 import static org.firstinspires.ftc.teamcode.lib.Config.claw_rot_flat;
 import static org.firstinspires.ftc.teamcode.lib.Config.main_rot_in;
+import static org.firstinspires.ftc.teamcode.lib.Config.main_rot_init;
 import static org.firstinspires.ftc.teamcode.lib.Config.main_rot_out;
 import static org.firstinspires.ftc.teamcode.lib.Config.main_rot_score;
 
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
-import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -56,17 +52,19 @@ public class block_arm {
             toggle_claw();
         }
     }
-    public void rotate_claw(){
+    public void rotate(){
         is_90 = !is_90;
-        claw_rot = is_90 ? claw_rot_flat : claw_rot_90;
+        claw_rot = is_90 ? claw_rot_90 : claw_rot_flat;
+        is_180 = !is_180;
+        main_rot = is_180 ? main_rot_in : main_rot_out;
     }
-    public void rotate_claw(GamepadEx gamepadEx){
-        if (gamepadEx.wasJustReleased(BIND_ROTATE_CLAW)){
-            rotate_claw();
+    public void rotate(GamepadEx gamepadEx){
+        if (gamepadEx.wasJustReleased(BIND_ROTATE_ARM)){
+            rotate();
         }
     }
 
-    public void rotate_arm (){
+    /*public void rotate_arm (){
         is_180 = !is_180;
         main_rot = is_180 ? main_rot_in : main_rot_out;
     }
@@ -74,7 +72,7 @@ public class block_arm {
         if (gamepadEx.wasJustReleased(BIND_ROTATE_ARM)){
             rotate_arm();
         }
-    }
+    }*/
     public void set_grab(Position pos){
         if (pos == Position.pickup){
             slides.setTarget(Slides.Position.DOWN);
@@ -84,7 +82,7 @@ public class block_arm {
                 toggle_claw();
             }
         } else if (pos == Position.wall){
-            slides.setTarget(Slides.Position.WALL);
+            slides.setTarget(Slides.Position.DOWN);
             main_rot = main_rot_out;
             claw_rot = claw_rot_flat;
         } else if (pos == Position.score){
@@ -99,36 +97,23 @@ public class block_arm {
             slides.setTarget(Slides.Position.POSTCLIP);
             main_rot = main_rot_out;
             claw_rot = claw_rot_flat;
-        } else if (pos == Position.init){
-            slides.setTarget(Slides.Position.INIT);
-            main_rot = .8;
-            claw_rot = claw_rot_flat;
-            if (!claw_open){
-                toggle_claw();
-            }
         }
         update_claws();
     }
     public void set_grab(GamepadEx gamepadEx){
-        if (gamepadEx.wasJustReleased(BIND_WALL_PRESET)){
-            set_grab(Position.wall);
-        } else if (gamepadEx.wasJustReleased(BIND_GRAB_PRESET)) {
+        if (gamepadEx.wasJustReleased(BIND_SLIDES_WALL)){
             set_grab(Position.pickup);
-        } else if (gamepadEx.wasJustReleased(BIND_SCORE_PRESET)) {
+        } else if (gamepadEx.wasJustReleased(BIND_SLIDES_CLIP)) {
+            set_grab(Position.preclip);
+        } else if (gamepadEx.wasJustReleased(BIND_SLIDES_HIGH)) {
             set_grab(Position.score);
-        }
-    }
-    public void set_slides(GamepadEx gamepadEx){
-        if (gamepadEx.wasJustReleased(BIND_SLIDES_HIGH)){
-            slides.setTarget(Slides.Position.TIER4);
-        } else if (gamepadEx.wasJustReleased(BIND_SLIDES_CLIP)){
-            slides.setTarget(Slides.Position.POSTCLIP);
         } else if (gamepadEx.wasJustReleased(BIND_SLIDES_DOWN)){
-            slides.setTarget(Slides.Position.DOWN);
-        } else if (gamepadEx.wasJustReleased(BIND_SLIDES_WALL)){
-            slides.setTarget(Slides.Position.WALL);
+            set_grab(Position.wall);
         }
     }
+    /*public void set_slides(GamepadEx gamepadEx){
+
+    }*/
     public void clip(GamepadEx gamepadEx){
         if (gamepadEx.wasJustPressed(BIND_CLIP)){
             set_grab(Position.wall);
