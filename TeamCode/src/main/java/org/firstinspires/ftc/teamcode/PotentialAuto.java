@@ -69,28 +69,28 @@ public class PotentialAuto extends LinearOpMode {
         intake.setPower(0);
         extendoRight.setPosition(0.26);
         extendoLeft.setPosition(0.26);
-
-        leftFrontDrive.setPower(-.50);
-       leftBackDrive.setPower(.50);
-       rightFrontDrive.setPower(.50);
-    rightBackDrive.setPower(-.50);
-
-    sleep(2000);
-
-        leftFrontDrive.setPower(0);
-        leftBackDrive.setPower(0);
-        rightFrontDrive.setPower(0);
-        rightBackDrive.setPower(0);
-sleep(250);
-        leftFrontDrive.setPower(-.50);
-        leftBackDrive.setPower(-.50);
-        rightFrontDrive.setPower(-.50);
-        rightBackDrive.setPower(-.50);
-sleep (100);
-        leftFrontDrive.setPower(0);
-        leftBackDrive.setPower(0);
-        rightFrontDrive.setPower(0);
-        rightBackDrive.setPower(0);
+//
+//        leftFrontDrive.setPower(-.50);
+//       leftBackDrive.setPower(.50);
+//       rightFrontDrive.setPower(.50);
+//    rightBackDrive.setPower(-.50);
+//
+//    sleep(2000);
+//
+//        leftFrontDrive.setPower(0);
+//        leftBackDrive.setPower(0);
+//        rightFrontDrive.setPower(0);
+//        rightBackDrive.setPower(0);
+//sleep(250);
+//        leftFrontDrive.setPower(-.50);
+//        leftBackDrive.setPower(-.50);
+//        rightFrontDrive.setPower(-.50);
+//        rightBackDrive.setPower(-.50);
+//sleep (100);
+//        leftFrontDrive.setPower(0);
+//        leftBackDrive.setPower(0);
+//        rightFrontDrive.setPower(0);
+//        rightBackDrive.setPower(0);
 
 //
 //        leftFrontDrive.setPower(.4);

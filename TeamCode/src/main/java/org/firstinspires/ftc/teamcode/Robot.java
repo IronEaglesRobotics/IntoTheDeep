@@ -97,9 +97,9 @@ public class Robot {
 
         }
 
-        public void setTargetPosition(int i,double p) {
-            this.liftRight.setTargetPosition(i);
-            this.liftLeft.setTargetPosition(i);
+        public void setTargetPosition(int p) {
+            this.liftRight.setTargetPosition(p);
+            this.liftLeft.setTargetPosition(p);
             this.liftRight.setPower(p);
             this.liftLeft.setPower(p);
             this.liftLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
