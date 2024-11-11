@@ -40,13 +40,10 @@ public class TeleOpMain extends OpMode {
         robot.getBlockarm().set_slides(controller2);
         robot.pullup(controller2.getRightY());
 
-        robot.getIntake().setColor(controller1);
-
         robot.getIntake().control_beatbar(controller2);
         try {
-            robot.getIntake().setEject(controller2);
-            robot.getIntake().intake_up(controller1);
-            robot.getIntake().intake_lower(controller1);
+            robot.getIntake().setEject(controller1);
+            robot.getIntake().intakeToggle(controller2);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }

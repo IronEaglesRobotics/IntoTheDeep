@@ -84,7 +84,7 @@ public class block_arm {
                 toggle_claw();
             }
         } else if (pos == Position.wall){
-            slides.setTarget(Slides.Position.DOWN);
+            slides.setTarget(Slides.Position.WALL);
             main_rot = main_rot_out;
             claw_rot = claw_rot_flat;
         } else if (pos == Position.score){
@@ -122,7 +122,7 @@ public class block_arm {
         if (gamepadEx.wasJustReleased(BIND_SLIDES_HIGH)){
             slides.setTarget(Slides.Position.TIER4);
         } else if (gamepadEx.wasJustReleased(BIND_SLIDES_CLIP)){
-            slides.setTarget(Slides.Position.PRECLIP);
+            slides.setTarget(Slides.Position.POSTCLIP);
         } else if (gamepadEx.wasJustReleased(BIND_SLIDES_DOWN)){
             slides.setTarget(Slides.Position.DOWN);
         } else if (gamepadEx.wasJustReleased(BIND_SLIDES_WALL)){
@@ -131,7 +131,7 @@ public class block_arm {
     }
     public void clip(GamepadEx gamepadEx){
         if (gamepadEx.wasJustPressed(BIND_CLIP)){
-            set_grab(Position.postclip);
+            set_grab(Position.wall);
         } else if (gamepadEx.wasJustReleased(BIND_CLIP)){
             toggle_claw();
         }

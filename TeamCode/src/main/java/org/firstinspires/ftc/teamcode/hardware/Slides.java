@@ -27,7 +27,7 @@ public class Slides {
     public int targetMin = -60000;
     public int targetMax = 60000;
 
-    public int down = 2000;
+    public int down = -6500;
     public int wall = 2000;
     public int postclip = 28500;
     public int preclip = 37000;

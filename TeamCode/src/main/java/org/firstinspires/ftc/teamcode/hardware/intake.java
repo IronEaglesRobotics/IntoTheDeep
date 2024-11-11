@@ -1,13 +1,8 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
 import static org.firstinspires.ftc.teamcode.lib.Config.BEAT_BAR;
-import static org.firstinspires.ftc.teamcode.lib.Config.BIND_COLOR_BLUE;
-import static org.firstinspires.ftc.teamcode.lib.Config.BIND_COLOR_RED;
-import static org.firstinspires.ftc.teamcode.lib.Config.BIND_COLOR_YELLOW;
 import static org.firstinspires.ftc.teamcode.lib.Config.BIND_INTAKE_EJECT;
-import static org.firstinspires.ftc.teamcode.lib.Config.BIND_INTAKE_LOWER;
-import static org.firstinspires.ftc.teamcode.lib.Config.BIND_INTAKE_PICKUP;
-import static org.firstinspires.ftc.teamcode.lib.Config.BIND_INTAKE_UP;
+import static org.firstinspires.ftc.teamcode.lib.Config.BIND_INTAKE_TOGGLE;
 import static org.firstinspires.ftc.teamcode.lib.Config.COLOR_SENSOR;
 import static org.firstinspires.ftc.teamcode.lib.Config.EJECT;
 import static org.firstinspires.ftc.teamcode.lib.Config.INTAKE_LEFT;
@@ -60,16 +55,6 @@ public class intake {
 
         return this;
     }
-    public void setColor(GamepadEx gamepadEx){
-        if (gamepadEx.wasJustReleased(BIND_COLOR_BLUE)){
-            c_input = color.blue;
-        } else if (gamepadEx.wasJustReleased(BIND_COLOR_RED)) {
-            c_input = color.red;
-        } else if (gamepadEx.wasJustReleased(BIND_COLOR_YELLOW)) {
-            c_input = color.yellow;
-        }
-        update_servo();
-    }
     public void control_beatbar(GamepadEx gamepad){
         Beat_bar.setPower(gamepad.getRightX());
     }
@@ -89,23 +74,22 @@ public class intake {
         return armTarget + " , " + Rot1.getPosition() + " , " + armPDcontroller.calculate(Rot1.getPosition());
     }
 
+    public void intakeToggle() throws InterruptedException {
+        if (intakeToggle) {
+            intake_up();
+        } else intake_lower();
+        intakeToggle = !intakeToggle;
+    }
     public void intakeToggle(GamepadEx gamepadEx) throws InterruptedException {
-
+        if (gamepadEx.wasJustReleased(BIND_INTAKE_TOGGLE))
+        intakeToggle();
     }
 
-    public void intake_up(GamepadEx gamepadEx) throws InterruptedException {
-        if (gamepadEx.wasJustReleased(BIND_INTAKE_UP)) intake_up();
-        update_servo();
-    }
     public void intake_lower() throws InterruptedException {
         rot1 = lower_rot_out;
         update_servo();
         sleep(500);
         rot1 = 0.12;
-    }
-    public void intake_lower(GamepadEx gamepadEx) throws InterruptedException {
-        if (gamepadEx.wasJustReleased(BIND_INTAKE_LOWER)) intake_lower();
-        update_servo();
     }
     public void eject() throws InterruptedException {
         eject = eject_rot_in;

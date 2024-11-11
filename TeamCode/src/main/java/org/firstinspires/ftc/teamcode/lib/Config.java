@@ -37,12 +37,12 @@ public class Config {
 
     // drive speed
     public static final double DEFAULT_SPEED = 1;
-    public static final double SLOW_SPEED = 0.5;
+    public static final double SLOW_SPEED = 0.2;
     public static final int LERP_SPEED = 5;
 
     // turn speed
     public static final double DEFAULT_TURN = 1;
-    public static final double SLOW_TURN = 0.5;
+    public static final double SLOW_TURN = 0.2;
 
     public static final double HSpos = 1;
 
@@ -65,14 +65,8 @@ public class Config {
     // keybinds
 
     // gamepad1
-    public static final GamepadKeys.Button BIND_SPEED = GamepadKeys.Button.X;
-    public static final GamepadKeys.Button BIND_INTAKE_PICKUP = GamepadKeys.Button.A;
-    public static final GamepadKeys.Button BIND_INTAKE_UP = GamepadKeys.Button.RIGHT_BUMPER;
-    public static final GamepadKeys.Button BIND_INTAKE_LOWER = GamepadKeys.Button.LEFT_BUMPER;
-    public static final GamepadKeys.Button BIND_INTAKE_EJECT = GamepadKeys.Button.Y;
-    public static final GamepadKeys.Button BIND_COLOR_BLUE = GamepadKeys.Button.DPAD_RIGHT;
-    public static final GamepadKeys.Button BIND_COLOR_RED = GamepadKeys.Button.DPAD_LEFT;
-    public static final GamepadKeys.Button BIND_COLOR_YELLOW = GamepadKeys.Button.DPAD_UP;
+    public static final GamepadKeys.Button BIND_SPEED = GamepadKeys.Button.Y;
+    public static final GamepadKeys.Button BIND_INTAKE_EJECT = GamepadKeys.Button.B;
 
     // gamepad2
     public static final GamepadKeys.Button BIND_TOGGLE_CLAW = GamepadKeys.Button.A;
@@ -86,4 +80,5 @@ public class Config {
     public static final GamepadKeys.Button BIND_SCORE_PRESET = GamepadKeys.Button.RIGHT_BUMPER;
     public static final GamepadKeys.Button BIND_WALL_PRESET = GamepadKeys.Button.Y;
     public static final GamepadKeys.Button BIND_CLIP = GamepadKeys.Button.LEFT_STICK_BUTTON;
+    public static final GamepadKeys.Button BIND_INTAKE_TOGGLE = GamepadKeys.Button.RIGHT_STICK_BUTTON;
 }

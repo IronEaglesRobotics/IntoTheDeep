@@ -45,12 +45,6 @@ public class presentation_op extends OpMode {
     @Override
     public void loop(){
         //drive.setDrive(controller,System.currentTimeMillis());
-        double x =gamepad1.left_stick_x, y = -gamepad1.left_stick_y , z = gamepad1.right_stick_x;
-        fl.setPower(((x + y + z)));
-        fr.setPower(((-x + y - z)));
-        bl.setPower(((-x + y + z)));
-        br.setPower(((x + y - z)));
-
         target_pos = Math.max(Math.min(target_pos,60000),0);
 
         Motor1.setPower(gamepad1.left_stick_y);
