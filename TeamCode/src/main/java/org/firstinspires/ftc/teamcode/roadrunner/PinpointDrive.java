@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.stuff_i_need;
+package org.firstinspires.ftc.teamcode.roadrunner;
 
 
 
@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
-import org.firstinspires.ftc.teamcode.messages.PoseMessage;
+import org.firstinspires.ftc.teamcode.roadrunner.messages.PoseMessage;
 
 /**
  * Experimental extension of MecanumDrive that uses the Gobilda Pinpoint sensor for localization.
@@ -32,8 +32,8 @@ public class PinpointDrive extends MecanumDrive {
          */
         //These are tuned for 3110-0002-0001 Product Insight #1
         // RR localizer note: These units are inches, presets are converted from mm (which is why they are inexact)
-        public double xOffset = -3.3071;
-        public double yOffset = -6.6142;
+        public double xOffset = 1;
+        public double yOffset = 3.65;
 
         /*
         Set the kind of pods used by your robot. If you're using goBILDA odometry pods, select either
@@ -45,7 +45,7 @@ public class PinpointDrive extends MecanumDrive {
         To get this value from inPerTick, first convert the value to millimeters (multiply by 25.4)
         and then take its inverse (one over the value)
          */
-        public double encoderResolution = GoBildaPinpointDriverRR.goBILDA_4_BAR_POD;
+        public double encoderResolution = GoBildaPinpointDriverRR.goBILDA_SWINGARM_POD;
 
         /*
         Set the direction that each of the two odometry pods count. The X (forward) pod should
@@ -63,7 +63,7 @@ public class PinpointDrive extends MecanumDrive {
     public PinpointDrive(HardwareMap hardwareMap, Pose2d pose) {
         super(hardwareMap, pose);
         FlightRecorder.write("PINPOINT_PARAMS",PARAMS);
-        pinpoint = hardwareMap.get(GoBildaPinpointDriverRR.class,"pinpoint");
+        pinpoint = hardwareMap.get(GoBildaPinpointDriverRR.class,"odo");
 
         // RR localizer note: don't love this conversion (change driver?)
         pinpoint.setOffsets(DistanceUnit.MM.fromInches(PARAMS.xOffset), DistanceUnit.MM.fromInches(PARAMS.yOffset));

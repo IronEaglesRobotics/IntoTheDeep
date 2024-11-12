@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.stuff_i_need;
+package org.firstinspires.ftc.teamcode.roadrunner;
 
 import androidx.annotation.NonNull;
 
@@ -41,10 +41,10 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
-import org.firstinspires.ftc.teamcode.messages.DriveCommandMessage;
-import org.firstinspires.ftc.teamcode.messages.MecanumCommandMessage;
-import org.firstinspires.ftc.teamcode.messages.MecanumLocalizerInputsMessage;
-import org.firstinspires.ftc.teamcode.messages.PoseMessage;
+import org.firstinspires.ftc.teamcode.roadrunner.messages.DriveCommandMessage;
+import org.firstinspires.ftc.teamcode.roadrunner.messages.MecanumCommandMessage;
+import org.firstinspires.ftc.teamcode.roadrunner.messages.MecanumLocalizerInputsMessage;
+import org.firstinspires.ftc.teamcode.roadrunner.messages.PoseMessage;
 
 import java.lang.Math;
 import java.util.Arrays;
@@ -60,7 +60,7 @@ public class MecanumDrive {
         public RevHubOrientationOnRobot.LogoFacingDirection logoFacingDirection =
                 RevHubOrientationOnRobot.LogoFacingDirection.UP;
         public RevHubOrientationOnRobot.UsbFacingDirection usbFacingDirection =
-                RevHubOrientationOnRobot.UsbFacingDirection.FORWARD;
+                RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD;
 
         // drive model parameters
         public double inPerTick = 1; // SparkFun OTOS Note: you can probably leave this at 1
@@ -217,10 +217,11 @@ public class MecanumDrive {
 
         // TODO: make sure your config has motors with these names (or change them)
         //   see https://ftc-docs.firstinspires.org/en/latest/hardware_and_software_configuration/configuring/index.html
-        leftFront = hardwareMap.get(DcMotorEx.class, "left_front");
-        leftBack = hardwareMap.get(DcMotorEx.class, "left_back");
-        rightBack = hardwareMap.get(DcMotorEx.class, "right_back");
-        rightFront = hardwareMap.get(DcMotorEx.class, "right_front");
+        leftFront = hardwareMap.get(DcMotorEx.class, "motor_ch_0");
+        leftBack = hardwareMap.get(DcMotorEx.class, "motor_ch_1");
+        rightFront = hardwareMap.get(DcMotorEx.class, "motor_ch_2");
+        rightBack = hardwareMap.get(DcMotorEx.class, "motor_ch_3");
+
 
         leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -229,10 +230,12 @@ public class MecanumDrive {
 
         // TODO: reverse motor directions if needed
         //   leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftBack.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // TODO: make sure your config has an IMU with this name (can be BNO or BHI)
         //   see https://ftc-docs.firstinspires.org/en/latest/hardware_and_software_configuration/configuring/index.html
-        lazyImu = new LazyImu(hardwareMap, "imu", new RevHubOrientationOnRobot(
+        lazyImu = new LazyImu(hardwareMap, "imu 2", new RevHubOrientationOnRobot(
                 PARAMS.logoFacingDirection, PARAMS.usbFacingDirection));
 
         voltageSensor = hardwareMap.voltageSensor.iterator().next();
