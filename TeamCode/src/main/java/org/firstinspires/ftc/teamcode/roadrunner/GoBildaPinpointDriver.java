@@ -502,12 +502,6 @@ public class GoBildaPinpointDriver extends I2cDeviceSynchDevice<I2cDeviceSynchSi
                 hOrientation);
     }
 
-    public Pose2d getPositionRR() {
-
-    }
-
-
-
     /**
      * @return a Pose2D containing the estimated velocity of the robot, velocity is unit per second
      */
