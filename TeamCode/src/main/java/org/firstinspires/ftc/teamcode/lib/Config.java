@@ -50,8 +50,8 @@ public class Config {
     public static final double BEATBAR_CHANGE = 1;
 
     // Servo ranges
-    public static final double block_claw_closed = 0;
-    public static final double block_claw_open = .25;
+    public static final double BLOCK_CLAW_CLOSED = 0;
+    public static final double BLOCK_CLAW_OPEN = .25;
     public static final double claw_rot_flat = .38;
     public static final double claw_rot_90 = .04;
     public static final double main_rot_in = .04;

@@ -4,48 +4,38 @@ import static org.firstinspires.ftc.teamcode.lib.Config.SLIDES_BACK;
 import static org.firstinspires.ftc.teamcode.lib.Config.SLIDES_FRONT;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.arcrobotics.ftclib.command.Command;
+import com.arcrobotics.ftclib.command.CommandBase;
+import com.arcrobotics.ftclib.command.InstantCommand;
+import com.arcrobotics.ftclib.command.SequentialCommandGroup;
+import com.arcrobotics.ftclib.command.SubsystemBase;
+import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 @Config
-public class Slides {
-    private DcMotor slide;
-    private DcMotor slide2;
+public class Slides extends SubsystemBase {
+    private final DcMotor slide;
+    private final DcMotor slide2;
+    private PIDController controller = new PIDController(KP, KI, KD);
+    private int target = 0;
 
-    /*public static double p = 0.0014;
-    public static double i = 0.02;
-    public static double d = 0;
-    public static double f = 0.01;*/
-    public static double p = 0.0003;
-    public static double i = 0;
-    public static double d = 0;
-    private double f = 0;
-    private double pTolerance = 200;
-    public PIDController controller = new PIDController(p, i, d);
-
-    public int targetMin = -60000;
-    public int targetMax = 60000;
-
-    public int down = -6500;
-    public int postclip = 20000;
-    public int preclip = 29000;
-    public int init = 3000;
-    public int tier2 = 35000;
-    public int tier3 = 50000;
-    public int tier4 = 60000;
-
-    public int target = 0;
-
-    public int manualSpeed = 20;
-
-    public enum Position { DOWN, PRECLIP, POSTCLIP, INIT, TIER2, TIER3,TIER4 }
+    public static double KP = 0.0003;
+    public static double KI = 0;
+    public static double KD = 0;
+    public static double TOLERANCE = 200;
+    public static int POSITION_MIN = -60000;
+    public static int POSITION_MAX = 60000;
+    public static int POSITION_DOWN = -6500;
+    public static int POSITION_AFTER_CLIP = 20000;
+    public int POSITION_BEFORE_CLIP = 29000;
+    public int POSITION_SCORE_HIGH = 60000;
 
     public Slides(HardwareMap hardwareMap) {
         slide = hardwareMap.get(DcMotor.class, SLIDES_FRONT);
         slide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         slide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//        slide.setDirection(DcMotorSimple.Direction.REVERSE);
         slide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         slide2 = hardwareMap.get(DcMotor.class, SLIDES_BACK);
@@ -55,27 +45,20 @@ public class Slides {
     }
 
     public void setTarget(int pos) {
-        target = Math.min(Math.max(pos, targetMin), targetMax);
+        target = Math.min(Math.max(pos, POSITION_MIN), POSITION_MAX);
     }
 
     public void setTarget(Position pos) {
         int value = 0;
         switch (pos) {
-            case DOWN: value = down; break;
-            case PRECLIP: value = preclip; break;
-            case POSTCLIP: value = postclip; break;
-            case INIT: value = init; break;
-            case TIER2: value = tier2; break;
-            case TIER3: value = tier3; break;
-            case TIER4: value = tier4; break;
-            default: value = targetMin; // or handle unexpected cases
+            case DOWN: value = POSITION_DOWN; break;
+            case PRECLIP: value = POSITION_BEFORE_CLIP; break;
+            case POSTCLIP: value = POSITION_AFTER_CLIP; break;
+            case SCORE_LOW: value = POSITION_SCORE_HIGH; break;
+            case SCORE_HIGH: value = POSITION_SCORE_HIGH; break;
+            default: value = POSITION_MIN; // or handle unexpected cases
         }
-        target = Math.min(Math.max(value, targetMin), targetMax);
-    }
-
-    public void increaseTarget(double increase) {
-        target += (int) (increase * manualSpeed);
-        target = Math.min(targetMax, Math.max(targetMin, target));
+        target = Math.min(Math.max(value, POSITION_MIN), POSITION_MAX);
     }
 
     public int getTarget() {
@@ -91,42 +74,65 @@ public class Slides {
     }
 
     public void targetReset() {
-        target = targetMin;
+        target = POSITION_MIN;
     }
 
-    public void update(double runTime) {
-//        highPos = 720 + heightOffset;
-//        midPos = 350 + heightOffset;
-//        lowPos = heightOffset;
-//        pickupPos = 20 + heightOffset;
-//        downPos = heightOffset;// TODO add these back in
+    @Override
+    public void periodic() {
+        double result;
+        controller.setPID(KP, KI, KD);
+        controller.setTolerance(TOLERANCE);
 
-//        if (target == 0) {
-//            slide.setPower(0);
-//            slide2.setPower(0);
-//        } else {
-//            if (target < 5) {
-//                slide.setPower(0);
-//                slide2.setPower(0);
-//            } else {
-        double pid, ff;
-        controller.setPID(p, i, d);
-        controller.setTolerance(pTolerance);
-
-        pid = controller.calculate(-slide.getCurrentPosition(), target);
-        pid = Math.min(Math.max(pid,-1),1);
-        ff = f;
-        slide.setPower((pid + ff));
-        slide2.setPower((pid + ff));
-
-        //pid = controller.calculate(slide2.getCurrentPosition(), target);
-        //ff = f;
-        //slide2.setPower(pid + ff);
-//            }
-//        }
+        result = controller.calculate(-slide.getCurrentPosition(), target);
+        result = Math.min(Math.max(result,-1),1);
+        slide.setPower((result));
+        slide2.setPower((result));
     }
 
-    public String getTelemetry() {
-        return String.format("Position: %s %s\nTarget: %s %s\nPower: %s %s\nHeightOffset: %s", slide.getCurrentPosition(), slide2.getCurrentPosition(), target, target, slide.getPower(), slide2.getPower());
+    public enum Position {
+        DOWN,
+        PRECLIP,
+        POSTCLIP,
+        SCORE_LOW,
+        SCORE_HIGH
+    }
+
+    public static class LiftPositionCommand extends CommandBase {
+        Position position;
+        Slides slides;
+
+        public LiftPositionCommand(Slides slides, Position position) {
+            this.slides = slides;
+            this.position = position;
+
+            addRequirements(slides);
+        }
+
+        @Override
+        public void initialize() {
+            slides.setTarget(position);
+        }
+
+        @Override
+        public boolean isFinished() {
+            return slides.atTarget();
+        }
+    }
+
+    public static class LiftEncoderPositionCommand extends InstantCommand {
+        double position;
+        Slides slides;
+
+        public LiftEncoderPositionCommand(Slides slides, double position) {
+            this.slides = slides;
+            this.position = position;
+
+            addRequirements(slides);
+        }
+
+        @Override
+        public void initialize() {
+            slides.setTarget(this.slides.getTarget() + (int) (position * 1000));
+        }
     }
 }
