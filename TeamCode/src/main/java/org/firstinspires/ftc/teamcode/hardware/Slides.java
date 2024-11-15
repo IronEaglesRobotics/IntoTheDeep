@@ -4,12 +4,9 @@ import static org.firstinspires.ftc.teamcode.lib.Config.SLIDES_BACK;
 import static org.firstinspires.ftc.teamcode.lib.Config.SLIDES_FRONT;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.arcrobotics.ftclib.command.Command;
 import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.command.InstantCommand;
-import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.SubsystemBase;
-import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -25,8 +22,10 @@ public class Slides extends SubsystemBase {
     public static double KI = 0;
     public static double KD = 0;
     public static double TOLERANCE = 200;
+    
     public static int POSITION_MIN = -60000;
     public static int POSITION_MAX = 60000;
+    
     public static int POSITION_DOWN = -6500;
     public static int POSITION_AFTER_CLIP = 20000;
     public int POSITION_BEFORE_CLIP = 29000;
@@ -51,12 +50,23 @@ public class Slides extends SubsystemBase {
     public void setTarget(Position pos) {
         int value = 0;
         switch (pos) {
-            case DOWN: value = POSITION_DOWN; break;
-            case PRECLIP: value = POSITION_BEFORE_CLIP; break;
-            case POSTCLIP: value = POSITION_AFTER_CLIP; break;
-            case SCORE_LOW: value = POSITION_SCORE_HIGH; break;
-            case SCORE_HIGH: value = POSITION_SCORE_HIGH; break;
-            default: value = POSITION_MIN; // or handle unexpected cases
+            case DOWN:
+                value = POSITION_DOWN;
+                break;
+            case PRECLIP:
+                value = POSITION_BEFORE_CLIP;
+                break;
+            case POSTCLIP:
+                value = POSITION_AFTER_CLIP;
+                break;
+            case SCORE_LOW:
+                value = POSITION_SCORE_HIGH;
+                break;
+            case SCORE_HIGH:
+                value = POSITION_SCORE_HIGH;
+                break;
+            default:
+                value = POSITION_MIN; // or handle unexpected cases
         }
         target = Math.min(Math.max(value, POSITION_MIN), POSITION_MAX);
     }
@@ -84,7 +94,7 @@ public class Slides extends SubsystemBase {
         controller.setTolerance(TOLERANCE);
 
         result = controller.calculate(-slide.getCurrentPosition(), target);
-        result = Math.min(Math.max(result,-1),1);
+        result = Math.min(Math.max(result, -1), 1);
         slide.setPower((result));
         slide2.setPower((result));
     }
@@ -96,7 +106,9 @@ public class Slides extends SubsystemBase {
         SCORE_LOW,
         SCORE_HIGH
     }
-
+    public DPadDownCommand dPadDownCommand = new DPadDownCommand(this);
+    public DPadUpCommand dPadUpCommand = new DPadUpCommand(this);
+    
     public static class LiftPositionCommand extends CommandBase {
         Position position;
         Slides slides;
@@ -133,6 +145,49 @@ public class Slides extends SubsystemBase {
         @Override
         public void initialize() {
             slides.setTarget(this.slides.getTarget() + (int) (position * 1000));
+        }
+    }
+
+    public static class DPadUpCommand extends InstantCommand {
+        Position curPosition = Position.DOWN;
+        Slides slides;
+        int index;
+
+        public DPadUpCommand(Slides slides) {
+            this.slides = slides;
+
+            addRequirements(slides);
+        }
+
+        @Override
+        public void initialize() {
+            Position foo = curPosition;
+            int idx = foo.ordinal();
+            idx = Math.min(idx + 1, Position.values().length);
+            Position nextFoo = Position.values()[idx];
+            slides.setTarget(nextFoo);
+            curPosition = nextFoo;
+        }
+    }
+    public static class DPadDownCommand extends InstantCommand {
+        Position curPosition = Position.DOWN;
+        Slides slides;
+        int index;
+
+        public DPadDownCommand(Slides slides) {
+            this.slides = slides;
+
+            addRequirements(slides);
+        }
+
+        @Override
+        public void initialize() {
+            Position foo = curPosition;
+            int idx = foo.ordinal();
+            idx = Math.min(idx - 1, Position.values().length);
+            Position nextFoo = Position.values()[idx];
+            slides.setTarget(nextFoo);
+            curPosition = nextFoo;
         }
     }
 }
