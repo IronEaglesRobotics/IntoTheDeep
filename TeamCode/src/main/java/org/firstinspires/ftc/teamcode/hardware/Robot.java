@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
 import com.acmerobotics.roadrunner.Pose2d;
+import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
@@ -12,6 +13,7 @@ public class Robot {
     private Claw claw;
     private Hang hang;
     private Slides slides;
+    private boolean beatbar = false;
 
     public Robot init(HardwareMap hardwareMap) {
         drive = new PinpointDrive(hardwareMap, new Pose2d(0,0,0));
@@ -43,5 +45,32 @@ public class Robot {
 
     public Claw getClaw() {
         return claw;
+    }
+
+    public armActivate activate = new armActivate(intake,intakeArm);
+
+    public void activateIntake(){
+        intakeArm.toggleExtension();
+        intake.toggleWrist();
+        if (beatbar) {
+            intake.startBeatBar();
+        }
+        beatbar = !beatbar;
+    }
+
+    public static class armActivate extends SequentialCommandGroup {
+        Intake intake;
+        IntakeArm intakeArm;
+
+        private armActivate(Intake tIntake, IntakeArm tIntakeArm){
+            intake = tIntake;
+            intakeArm = tIntakeArm;
+
+//            addCommands(intakeArm.extendCommand,
+//                    ()->{intake.toggleWrist();},
+//                    ()->{intake.startBeatBar();}// place holders for actual commands
+//            );
+        }
+
     }
 }

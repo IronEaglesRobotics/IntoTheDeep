@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.hardware;
 import static org.firstinspires.ftc.teamcode.lib.Config.LEFT_ARM;
 import static org.firstinspires.ftc.teamcode.lib.Config.RIGHT_ARM;
 
-import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.SubsystemBase;
@@ -37,7 +36,7 @@ public class IntakeArm extends SubsystemBase {
         up = !up;
     }
 
-    public void toggleExtenssion() {
+    public void toggleExtension() {
         ex_save = out ? .5 : 0;
         out = !out;
     }
@@ -83,7 +82,7 @@ public class IntakeArm extends SubsystemBase {
         }
         @Override
         public void initialize() {
-            arm.toggleExtenssion();
+            arm.toggleExtension();
         }
     }
     public static class RaiseCommand extends SequentialCommandGroup {
