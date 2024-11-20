@@ -1,5 +1,10 @@
 package org.firstinspires.ftc.teamcode.roadrunner;
 
+import static org.firstinspires.ftc.teamcode.lib.Config.BL_WHEEL;
+import static org.firstinspires.ftc.teamcode.lib.Config.BR_WHEEL;
+import static org.firstinspires.ftc.teamcode.lib.Config.FL_WHEEL;
+import static org.firstinspires.ftc.teamcode.lib.Config.FR_WHEEL;
+
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.canvas.Canvas;
@@ -217,10 +222,10 @@ public class MecanumDrive {
 
         // TODO: make sure your config has motors with these names (or change them)
         //   see https://ftc-docs.firstinspires.org/en/latest/hardware_and_software_configuration/configuring/index.html
-        leftFront = hardwareMap.get(DcMotorEx.class, "motor_ch_0");
-        leftBack = hardwareMap.get(DcMotorEx.class, "motor_ch_1");
-        rightFront = hardwareMap.get(DcMotorEx.class, "motor_ch_2");
-        rightBack = hardwareMap.get(DcMotorEx.class, "motor_ch_3");
+        leftFront = hardwareMap.get(DcMotorEx.class, FL_WHEEL);
+        leftBack = hardwareMap.get(DcMotorEx.class, BL_WHEEL);
+        rightFront = hardwareMap.get(DcMotorEx.class, FR_WHEEL);
+        rightBack = hardwareMap.get(DcMotorEx.class, BR_WHEEL);
 
 
         leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -235,7 +240,7 @@ public class MecanumDrive {
 
         // TODO: make sure your config has an IMU with this name (can be BNO or BHI)
         //   see https://ftc-docs.firstinspires.org/en/latest/hardware_and_software_configuration/configuring/index.html
-        lazyImu = new LazyImu(hardwareMap, "imu 2", new RevHubOrientationOnRobot(
+        lazyImu = new LazyImu(hardwareMap, "imu", new RevHubOrientationOnRobot(
                 PARAMS.logoFacingDirection, PARAMS.usbFacingDirection));
 
         voltageSensor = hardwareMap.voltageSensor.iterator().next();
