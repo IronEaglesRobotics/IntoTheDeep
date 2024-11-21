@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
+import static org.firstinspires.ftc.teamcode.lib.Config.INTAKE_LEFT;
+import static org.firstinspires.ftc.teamcode.lib.Config.INTAKE_RIGHT;
 import static org.firstinspires.ftc.teamcode.lib.Config.LEFT_ARM;
 import static org.firstinspires.ftc.teamcode.lib.Config.RIGHT_ARM;
 
@@ -25,8 +27,8 @@ public class IntakeArm extends SubsystemBase {
         rotation2 = HardwareMap.get(Servo.class, RIGHT_ARM);
         rotation2.setDirection(Servo.Direction.REVERSE);
 
-        extension1 = HardwareMap.get(Servo.class, "");
-        extension2 = HardwareMap.get(Servo.class, "");
+        extension1 = HardwareMap.get(Servo.class, INTAKE_LEFT);
+        extension2 = HardwareMap.get(Servo.class, INTAKE_RIGHT);
         extension2.setDirection(Servo.Direction.REVERSE);
 
     }

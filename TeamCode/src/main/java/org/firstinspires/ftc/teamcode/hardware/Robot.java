@@ -19,6 +19,9 @@ public class Robot {
         drive = new PinpointDrive(hardwareMap, new Pose2d(0,0,0));
         intake = new Intake(hardwareMap);
         intakeArm = new IntakeArm(hardwareMap);
+        claw = new Claw(hardwareMap);
+        hang = new Hang(hardwareMap);
+        slides = new Slides(hardwareMap);
 
         return this;
     }

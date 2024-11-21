@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.opmodes;
 import org.firstinspires.ftc.teamcode.hardware.Robot;
 import org.firstinspires.ftc.teamcode.hardware.Slides;
 
+import com.acmerobotics.roadrunner.PoseVelocity2d;
+import com.acmerobotics.roadrunner.Vector2d;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.button.Trigger;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
@@ -37,5 +39,10 @@ public class TeleOpMain extends CommandOpMode {
 
         new Trigger(() -> Math.abs(controller2.getLeftY()) > 0.1)
                 .whenActive(new Slides.LiftEncoderPositionCommand(robot.getSlides(), controller2.getLeftY()));
+
+        robot.getDrive().setDrivePowers(new PoseVelocity2d(
+                new Vector2d(controller1.getLeftY(),controller1.getLeftX())
+                ,controller1.getRightX()
+        ));
     }
 }
