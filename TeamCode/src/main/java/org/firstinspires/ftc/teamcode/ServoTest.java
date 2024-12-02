@@ -62,44 +62,36 @@ import com.qualcomm.robotcore.util.Range;
  */
 @TeleOp(name="Servo Opmode", group="Iterative OpMode")
 //@Disabled
-public class ServoTest extends LinearOpMode{
+public class ServoTest extends LinearOpMode {
 
-    public Servo leftHand;
-    public double OPEN = .5;
-    public double CLOSE =0;
-    public boolean STATE = true;
-    GamepadEx controller1;
+    public Servo claw;
+    public double OPEN = 1;
+    public double CLOSE = 0;
+    public Servo wrist;
+    public Servo arm;
 
 
     @Override
-public void runOpMode() throws InterruptedException{
-        leftHand = hardwareMap.servo.get("aS");
-//        leftHand.scaleRange(OPEN, CLOSE);
-        controller1=new GamepadEx(gamepad1);
-    waitForStart();
+    public void runOpMode() throws InterruptedException {
+        arm = hardwareMap.servo.get("a");
+        wrist = hardwareMap.servo.get("a");
+        claw = hardwareMap.servo.get("a");
+        waitForStart();
 
         while (opModeIsActive()) {
-            controller1.readButtons();
+            if(gamepad1.a){
+                arm.setPosition(OPEN);
+                wrist.setPosition(OPEN);
+                claw.setPosition(OPEN);
 
-//            if (gamepad1.
-//                OPEN += .05;
-//            } else if (gamepad1.dpad_down) {
-//                OPEN -= .05;a
-//            }
-
-            if (controller1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER) && STATE) {
-                leftHand.setPosition(0);
-                STATE = false;
-            } else if (controller1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
-                leftHand.setPosition(CLOSE);
-                STATE = true;
             }
-//
-//            else {
-//                stop();
-//            }
-            telemetry.addData("STATE",STATE);
-            telemetry.update();
-            telemetry.addData("open",OPEN);
+
+            if(gamepad1.y){
+                arm.setPosition(CLOSE);
+                wrist.setPosition(CLOSE);
+                claw.setPosition(CLOSE);
+            }
+
+        }
     }
-}}
+}
