@@ -68,7 +68,6 @@ public class PinpointDrive extends MecanumDrive {
         // RR localizer note: don't love this conversion (change driver?)
         pinpoint.setOffsets(DistanceUnit.MM.fromInches(PARAMS.xOffset), DistanceUnit.MM.fromInches(PARAMS.yOffset));
 
-
         pinpoint.setEncoderResolution(PARAMS.encoderResolution);
 
         pinpoint.setEncoderDirections(PARAMS.xDirection, PARAMS.yDirection);
@@ -83,6 +82,7 @@ public class PinpointDrive extends MecanumDrive {
          */
         //pinpoint.recalibrateIMU();
         pinpoint.resetPosAndIMU();
+        lazyImu.get().resetYaw();
         // wait for pinpoint to finish calibrating
         try {
             Thread.sleep(300);
