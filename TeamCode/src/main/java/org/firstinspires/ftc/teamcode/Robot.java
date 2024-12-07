@@ -10,100 +10,40 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Robot {
 
     Drive drive;
-    Extendo extendo;
-    TopExtendo topExtendo;
     Lift lift;
     Claw claw;
-    Intake intake;
-    TiltRight tiltRight;
-    TiltLeft tiltLeft;
     Wrist wrist;
-    Elbow elbow;
     Arm arm;
     public static double test = 0.0;
 
     public Robot(HardwareMap hardwareMap) {
         this.drive = new Drive(hardwareMap);
         this.claw = new Claw(hardwareMap);
-        this.intake = new Intake(hardwareMap);
-        this.tiltRight = new TiltRight(hardwareMap);
-        this.tiltLeft = new TiltLeft(hardwareMap);
         // this.lift = new Lift(hardwareMap);
         this.lift = new Lift(hardwareMap);
-        this.extendo = new Extendo(hardwareMap);
-        this.topExtendo = new TopExtendo(hardwareMap);
         this.arm = new Arm(hardwareMap);
-        this.elbow = new Elbow(hardwareMap);
         this.wrist = new Wrist(hardwareMap);
     }
 
-    public static class Extendo {
-        private Servo extendoRight;
-        private Servo extendoLeft;
-
-        public Extendo(HardwareMap hardwareMap) {
-
-            extendoRight = hardwareMap.servo.get("eR");
-            extendoLeft = hardwareMap.servo.get("eL");
-            extendoRight.setDirection(Servo.Direction.REVERSE);
-        }
-
-        public void moveTo(double position) {
-            this.extendoRight.setPosition(position);
-            this.extendoLeft.setPosition(position);
-        }
-    }
-
-    public static class TopExtendoLeft {
-
-        public TopExtendoLeft(HardwareMap hardwareMap) {
-
-        }
-
-    }
-
-    public static class TopExtendo {
-        private Servo topExtendoRight;
-        private Servo topExtendoLeft;
-
-        public void setPosition(double position) {
-            this.topExtendoRight.setPosition(position);
-            this.topExtendoLeft.setPosition(position);
-        }
-        public TopExtendo(HardwareMap hardwareMap) {
-            topExtendoRight = hardwareMap.servo.get("TeR");
-            topExtendoLeft = hardwareMap.servo.get("TeL");
-        }
-    }
-
     public static class Lift {
-        private DcMotor liftRight;
-        private DcMotor liftLeft;
+        public DcMotor lift;
         // double ticks = 384.5;
         // double newTarget;
 
         public Lift(HardwareMap hardwareMap) {
-            liftRight = hardwareMap.get(DcMotor.class, "liftR");
-            liftRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            liftRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//            liftRight.setDirection(DcMotorSimple.Direction.REVERSE);
+            lift = hardwareMap.get(DcMotor.class, "lift");
+            lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-            liftLeft = hardwareMap.get(DcMotor.class, "liftL");
-            liftLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            liftLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-
-            liftLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+            lift.setDirection(DcMotorSimple.Direction.REVERSE);
 
         }
 
-        public void setTargetPosition(int p) {
-            this.liftRight.setTargetPosition(p);
-            this.liftLeft.setTargetPosition(p);
-            this.liftRight.setPower(p);
-            this.liftLeft.setPower(p);
-            this.liftLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            this.liftRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        public void setTargetPosition(int pos,double p) {
+            this.lift.setTargetPosition(pos);
+            this.lift.setPower(p);
+            this.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+          //  this.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         }
 
@@ -111,8 +51,8 @@ public class Robot {
         }
 
         public void setMode(DcMotor.RunMode mode){
-            this.liftRight.setMode(mode);
-            this.liftLeft.setMode(mode);
+            this.lift.setMode(mode);
+            this.lift.setMode(mode);
         }
 
     }
@@ -124,7 +64,7 @@ public class Robot {
         }
 
         public Claw(HardwareMap hardwareMap) {
-            claw = hardwareMap.servo.get("c");
+            claw = hardwareMap.servo.get("claw");
         }
     }
 
@@ -134,68 +74,21 @@ public class Robot {
             this.wrist.setPosition(position);
         }
         public Wrist(HardwareMap hardwareMap) {
-            wrist = hardwareMap.servo.get("j1");
-        }
-    }
-
-    public static class Elbow {
-        private Servo elbow;
-        public void setPosition(double position){
-            this.elbow.setPosition(position);
-        }
-        public Elbow(HardwareMap hardwareMap){
-            elbow = hardwareMap.servo.get("j2");
+            wrist = hardwareMap.servo.get("wrist");
         }
     }
 
     public static class Arm {
-        private Servo leftArm;
-        private Servo rightArm;
+        private Servo Arm;
 
         public void setPosition(double position){
-            this.leftArm.setPosition(position);
+            this.Arm.setPosition(position);
             // this.rightArm.setPosition(position);
         }
         public Arm(HardwareMap hardwareMap){
-            leftArm = hardwareMap.servo.get("j3L");
+            Arm = hardwareMap.servo.get("arm");
             //  rightArm = hardwareMap.servo.get("j3R");
-            leftArm.setDirection(Servo.Direction.REVERSE);
-        }
-    }
-
-    public static class Intake {
-        private DcMotor intake;
-        public void setSpin(double power) {
-            this.intake.setPower(power);
-        }
-
-        public Intake(HardwareMap hardwareMap) {
-            intake = hardwareMap.dcMotor.get("s");
-
-            intake.setDirection(DcMotor.Direction.FORWARD);
-        }
-    }
-
-    public static class TiltRight {
-        private Servo tiltRight;
-        public void setPosition(double position) {
-            this.tiltRight.setPosition(position);
-        }
-        public TiltRight(HardwareMap hardwareMap) {
-            tiltRight = hardwareMap.servo.get("tR");
-            tiltRight.setDirection(Servo.Direction.FORWARD);
-        }
-
-    }
-
-    public static class TiltLeft {
-        private Servo tiltLeft;
-        public void setPosition(double position) {
-            this.tiltLeft.setPosition(position);
-        }
-        public TiltLeft(HardwareMap hardwareMap) {
-            tiltLeft = hardwareMap.servo.get("tL");
-            tiltLeft.setDirection(Servo.Direction.REVERSE);
+            Arm.setDirection(Servo.Direction.REVERSE);
         }
     }
 
@@ -204,17 +97,44 @@ public class Robot {
         private DcMotor BL;
         private DcMotor FR;
         private DcMotor BR;
+        private DcMotor encoderLeft;
+        private DcMotor encoderRight;
+        private DcMotor encoderAux;
 
         public Drive(HardwareMap hardwareMap) {
-            FL = hardwareMap.dcMotor.get("frontLeft");
-            BL = hardwareMap.dcMotor.get("backLeft");
-            FR = hardwareMap.dcMotor.get("frontRight");
-            BR = hardwareMap.dcMotor.get("backRight");
-
+            FL = hardwareMap.dcMotor.get("fld");
             FL.setDirection(DcMotor.Direction.REVERSE);
+            FL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            FL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+            BL = hardwareMap.dcMotor.get("bld");
             BL.setDirection(DcMotor.Direction.REVERSE);
+            BL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            BL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+
+            FR = hardwareMap.dcMotor.get("fld");
             FR.setDirection(DcMotor.Direction.REVERSE);
+            FR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            FR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+
+            BR = hardwareMap.dcMotor.get("bld");
             BR.setDirection(DcMotor.Direction.REVERSE);
+            BR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            BR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+            encoderLeft = BL;
+            encoderRight = BR;
+            encoderAux = FR;
+
+
+
+
+
+
+
+
 
         }
 

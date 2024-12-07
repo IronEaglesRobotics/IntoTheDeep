@@ -32,6 +32,7 @@ package org.firstinspires.ftc.teamcode;
 
 import android.graphics.Path;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -60,46 +61,52 @@ import com.qualcomm.robotcore.util.Range;
  * Also add a new OpMode, select the sample ConceptExternalHardwareClass.java, and select TeleOp.
  *
  */
+@Config
 @TeleOp(name="Servo Opmode", group="Iterative OpMode")
 //@Disabled
-public class ServoTest extends LinearOpMode{
+public class ServoTest extends LinearOpMode {
 
-    public Servo leftHand;
-    public double OPEN = .5;
-    public double CLOSE =0;
-    public boolean STATE = true;
-    GamepadEx controller1;
+    public Servo claw;
+    public double OPEN = 1;
+    public double CLOSE = 0;
+    public Servo wrist;
+    public Servo arm;
+
+    public static double armPickUp;
+    public static double Arm;
+    public static double armInit = 1;
+    public static double clawOpen = 0.5;
+    public static double clawInit = .6;
+    public static double clawClose = 0.05;
 
 
     @Override
-public void runOpMode() throws InterruptedException{
-        leftHand = hardwareMap.servo.get("aS");
-//        leftHand.scaleRange(OPEN, CLOSE);
-        controller1=new GamepadEx(gamepad1);
-    waitForStart();
+    public void runOpMode() throws InterruptedException {
+        arm = hardwareMap.servo.get("arm");
+        wrist = hardwareMap.servo.get("wrist");
+        claw = hardwareMap.servo.get("claw");
+        arm.setDirection(Servo.Direction.REVERSE);
+
+        arm.setPosition(armInit);
+        claw.setPosition(clawInit);
+
+
+        waitForStart();
 
         while (opModeIsActive()) {
-            controller1.readButtons();
+            if(gamepad1.a){
+              //  arm.setPosition(Arm);
+              //  wrist.setPosition(OPEN);
+                claw.setPosition(clawOpen);
 
-//            if (gamepad1.
-//                OPEN += .05;
-//            } else if (gamepad1.dpad_down) {
-//                OPEN -= .05;a
-//            }
-
-            if (controller1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER) && STATE) {
-                leftHand.setPosition(0);
-                STATE = false;
-            } else if (controller1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
-                leftHand.setPosition(CLOSE);
-                STATE = true;
             }
-//
-//            else {
-//                stop();
-//            }
-            telemetry.addData("STATE",STATE);
-            telemetry.update();
-            telemetry.addData("open",OPEN);
+
+            if(gamepad1.y){
+               // arm.setPosition(CLOSE);
+               // wrist.setPosition(CLOSE);
+                claw.setPosition(clawClose);
+            }
+
+        }
     }
-}}
+}
