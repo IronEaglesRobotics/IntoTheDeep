@@ -39,7 +39,7 @@ public class IntakeArm extends SubsystemBase {
     }
 
     public void toggleExtension() {
-        ex_save = out ? .5 : 0;
+        ex_save = out ? 1 : 0;
         out = !out;
     }
 
@@ -50,6 +50,13 @@ public class IntakeArm extends SubsystemBase {
         return rotation1.getPosition() == ex_save;
     }
 
+    public boolean isOut() {
+        return out;
+    }
+
+    public boolean isUp() {
+        return up;
+    }
 
     public void periodic() {
         rotation1.setPosition(rot_save);
@@ -93,10 +100,18 @@ public class IntakeArm extends SubsystemBase {
         public RaiseCommand(IntakeArm intakeArm) {
             arm = intakeArm;
             addRequirements(intakeArm);
-            addCommands(
+            if (arm.isOut()){
+                addCommands(
+                    new ExtendCommand(arm),
                     new RotateCommand(arm),
                     new ExtendCommand(arm)
-            );
+                );
+            } else {
+                addCommands(
+                        new RotateCommand(arm),
+                        new ExtendCommand(arm)
+                );
+            }
         }
 
     }

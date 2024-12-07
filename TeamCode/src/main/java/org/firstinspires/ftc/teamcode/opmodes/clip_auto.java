@@ -35,7 +35,7 @@ public class clip_auto  extends LinearOpMode {
                 .lineToX(25)
                 .waitSeconds(.5)
                 .turn(90)
-                .afterDisp(0,robot.getIntake()::reversBeatBar)
+                .afterDisp(0,robot.getIntake()::reverseBeatBar)
                 .afterTime(1,robot.getIntakeArm()::toggleExtension)
                 .splineToLinearHeading(new Pose2d(20,0,Math.toRadians(135)),0)
                 .build();

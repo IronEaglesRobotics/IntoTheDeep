@@ -63,6 +63,11 @@ public class Config {
     public static final double eject_rot_in = .02;
     public static final double eject_rot_out = .55;
 
+    public static double extendlowscale2 = .325;
+    public static double extendhighscale2 = .93;
+    public static double extendlowscale1 = 0;
+    public static double extendhighscale1 = .58;
+
     // keybinds
 
     // gamepad1

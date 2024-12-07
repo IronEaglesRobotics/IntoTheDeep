@@ -69,10 +69,10 @@ public class Robot {
             intake = tIntake;
             intakeArm = tIntakeArm;
 
-//            addCommands(intakeArm.extendCommand,
-//                    ()->{intake.toggleWrist();},
-//                    ()->{intake.startBeatBar();}// place holders for actual commands
-//            );
+            addCommands(intakeArm.extendCommand,
+                    ()->{intake.toggleWrist();},
+                    ()->{intake.startBeatBar();}// place holders for actual commands
+            );
         }
 
     }
