@@ -31,19 +31,20 @@ public class TeleOp extends OpMode {
     public double swingTimer = 0;
 
     public static int SLIDES_DOWN = 0;
-    public static int SLIDES_PICKUP = 900;
-    public static int SLIDES_SCORE1;
-    public static int SLIDES_HIGH_BUCKET;
-    public static int SLIDES_SCORE2;
+    public static int SLIDES_PICKUP = 500;
+    public static int SLIDES_SCORE1 = 1900;
+    public static int SLIDES_HIGH_BUCKET = 3000;
+    public static int SLIDES_SCORE2 = 1550;
 
     public static double armPickUp = 0.05;
     public static double armFloor = 0.01;
     public static double armInit = 0.25;
     public static double armBucket = 0.25;
     public static double armSpec = 0.05;
+    public static double armScore = 0.03;
     public static double clawOpen = 0.5;
     public static double clawInit = 0.05;
-    public static double clawClose = 0.05;
+    public static double clawClose = 0;
     public static double wristFloor;
     public static double wristScore;
 
@@ -56,7 +57,6 @@ public class TeleOp extends OpMode {
 
         robot.arm.setPosition(armInit);
         robot.claw.setPosition(clawInit);
-        robot.wrist.setPosition(1);
 
 
     }
@@ -76,21 +76,26 @@ public class TeleOp extends OpMode {
         telemetry.update();
 
         if (gamepad2.dpad_up) {
-            //robot.lift.setTargetPosition(SLIDES_HIGH_BUCKET, 0.5);
+            robot.lift.setTargetPosition(SLIDES_HIGH_BUCKET, 0.5);
             robot.arm.setPosition(armBucket);
-            // robot.wrist.setPosition(wristScore);
+            //robot.wrist.setPosition(wristScore);
         }
 
         if (gamepad2.dpad_down) {
-            //robot.lift.setTargetPosition(SLIDES_DOWN, 0.5);
-            //robot.claw.setPosition(clawClose);
+            robot.lift.setTargetPosition(SLIDES_DOWN, 1);
+         //   robot.claw.setPosition(clawClose);
             robot.arm.setPosition(armFloor);
             // robot.wrist.setPosition(wristFloor);
         }
 
         if (gamepad2.dpad_left) {
-            //robot.lift.setTargetPosition(SLIDES_PICKUP, 0.2);
+            robot.lift.setTargetPosition(SLIDES_PICKUP, 0.2);
             robot.arm.setPosition(armPickUp);
+        }
+
+        if(gamepad2.y){
+            robot.lift.setTargetPosition(SLIDES_SCORE2, 0.5);
+            robot.arm.setPosition(armScore);
         }
 
 //        swingMacro(controller2);
@@ -102,9 +107,8 @@ public class TeleOp extends OpMode {
 
 
         if (gamepad2.dpad_right) {
-//            robot.lift.setTargetPosition(SLIDES_SCORE1);
-//            robot.lift.setPower(0.5);
-            robot.arm.setPosition(armSpec);
+            robot.lift.setTargetPosition(SLIDES_SCORE1, 0.5);
+            robot.arm.setPosition(armScore);
         }
 
         if (gamepad2.a) {
