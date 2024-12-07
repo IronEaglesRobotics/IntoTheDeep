@@ -1,9 +1,11 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.I2cAddr;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -17,6 +19,10 @@ public class MechanicumWheels extends LinearOpMode {
     public DcMotor BR;
     public Servo intake1;
     public Servo intake2;
+
+    public MechanicumWheels(HardwareMap hardwareMap, Pose2d startPose) {
+
+    }
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -65,6 +71,37 @@ public class MechanicumWheels extends LinearOpMode {
                 intake2.setPosition(0);
             }
         }
+    }
 
+    public void setDrivePower(double x, double y, double rx) {
+        double denominator = Math.abs(Math.abs(y) + Math.abs(x) + Math.abs(rx));
+
+        double FLPower = (y + x + rx) / denominator;
+        double BLPower = (y - x + rx) / denominator;
+        double FRPower = (y - x - rx) / denominator;
+        double BRPower = (y + x - rx) / denominator;
+
+        FL.setPower(FLPower);
+        BL.setPower(BLPower);
+        FR.setPower(FRPower);
+        BR.setPower(BRPower);
+    }
+
+    public void setDrivePower(Pose2d newPose) {
+        double x = newPose.getX();
+        double y = newPose.getY();
+        double rx = newPose.getHeading();
+
+        double denominator = Math.abs(Math.abs(y) + Math.abs(x) + Math.abs(rx));
+
+        double FLPower = (y + x + rx) / denominator;
+        double BLPower = (y - x + rx) / denominator;
+        double FRPower = (y - x - rx) / denominator;
+        double BRPower = (y + x - rx) / denominator;
+
+        FL.setPower(FLPower);
+        BL.setPower(BLPower);
+        FR.setPower(FRPower);
+        BR.setPower(BRPower);
     }
 }
