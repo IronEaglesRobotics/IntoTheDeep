@@ -113,6 +113,8 @@ public class TeleOp extends OpMode {
             robot.claw.setPosition(clawClose);
         }
 
+        if
+
     }}
 
 //    public void swingMacro(GamepadEx cont2){
