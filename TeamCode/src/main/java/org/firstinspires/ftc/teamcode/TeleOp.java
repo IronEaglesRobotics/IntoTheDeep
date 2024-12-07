@@ -36,11 +36,11 @@ public class TeleOp extends OpMode {
     public static int SLIDES_HIGH_BUCKET;
     public static int SLIDES_SCORE2;
 
-    public static double armPickUp;
-    public static double armFloor = 0;
-    public static double armInit = 0;
-    public static double armBucket;
-    public static double armSpec = 0;
+    public static double armPickUp = 0.05;
+    public static double armFloor = 0.01;
+    public static double armInit = 0.25;
+    public static double armBucket = 0.25;
+    public static double armSpec = 0.05;
     public static double clawOpen = 0.5;
     public static double clawInit = 0.05;
     public static double clawClose = 0.05;
@@ -112,8 +112,6 @@ public class TeleOp extends OpMode {
         } else if (gamepad2.b) {
             robot.claw.setPosition(clawClose);
         }
-
-        if
 
     }}
 
