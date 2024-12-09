@@ -19,7 +19,6 @@ public class Robot {
     public Robot(HardwareMap hardwareMap) {
         this.drive = new Drive(hardwareMap);
         this.claw = new Claw(hardwareMap);
-        // this.lift = new Lift(hardwareMap);
         this.lift = new Lift(hardwareMap);
         this.arm = new Arm(hardwareMap);
         this.wrist = new Wrist(hardwareMap);
@@ -144,13 +143,13 @@ public class Robot {
             double x = -gamepad1.left_stick_x;
             double rx = -gamepad1.right_stick_x;
 
-            double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 0.2);
+            double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 2);
 
 
 
             //sets motor power based on input
-            double FLPower = ((-y - x - rx) / denominator);
-            double BLPower = ((y - x + rx) / denominator);
+            double FLPower = ((y - x + rx) / denominator);
+            double BLPower = ((-y - x - rx) / denominator);
             double FRPower = ((y - x - rx) / denominator);
             double BRPower = ((y + x - rx) / denominator);
 
