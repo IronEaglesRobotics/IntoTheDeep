@@ -14,6 +14,7 @@ public class set0 extends OpMode {
     public static double servo1 = 0;
     public static double servo2 = 0;
     public static double lowscale2 = .325;
+    // wrist .27
     public static double highscale2 = .93;
     public static double lowscale1 = 0;
     public static double highscale1 = .58;

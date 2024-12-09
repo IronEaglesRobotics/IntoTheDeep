@@ -50,30 +50,42 @@ public class Robot {
         return claw;
     }
 
-    public armActivate activate = new armActivate(intake,intakeArm);
 
-    public void activateIntake(){
-        intakeArm.toggleExtension();
-        intake.toggleWrist();
-        if (beatbar) {
-            intake.startBeatBar();
+//    public armActivate activate = new armActivate(intake,intakeArm);
+
+//    public void activateIntake(){
+//        intakeArm.toggleExtension();
+//        intake.toggleWrist();
+//        if (beatbar) {
+//            intake.startBeatBar();
+//        }
+//        beatbar = !beatbar;
+//    }
+
+//    public static class armActivate extends SequentialCommandGroup {
+//        Intake intake;
+//        IntakeArm intakeArm;
+//
+//        private armActivate(Intake tIntake, IntakeArm tIntakeArm){
+//            intake = tIntake;
+//            intakeArm = tIntakeArm;
+//
+//            addCommands(intakeArm.extendCommand,
+//                    intake.activeIntake
+//            );
+//        }
+        public static class armDeactivate extends SequentialCommandGroup {
+            Intake intake;
+            IntakeArm intakeArm;
+
+            private armDeactivate(Intake tIntake, IntakeArm tIntakeArm) {
+                intake = tIntake;
+                intakeArm = tIntakeArm;
+
+                addCommands(intakeArm.extendCommand,
+                        intake.offIntake
+                );
+            }
         }
-        beatbar = !beatbar;
-    }
-
-    public static class armActivate extends SequentialCommandGroup {
-        Intake intake;
-        IntakeArm intakeArm;
-
-        private armActivate(Intake tIntake, IntakeArm tIntakeArm){
-            intake = tIntake;
-            intakeArm = tIntakeArm;
-
-            addCommands(intakeArm.extendCommand,
-                    ()->{intake.toggleWrist();},
-                    ()->{intake.startBeatBar();}// place holders for actual commands
-            );
-        }
 
     }
-}

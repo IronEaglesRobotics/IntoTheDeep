@@ -52,16 +52,7 @@ public class Config {
     // Servo ranges
     public static final double BLOCK_CLAW_CLOSED = 0;
     public static final double BLOCK_CLAW_OPEN = .25;
-    public static final double claw_rot_flat = .38;
-    public static final double claw_rot_90 = .04;
-    public static final double main_rot_in = .04;
-    public static final double main_rot_out = .55;
-    public static final double main_rot_score = .35;
-    public static final double main_rot_init = .8;
-    public static final double lower_rot_in = .52;
-    public static final double lower_rot_out = .3;
-    public static final double eject_rot_in = .02;
-    public static final double eject_rot_out = .55;
+
 
     public static double extendlowscale2 = .325;
     public static double extendhighscale2 = .93;

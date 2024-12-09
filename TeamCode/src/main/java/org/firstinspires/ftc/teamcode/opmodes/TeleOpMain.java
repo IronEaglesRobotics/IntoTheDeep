@@ -23,6 +23,9 @@ public class TeleOpMain extends CommandOpMode {
         controller2 = new GamepadEx(gamepad2);
         robot = new Robot().init(hardwareMap);
 
+        controller1.readButtons();
+        controller2.readButtons();
+
         // Deploy hang and extension at the start of the match
         robot.getHang().hangCommand.schedule();
 

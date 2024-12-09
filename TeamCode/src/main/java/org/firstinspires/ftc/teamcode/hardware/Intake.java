@@ -32,6 +32,9 @@ public class Intake extends SubsystemBase {
             wrist.setPosition(0);
         }
     }
+    activeIntake activeIntake = new activeIntake(this);
+    reverseIntake reverseIntake = new reverseIntake(this);
+    offIntake offIntake = new offIntake(this);
     public static class activeIntake extends InstantCommand{
         Intake intake;
         public activeIntake(Intake tempIntake){

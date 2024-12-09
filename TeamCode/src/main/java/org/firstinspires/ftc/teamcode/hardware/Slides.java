@@ -163,7 +163,7 @@ public class Slides extends SubsystemBase {
         public void initialize() {
             Position foo = curPosition;
             int idx = foo.ordinal();
-            idx = Math.min(idx + 1, Position.values().length);
+            idx = Math.min(idx + 1, Position.values().length-1);
             Position nextFoo = Position.values()[idx];
             slides.setTarget(nextFoo);
             curPosition = nextFoo;
@@ -184,7 +184,7 @@ public class Slides extends SubsystemBase {
         public void initialize() {
             Position foo = curPosition;
             int idx = foo.ordinal();
-            idx = Math.min(idx - 1, Position.values().length);
+            idx = Math.max(idx - 1, 0);
             Position nextFoo = Position.values()[idx];
             slides.setTarget(nextFoo);
             curPosition = nextFoo;

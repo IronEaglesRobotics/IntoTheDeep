@@ -19,16 +19,16 @@ public class IntakeArm extends SubsystemBase {
     boolean up = false;
     boolean out = false;
     double rot_save = 0;
-    double ex_save = 0;
+    double ex_save = 1;
 
 
     public IntakeArm(HardwareMap HardwareMap) {
-        rotation1 = HardwareMap.get(Servo.class, LEFT_ARM);
-        rotation2 = HardwareMap.get(Servo.class, RIGHT_ARM);
-        rotation2.setDirection(Servo.Direction.REVERSE);
+//        rotation1 = HardwareMap.get(Servo.class, LEFT_ARM);
+//        rotation2 = HardwareMap.get(Servo.class, RIGHT_ARM);
+//        rotation2.setDirection(Servo.Direction.REVERSE);
 
-        extension1 = HardwareMap.get(Servo.class, INTAKE_LEFT);
-        extension2 = HardwareMap.get(Servo.class, INTAKE_RIGHT);
+        extension1 = HardwareMap.get(Servo.class, "extension1");
+        extension2 = HardwareMap.get(Servo.class, "extension2");
         extension2.setDirection(Servo.Direction.REVERSE);
 
     }
@@ -59,14 +59,14 @@ public class IntakeArm extends SubsystemBase {
     }
 
     public void periodic() {
-        rotation1.setPosition(rot_save);
-        rotation2.setPosition(rot_save);
+//        rotation1.setPosition(rot_save);
+//        rotation2.setPosition(rot_save);
         extension1.setPosition(ex_save);
         extension2.setPosition(ex_save);
     }
     public RotateCommand rotateCommand = new RotateCommand(this);
 
-    public ExtendCommand extendCommand = new ExtendCommand(this);
+    public final ExtendCommand extendCommand = new ExtendCommand(this);
 
     public RaiseCommand raiseCommand = new RaiseCommand(this);
 
