@@ -10,18 +10,24 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.lib.Config;
 
 public class Claw extends SubsystemBase {
-    Servo claw;
+    Servo Claw;
+    double claw;
 
     public Claw(HardwareMap hardwareMap) {
-        claw = hardwareMap.get(Servo.class,BLOCK_CLAW);
+        Claw = hardwareMap.get(Servo.class,BLOCK_CLAW);
     }
 
     public void open() {
-        claw.setPosition(Config.BLOCK_CLAW_OPEN);
+        claw = Config.BLOCK_CLAW_OPEN;
     }
 
     public void close() {
-        claw.setPosition(Config.BLOCK_CLAW_CLOSED);
+        claw = Config.BLOCK_CLAW_CLOSED;
+    }
+
+    @Override
+    public void periodic(){
+        Claw.setPosition(claw);
     }
 
     public final ClawCommand openCommand = new ClawCommand(this, true);

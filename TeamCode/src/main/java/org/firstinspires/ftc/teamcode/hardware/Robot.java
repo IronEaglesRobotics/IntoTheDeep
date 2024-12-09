@@ -13,6 +13,7 @@ public class Robot {
     private Claw claw;
     private Hang hang;
     private Slides slides;
+    private pusher pusher;
     private boolean beatbar = false;
 
     public Robot init(HardwareMap hardwareMap) {
@@ -22,6 +23,7 @@ public class Robot {
         claw = new Claw(hardwareMap);
         hang = new Hang(hardwareMap);
         slides = new Slides(hardwareMap);
+        pusher = new pusher(hardwareMap);
 
         return this;
     }
@@ -49,6 +51,8 @@ public class Robot {
     public Claw getClaw() {
         return claw;
     }
+
+    public pusher getPusher(){return pusher;}
 
 
 //    public armActivate activate = new armActivate(intake,intakeArm);

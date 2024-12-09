@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 public class Hang extends SubsystemBase {
     private DcMotor motor;
 
-    public static int DEPLOYED_POSITION = 200;
+    public static int DEPLOYED_POSITION = 2000;
 
     public Hang(HardwareMap hardwareMap) {
         motor = hardwareMap.get(DcMotor.class, HANG);

@@ -59,6 +59,11 @@ public class Config {
     public static double extendlowscale1 = 0;
     public static double extendhighscale1 = .58;
 
+    public static double wristFullLowscale = 0;
+    public static double wristFullhighscale = .75;
+    public static double wristFloorlowscale1 = .16;
+    public static double wristMedianhighscale1 = .35;
+
     // keybinds
 
     // gamepad1

@@ -40,14 +40,28 @@ public class TeleOpMain extends CommandOpMode {
         controller2.getGamepadButton(GamepadKeys.Button.DPAD_UP)
                 .whenPressed(robot.getSlides().dPadUpCommand);
         // macros rotating arm up and extending intake
-//        controller2.getGamepadButton(GamepadKeys.Button.Y)
-//                .whenPressed(robot.getIntakeArm().raiseCommand);
-        // extends intake
         controller2.getGamepadButton(GamepadKeys.Button.X)
+                .whenPressed(robot.getIntake().reverseIntake);
+        // extends intake
+        controller2.getGamepadButton(GamepadKeys.Button.Y)
                 .whenPressed(robot.getIntakeArm().extendCommand);
         // rotates intake arm up
-//        controller2.getGamepadButton(GamepadKeys.Button.B)
-//                .whenPressed(robot.getIntakeArm().rotateCommand);
+        controller2.getGamepadButton(GamepadKeys.Button.B)
+                .whenPressed(robot.getIntake().activeIntake);
+
+        controller2.getGamepadButton(GamepadKeys.Button.A)
+                .whenPressed(robot.getIntake().offIntake);
+
+        controller2.getGamepadButton(GamepadKeys.Button.RIGHT_STICK_BUTTON)
+                .whenPressed(robot.getPusher().activateCommand)
+                .whenReleased(robot.getPusher().offCommand);
+
+        controller2.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
+                .whenPressed(robot.getClaw().openCommand);
+
+        controller2.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
+                .whenPressed(robot.getClaw().closeCommand);
+
 
         // manual control of slides
         new Trigger(() -> Math.abs(controller2.getLeftY()) > 0.1)
@@ -60,8 +74,8 @@ public class TeleOpMain extends CommandOpMode {
         CommandScheduler.getInstance().run();
         // drive controls
         robot.getDrive().setDrivePowers(new PoseVelocity2d(
-                new Vector2d(controller1.getLeftY(),controller1.getLeftX())
-                ,controller1.getRightX()
+                new Vector2d(-controller1.getLeftY(),controller1.getLeftX())
+                ,-controller1.getRightX()
         ));
     }
 }
