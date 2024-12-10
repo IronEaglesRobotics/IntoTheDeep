@@ -51,7 +51,7 @@ public class Config {
 
     // Servo ranges
     public static final double BLOCK_CLAW_CLOSED = 0;
-    public static final double BLOCK_CLAW_OPEN = .25;
+    public static final double BLOCK_CLAW_OPEN = .05;
 
 
     public static double extendlowscale2 = .325;

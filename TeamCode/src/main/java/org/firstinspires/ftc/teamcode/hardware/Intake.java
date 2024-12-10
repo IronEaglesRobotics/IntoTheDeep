@@ -1,8 +1,6 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
 import static org.firstinspires.ftc.teamcode.lib.Config.wristFloorlowscale1;
-import static org.firstinspires.ftc.teamcode.lib.Config.wristFullhighscale;
-import static org.firstinspires.ftc.teamcode.lib.Config.wristFullLowscale;
 import static org.firstinspires.ftc.teamcode.lib.Config.wristMedianhighscale1;
 
 import com.acmerobotics.dashboard.config.Config;
@@ -16,7 +14,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Intake extends SubsystemBase {
     CRServo beatBar;
     Servo Wrist;
-    double wrist = wristFullhighscale;
+    double wrist = 1;
     boolean wristUp = true;
     public Intake(HardwareMap hardwareMap) {
         beatBar = hardwareMap.get(CRServo.class,"beatbar");
@@ -32,12 +30,11 @@ public class Intake extends SubsystemBase {
     public void reverseBeatBar(){
         beatBar.setPower(1);
     }
-    public void toggleWrist (){
-        if (!wristUp){
-            wrist = 1;
-        } else {
-            wrist = 0;
-        }
+    public void wristUp(){
+        wrist = 0;
+    }
+    public void wristDown(){
+        wrist = 1;
     }
     public void periodic() {
         Wrist.setPosition(wrist);
@@ -55,9 +52,7 @@ public class Intake extends SubsystemBase {
 
         @Override
         public void initialize() {
-            if (intake.wristUp){
-                intake.toggleWrist();
-            }
+            intake.wristUp();
             intake.startBeatBar();
         }
     }
@@ -70,9 +65,6 @@ public class Intake extends SubsystemBase {
 
         @Override
         public void initialize() {
-            if (intake.wristUp){
-                intake.toggleWrist();
-            }
             intake.reverseBeatBar();
         }
     }
@@ -85,9 +77,7 @@ public class Intake extends SubsystemBase {
 
         @Override
         public void initialize() {
-            if (!intake.wristUp){
-                intake.toggleWrist();
-            }
+            intake.wristDown();
             intake.stopBeatBar();
         }
     }

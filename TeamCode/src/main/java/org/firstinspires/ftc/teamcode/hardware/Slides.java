@@ -15,7 +15,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 public class Slides extends SubsystemBase {
     private final DcMotor slide;
     private final DcMotor slide2;
-    private PIDController controller = new PIDController(KP, KI, KD);
+    public PIDController controller = new PIDController(KP, KI, KD);
     private int target = 0;
 
     public static double KP = 0.0003;
@@ -26,9 +26,9 @@ public class Slides extends SubsystemBase {
     public static int POSITION_MIN = -60000;
     public static int POSITION_MAX = 60000;
     
-    public static int POSITION_DOWN = -6500;
-    public static int POSITION_AFTER_CLIP = 20000;
-    public int POSITION_BEFORE_CLIP = 29000;
+    public static int POSITION_DOWN = 1000;
+    public static int POSITION_AFTER_CLIP = 29000;
+    public int POSITION_BEFORE_CLIP = 33500;
 //    public int POSITION_SCORE_HIGH = 60000;
 
     public Slides(HardwareMap hardwareMap) {

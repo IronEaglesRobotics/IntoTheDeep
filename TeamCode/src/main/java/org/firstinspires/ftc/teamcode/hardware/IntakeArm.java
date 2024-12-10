@@ -4,6 +4,10 @@ import static org.firstinspires.ftc.teamcode.lib.Config.INTAKE_LEFT;
 import static org.firstinspires.ftc.teamcode.lib.Config.INTAKE_RIGHT;
 import static org.firstinspires.ftc.teamcode.lib.Config.LEFT_ARM;
 import static org.firstinspires.ftc.teamcode.lib.Config.RIGHT_ARM;
+import static org.firstinspires.ftc.teamcode.lib.Config.extendhighscale1;
+import static org.firstinspires.ftc.teamcode.lib.Config.extendhighscale2;
+import static org.firstinspires.ftc.teamcode.lib.Config.extendlowscale1;
+import static org.firstinspires.ftc.teamcode.lib.Config.extendlowscale2;
 
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
@@ -30,6 +34,8 @@ public class IntakeArm extends SubsystemBase {
         extension1 = HardwareMap.get(Servo.class, "extension1");
         extension2 = HardwareMap.get(Servo.class, "extension2");
         extension2.setDirection(Servo.Direction.REVERSE);
+        extension1.scaleRange(extendlowscale1,extendhighscale1);
+        extension2.scaleRange(extendlowscale2,extendhighscale2);
 
     }
 
