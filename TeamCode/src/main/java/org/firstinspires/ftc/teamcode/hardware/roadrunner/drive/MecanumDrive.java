@@ -345,8 +345,8 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
 
         }
 
-        double speedScale = slowmo ? .3 : 1;
-        double turnScale = slowmo ? .3 : .8;
+        double speedScale = slowmo ? .5 : 1;
+        double turnScale = slowmo ? .15 : .5;
 
         this.setWeightedDrivePower(
                 new Pose2d(

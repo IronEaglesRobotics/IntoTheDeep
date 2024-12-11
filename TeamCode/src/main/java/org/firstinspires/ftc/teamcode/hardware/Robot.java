@@ -66,8 +66,8 @@ public class Robot {
     public static class Claw {
         //Variables
         public static double OPEN = 1;
-        public static double OPENSMALL = .8;
-        public static double CLOSE = .63;
+        public static double OPENSMALL = .9;
+        public static double CLOSE = .6;
         //Servo
         public ServoImplEx claw;
 
@@ -181,7 +181,7 @@ public class Robot {
         public static double INTAKE = .4;
         public static double OUTTAKESAMPLE = .58;
         public static double INTAKESPEC = .33;
-        public static double OUTTAKESPEC = .6;
+        public static double OUTTAKESPEC = .62;
         //PController
         public static double KP = 1.2;
         public static double KD = 0;
@@ -282,6 +282,7 @@ public class Robot {
             this.slidesR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 //            this.slidesR.
             return this;
+
         }
 
         //Methods
@@ -379,7 +380,7 @@ public class Robot {
 
 
         //Variables
-        public static double up = .34;
+        public static double up = .29;
         public static double spit = .65;
         public static double down = .8;
         public static double INTAKE = 1;
@@ -695,7 +696,7 @@ public class Robot {
     }
 
     //Intake Macro
-    private boolean mini;
+    public boolean mini;
 
 
     public intakeStates intakeState = intakeStates.IDLE;
@@ -716,10 +717,10 @@ public class Robot {
                 if (controller1.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > .3) {
                     intakeState = intakeStates.EXTENDED;
                     mini = false;
-                    intakeDelay = runtime + 1;
+                    intakeDelay = runtime + .5;
                 } else if (controller1.wasJustPressed(GamepadKeys.Button.B)) {
                     intakeState = intakeStates.EXTENDED;
-                    intakeDelay = runtime + 1;
+                    intakeDelay = runtime + .5;
                     mini = true;
                 }
                 break;
@@ -753,21 +754,23 @@ public class Robot {
 
                 if (intake.getAlpha() > Intake.ALPHA) {
                     intakeState = intakeStates.DETECT;
+                    intakeDelay = runtime + .005;
                 } else if (controller1.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
                 intakeState = intakeStates.HASSAMPLE;
             }
                 break;
             case DETECT:
                 //Actions
-
-                intake.color = intake.getColor();
-                //Switch States
-                if (intake.color != Intake.colors.YELLOW && intake.color != getIntake().targetColor) {
-                    intakeState = intakeStates.OUTTAKE;
-                    intakeDelay = runtime + 1.5;
-                } else {
-                    intakeState = intakeStates.HASSAMPLE;
-                    intakeDelay = runtime + .3;
+                if (runtime > intakeDelay) {
+                    intake.color = intake.getColor();
+                    //Switch States
+                    if (intake.color != Intake.colors.YELLOW && intake.color != getIntake().targetColor) {
+                        intakeState = intakeStates.OUTTAKE;
+                        intakeDelay = runtime + 1.5;
+                    } else {
+                        intakeState = intakeStates.HASSAMPLE;
+                        intakeDelay = runtime + .3;
+                    }
                 }
                 break;
             case HASSAMPLE:

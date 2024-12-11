@@ -5,6 +5,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.fasterxml.jackson.databind.deser.std.JsonLocationInstantiator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
@@ -147,14 +148,16 @@ public class specAuto extends LinearOpMode {
     protected void park() {
         TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
 
-        builder.turn(Math.toRadians(-120));
+//        builder.turn(Math.toRadians(-120));
         builder.splineToSplineHeading(PICKUP_1, Math.toRadians(270));
-        builder.lineToConstantHeading(PICKUP_1.vec().plus(new Vector2d(0,-4)),
-                MecanumDrive.getVelocityConstraint(20, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                MecanumDrive.getAccelerationConstraint(20)
-        );
+//        builder.lineToConstantHeading(PICKUP_1.vec().plus(new Vector2d(0,-4)),
+//                MecanumDrive.getVelocityConstraint(20, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+//                MecanumDrive.getAccelerationConstraint(20)
+//        );
         this.robot.getDrive().followTrajectorySequenceAsync(builder.build());
         robot.scoringState = Robot.scoringStates.SPECIMENR;
+        timer = getRuntime() + 5;
+        robot.specStep = 0;
         while ((this.robot.getDrive().isBusy() || robot.intakeState != Robot.intakeStates.IDLE)) {
             this.robot.update();
             this.robot.scoringMacro(controller1, this.getRuntime(), true);
@@ -177,13 +180,20 @@ public class specAuto extends LinearOpMode {
         }
         specScore();
         getSpec();
-//        sleep(200);
-        specScoreAgain();
-        robot.AUTO=false;
-        plow();
-        specScoreAgain2();
-        robot.AUTO=false;
+////        sleep(200);
+//        specScoreAgain();
+//        robot.AUTO=false;
+//        plow();
+//        specScoreAgain2();
+//        robot.AUTO=false;
         park();
+        robot.slides.slidesTo(0);
+        while (timer > getRuntime()) {
+            robot.update();
+            robot.slides.slidesTo(0);
+        }
+
+        sleep(1000);
 
 //        sleep(200);
 //
