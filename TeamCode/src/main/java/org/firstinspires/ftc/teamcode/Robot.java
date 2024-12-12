@@ -14,6 +14,7 @@ public class Robot {
     Claw claw;
     Wrist wrist;
     Arm arm;
+    Hang hang;
     public static double test = 0.0;
 
     public Robot(HardwareMap hardwareMap) {
@@ -22,6 +23,7 @@ public class Robot {
         this.lift = new Lift(hardwareMap);
         this.arm = new Arm(hardwareMap);
         this.wrist = new Wrist(hardwareMap);
+        this.hang = new Hang(hardwareMap);
     }
 
     public static class Lift {
@@ -38,20 +40,43 @@ public class Robot {
 
         }
 
-        public void setTargetPosition(int pos,double p) {
+        public void setTargetPosition(int pos, double p) {
             this.lift.setTargetPosition(pos);
             this.lift.setPower(p);
             this.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-          //  this.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            //  this.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         }
 
         public void setPower(double v) {
         }
 
-        public void setMode(DcMotor.RunMode mode){
+        public void setMode(DcMotor.RunMode mode) {
             this.lift.setMode(mode);
             this.lift.setMode(mode);
+        }
+
+    }
+
+    public static class Hang {
+        public DcMotor hang;
+        // double ticks = 384.5;
+        // double newTarget;
+
+        public Hang(HardwareMap hardwareMap) {
+            hang = hardwareMap.get(DcMotor.class, "hang");
+            hang.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            hang.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            hang.setDirection(DcMotorSimple.Direction.FORWARD);
+        }
+
+
+
+        public void setTargetPosition(int pos, double p) {
+            this.hang.setTargetPosition(pos);
+            this.hang.setPower(p);
+            this.hang.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            //  this.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
 
     }
@@ -90,6 +115,7 @@ public class Robot {
             Arm.setDirection(Servo.Direction.REVERSE);
         }
     }
+
 
     public static class Drive {
         private DcMotor FL;

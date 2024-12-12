@@ -31,11 +31,11 @@ public class TeleOp extends OpMode {
     public double swingTimer = 0;
 
     public static int SLIDES_DOWN = 0;
-    public static int SLIDES_PICKUP = 550;
+    public static int SLIDES_PICKUP = 475;
     public static int SLIDES_SCORE1 = 1700;
     public static int SLIDES_HIGH_BUCKET = 2750;
     public static int SLIDES_SCORE2 = 1300;
-    public static double armPickUp = 0.05;
+    public static double armPickUp = 0.06;
     public static double armFloor = 0.01;
     public static double armInit = 0.25;
     public static double armBucket = 0.25;
@@ -116,7 +116,16 @@ public class TeleOp extends OpMode {
             robot.claw.setPosition(clawClose);
         }
 
-    }}
+        if(gamepad1.right_trigger > 0){
+            robot.hang.setTargetPosition(1000, .5);
+        }
+
+        if(gamepad1.left_trigger > 0){
+            robot.hang.setTargetPosition(0, .5);
+        }
+
+    }
+}
 
 //    public void swingMacro(GamepadEx cont2){
 //        switch (swingStep){
