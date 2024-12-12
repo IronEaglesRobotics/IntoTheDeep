@@ -7,6 +7,7 @@ import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
+import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.command.button.Trigger;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
@@ -28,14 +29,14 @@ public class TeleOpMain extends CommandOpMode {
         controller2.readButtons();
 
         // Deploy hang and extension at the start of the match
-        robot.getHang().hangCommand.schedule();
+        robot.getHang().hangCommand.withTimeout(5000).schedule();
 
         // controls hang
         controller2.getGamepadButton(GamepadKeys.Button.LEFT_STICK_BUTTON)
                 .whenPressed(robot.getHang().hangCommand);
         // controls lowering slides
         controller2.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
-                .whenPressed(robot.getSlides().dPadDownCommand);
+                .whenPressed(robot.getSlides().dPadDownCommand).whenPressed(new WaitCommand(300).andThen(robot.getClaw().openCommand));
         // controls raising slides
         controller2.getGamepadButton(GamepadKeys.Button.DPAD_UP)
                 .whenPressed(robot.getSlides().dPadUpCommand);
@@ -43,25 +44,26 @@ public class TeleOpMain extends CommandOpMode {
         controller2.getGamepadButton(GamepadKeys.Button.X)
                 .whenPressed(robot.getIntake().reverseIntake);
         // extends intake
-        controller2.getGamepadButton(GamepadKeys.Button.Y)
+        controller2.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
                 .whenPressed(robot.getIntakeArm().extendCommand);
         // rotates intake arm up
-        controller2.getGamepadButton(GamepadKeys.Button.B)
-                .whenPressed(robot.getIntake().activeIntake);
+        if (robot.getSlides().getTarget() > 42500) {
+            controller2.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
+                    .whenPressed(robot.getIntakeArm().rotateCommand);
+        }
 
-        controller2.getGamepadButton(GamepadKeys.Button.A)
-                .whenPressed(robot.getIntake().offIntake);
+        controller2.getGamepadButton(GamepadKeys.Button.B)
+                .whenPressed(robot.getIntake().runIntake);
 
         controller2.getGamepadButton(GamepadKeys.Button.RIGHT_STICK_BUTTON)
                 .whenPressed(robot.getPusher().activateCommand)
                 .whenReleased(robot.getPusher().offCommand);
 
-        controller2.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
-                .whenPressed(robot.getClaw().openCommand);
+        controller2.getGamepadButton(GamepadKeys.Button.A)
+                .toggleWhenPressed(robot.getClaw().openCommand,robot.getClaw().closeCommand);
 
-        controller2.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
-                .whenPressed(robot.getClaw().closeCommand);
-
+        controller2.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
+                .toggleWhenPressed(robot.getIntake().setBlue,robot.getIntake().setRed);
 
         // manual control of slides
         new Trigger(() -> Math.abs(controller2.getLeftY()) > 0.1)
@@ -77,5 +79,8 @@ public class TeleOpMain extends CommandOpMode {
                 new Vector2d(-controller1.getLeftY(),controller1.getLeftX())
                 ,-controller1.getRightX()
         ));
+        telemetry.addData("target",robot.getIntake().target);
+        telemetry.addData("color",robot.getIntake().getColor());
+        telemetry.update();
     }
 }

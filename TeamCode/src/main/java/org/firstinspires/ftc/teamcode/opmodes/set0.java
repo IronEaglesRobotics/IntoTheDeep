@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 //tresrh
 @Config
@@ -11,6 +12,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class set0 extends OpMode {
     Servo Servo1;
     Servo Servo2;
+    DcMotor motor;
     public static double servo1 = 0;
     public static double servo2 = 0;
     public static double lowscale2 = .325;
@@ -24,6 +26,7 @@ public class set0 extends OpMode {
         Servo1 = hardwareMap.get(Servo.class,"left_arm");
         Servo2 = hardwareMap.get(Servo.class,"right_arm");
         crServo = hardwareMap.get(CRServo.class,"crservo");
+        motor = hardwareMap.get(DcMotor.class,"motor");
     }
     @Override
     public void loop()  {
@@ -39,6 +42,7 @@ public class set0 extends OpMode {
         Servo2.setPosition(servo2);
         telemetry.addData("servo1",servo1);
         telemetry.addData("servo2",servo2);
+        telemetry.addData("motor",motor.getCurrentPosition());
     }
 }
 

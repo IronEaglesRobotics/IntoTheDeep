@@ -6,6 +6,7 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 
 import org.firstinspires.ftc.teamcode.hardware.Robot;
 import org.firstinspires.ftc.teamcode.hardware.Slides;
+import org.firstinspires.ftc.teamcode.roadrunner.ActionCommand;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -25,7 +26,7 @@ public class clip_auto  extends LinearOpMode {
         robot = new Robot().init(hardwareMap);
         Action act1 = robot.getDrive().actionBuilder(new Pose2d(0,0,0))
                 .afterDisp(1,()->{ robot.getSlides().setTarget(Slides.Position.PRECLIP);})
-                .splineToSplineHeading(new Pose2d(-25,-30,0),0)
+                .splineToSplineHeading(new Pose2d(-25,0,0),0)
                 .afterDisp(0,()->{robot.getSlides().setTarget(Slides.Position.POSTCLIP);})
                 .build();
         Action act2 = robot.getDrive().actionBuilder(new Pose2d(-25,-30,0))

@@ -12,12 +12,12 @@ import static org.firstinspires.ftc.teamcode.lib.Config.extendlowscale2;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.SubsystemBase;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 public class IntakeArm extends SubsystemBase {
-    Servo rotation1;
-    Servo rotation2;
+    DcMotor motor;
     Servo extension1;
     Servo extension2;
     boolean up = false;
@@ -27,10 +27,8 @@ public class IntakeArm extends SubsystemBase {
 
 
     public IntakeArm(HardwareMap HardwareMap) {
-//        rotation1 = HardwareMap.get(Servo.class, LEFT_ARM);
-//        rotation2 = HardwareMap.get(Servo.class, RIGHT_ARM);
-//        rotation2.setDirection(Servo.Direction.REVERSE);
-
+        motor = HardwareMap.get(DcMotor.class,"motor");
+        motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         extension1 = HardwareMap.get(Servo.class, "extension1");
         extension2 = HardwareMap.get(Servo.class, "extension2");
         extension2.setDirection(Servo.Direction.REVERSE);
@@ -40,20 +38,20 @@ public class IntakeArm extends SubsystemBase {
     }
 
     public void toggleRotation() {
-        rot_save = up ? .2 : 0;
-        up = !up;
+        if (!up){
+            motor.setTargetPosition(-200);
+            motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            motor.setPower(-1);
+        } else {
+            motor.setTargetPosition(0);
+            motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            motor.setPower(1);
+        }
     }
 
     public void toggleExtension() {
         ex_save = out ? 1 : 0;
         out = !out;
-    }
-
-    public boolean isRotBusy() {
-        return rotation1.getPosition() == rot_save;
-    }
-    public boolean isExtBusy() {
-        return rotation1.getPosition() == ex_save;
     }
 
     public boolean isOut() {
@@ -65,8 +63,6 @@ public class IntakeArm extends SubsystemBase {
     }
 
     public void periodic() {
-//        rotation1.setPosition(rot_save);
-//        rotation2.setPosition(rot_save);
         extension1.setPosition(ex_save);
         extension2.setPosition(ex_save);
     }
@@ -85,7 +81,9 @@ public class IntakeArm extends SubsystemBase {
         }
 
         public void initialize() {
-            arm.toggleRotation();
+            if (!arm.isOut()) {
+                arm.toggleRotation();
+            }
         }
     }
     public static class ExtendCommand extends InstantCommand {

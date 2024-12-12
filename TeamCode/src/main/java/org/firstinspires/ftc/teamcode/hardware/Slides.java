@@ -23,13 +23,13 @@ public class Slides extends SubsystemBase {
     public static double KD = 0;
     public static double TOLERANCE = 200;
     
-    public static int POSITION_MIN = -60000;
-    public static int POSITION_MAX = 60000;
+    public static int POSITION_MIN = 0;
+    public static int POSITION_MAX = 43000;
     
     public static int POSITION_DOWN = 1000;
     public static int POSITION_AFTER_CLIP = 29000;
     public int POSITION_BEFORE_CLIP = 33500;
-//    public int POSITION_SCORE_HIGH = 60000;
+    public int POSITION_SCORE_HIGH = 43000;
 
     public Slides(HardwareMap hardwareMap) {
         slide = hardwareMap.get(DcMotor.class, SLIDES_FRONT);
@@ -59,9 +59,9 @@ public class Slides extends SubsystemBase {
             case POSTCLIP:
                 value = POSITION_AFTER_CLIP;
                 break;
-//            case SCORE_LOW:
-//                value = POSITION_SCORE_HIGH;
-//                break;
+            case SCORE_LOW:
+                value = POSITION_SCORE_HIGH;
+                break;
 //            case SCORE_HIGH:
 //                value = POSITION_SCORE_HIGH;
 //                break;
@@ -101,10 +101,9 @@ public class Slides extends SubsystemBase {
 
     public enum Position {
         DOWN,
-        PRECLIP,
         POSTCLIP,
-//        SCORE_LOW,
-//        SCORE_HIGH
+        PRECLIP,
+        SCORE_LOW
     }
     public DPadDownCommand dPadDownCommand = new DPadDownCommand(this);
     public DPadUpCommand dPadUpCommand = new DPadUpCommand(this);
