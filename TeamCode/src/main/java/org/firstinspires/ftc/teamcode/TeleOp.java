@@ -8,6 +8,7 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import java.security.PublicKey;
 
@@ -46,6 +47,8 @@ public class TeleOp extends OpMode {
     public static double clawClose = 0.01;
     public static double wristFloor;
     public static double wristScore;
+    public static int hangup;
+    public static int hangdown;
 
 
     @Override
@@ -116,12 +119,20 @@ public class TeleOp extends OpMode {
             robot.claw.setPosition(clawClose);
         }
 
-        if(gamepad1.right_trigger > 0){
-            robot.hang.setTargetPosition(1000, .5);
+        if(gamepad1.right_trigger > 0.1){
+          robot.hang.hang.setDirection(DcMotorSimple.Direction.FORWARD);
+          robot.hang.hang.setPower(1);
+        }
+        else if(gamepad1.right_trigger < 0.3) {
+            robot.hang.hang.setPower(0);
         }
 
-        if(gamepad1.left_trigger > 0){
-            robot.hang.setTargetPosition(0, .5);
+        if(gamepad1.left_trigger > 0.1){
+            robot.hang.hang.setDirection(DcMotorSimple.Direction.REVERSE);
+            robot.hang.hang.setPower(1);
+        }
+        else if(gamepad1.left_trigger < 0.3){
+            robot.hang.hang.setPower(0);
         }
 
     }

@@ -65,18 +65,10 @@ public class Robot {
 
         public Hang(HardwareMap hardwareMap) {
             hang = hardwareMap.get(DcMotor.class, "hang");
-            hang.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            hang.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            hang.setDirection(DcMotorSimple.Direction.FORWARD);
+            hang.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
-
-
-
-        public void setTargetPosition(int pos, double p) {
-            this.hang.setTargetPosition(pos);
-            this.hang.setPower(p);
-            this.hang.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            //  this.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        public void setPower (double h) {
+            this.hang.setPower(h);
         }
 
     }
