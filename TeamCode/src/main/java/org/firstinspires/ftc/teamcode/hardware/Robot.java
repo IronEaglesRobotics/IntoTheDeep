@@ -37,6 +37,8 @@ public class Robot {
     public Extendo extendo;
     @Getter
     public Intake intake;
+    @Getter
+    public Hang hang;
 
     public double intakeDelay;
     public double outtakeDelay;
@@ -52,6 +54,7 @@ public class Robot {
         this.slides = new Slides().init(hardwareMap);
         this.extendo = new Extendo().init(hardwareMap);
         this.intake = new Intake().init(hardwareMap);
+        this.hang = new Hang().init(hardwareMap);
         return this;
     }
 
@@ -471,6 +474,33 @@ public class Robot {
 
     }
 
+    @Config
+    public static class Hang{
+        public DcMotorEx depression;
+
+        public Hang init(HardwareMap hardwareMap){
+            this.depression = hardwareMap.get(DcMotorEx.class,"depression");
+            this.depression.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            depression.setTargetPosition(0);
+            this.depression.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            this.depression.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            return this;
+        }
+
+        public void setPosition(int pos){
+            depression.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            depression.setTargetPosition(pos);
+            depression.setPower(1);
+            depression.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        }
+
+        public void pause(){
+            depression.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            depression.setPower(0);
+        }
+
+    }
 
     //Scoring Macro
     public int bucketStep;
@@ -668,7 +698,7 @@ public class Robot {
                         } else if (A){
                             outtakeDelay = runtime + .051;
                             scoringState = scoringStates.SPECIMENGRAB;
-                            specStep = 1;
+                            specStep = 0;
                         }
                         break;
                     case 1:
