@@ -33,22 +33,21 @@ public class TeleOp extends OpMode {
 
     public static int SLIDES_DOWN = 0;
     public static int SLIDES_PICKUP = 475;
-    public static int SLIDES_SCORE1 = 1700;
+    public static int SLIDES_SCORE1 = 1750;
     public static int SLIDES_HIGH_BUCKET = 2750;
-    public static int SLIDES_SCORE2 = 1300;
+    public static int SLIDES_SCORE2 = 1350;
     public static double armPickUp = 0.06;
-    public static double armFloor = 0.01;
+    public static double armFloor = 0.05;
     public static double armInit = 0.25;
     public static double armBucket = 0.25;
-    public static double armScore2 = 0.03;
-    public static double armScore = 0.07;
-    public static double clawOpen = 0.5;
-    public static double clawInit = 0.05;
-    public static double clawClose = 0.01;
+    public static double armScore2 = 0.015;
+    public static double armScore = 0.08;
+    public static double clawOpen = 0.75;
+    public static double clawInit = 0.4;
+    public static double clawClose = 0.4;
     public static double wristFloor;
     public static double wristScore;
-    public static int hangup;
-    public static int hangdown;
+    public static double armSub;
 
 
     @Override
@@ -134,6 +133,8 @@ public class TeleOp extends OpMode {
         else if(gamepad1.left_trigger < 0.3){
             robot.hang.hang.setPower(0);
         }
+
+        
 
     }
 }
