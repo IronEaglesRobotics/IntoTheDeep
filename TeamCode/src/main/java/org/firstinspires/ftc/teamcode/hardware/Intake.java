@@ -166,12 +166,12 @@ public class Intake extends SubsystemBase {
             addRequirements(intake);
         }
         @Override
-        public void initialize() {
+        public void execute() {
             intake.actionChoice().schedule();
         }
         @Override
         public boolean isFinished(){
-            return (true);
+            return (intake.getColor() == intake.target);
         }
     }
 }

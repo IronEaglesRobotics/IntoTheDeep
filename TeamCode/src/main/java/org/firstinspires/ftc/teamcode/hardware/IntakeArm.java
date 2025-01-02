@@ -24,6 +24,7 @@ public class IntakeArm extends SubsystemBase {
     boolean out = false;
     double rot_save = 0;
     double ex_save = 1;
+    Slides slides;
 
 
     public IntakeArm(HardwareMap HardwareMap) {
@@ -34,7 +35,7 @@ public class IntakeArm extends SubsystemBase {
         extension2.setDirection(Servo.Direction.REVERSE);
         extension1.scaleRange(extendlowscale1,extendhighscale1);
         extension2.scaleRange(extendlowscale2,extendhighscale2);
-
+        slides = new Slides(HardwareMap);
     }
 
     public void toggleRotation() {
@@ -70,7 +71,7 @@ public class IntakeArm extends SubsystemBase {
 
     public final ExtendCommand extendCommand = new ExtendCommand(this);
 
-    public RaiseCommand raiseCommand = new RaiseCommand(this);
+    public RaiseCommand raiseCommand = new RaiseCommand(this,slides);
 
     public static class RotateCommand extends InstantCommand {
         private final IntakeArm arm;
@@ -100,13 +101,16 @@ public class IntakeArm extends SubsystemBase {
     }
     public static class RaiseCommand extends SequentialCommandGroup {
         private final IntakeArm arm;
+        private final Slides slides;
 
-        public RaiseCommand(IntakeArm intakeArm) {
+        public RaiseCommand(IntakeArm intakeArm,Slides tslides) {
             arm = intakeArm;
+            slides = tslides;
             addRequirements(intakeArm);
             if (arm.isOut()){
                 addCommands(
                     new ExtendCommand(arm),
+                    new Slides.LiftPositionCommand(slides, Slides.Position.SCORE_LOW),
                     new RotateCommand(arm),
                     new ExtendCommand(arm)
                 );

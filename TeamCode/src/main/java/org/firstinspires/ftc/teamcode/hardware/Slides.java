@@ -79,6 +79,8 @@ public class Slides extends SubsystemBase {
         return controller.atSetPoint();
     }
 
+    public int getPos(){return slide.getCurrentPosition();}
+
     public void cancel() {
         target = slide.getCurrentPosition();
     }
@@ -105,8 +107,12 @@ public class Slides extends SubsystemBase {
         PRECLIP,
         SCORE_LOW
     }
-    public DPadDownCommand dPadDownCommand = new DPadDownCommand(this);
-    public DPadUpCommand dPadUpCommand = new DPadUpCommand(this);
+//    public DPadDownCommand dPadDownCommand = new DPadDownCommand(this);
+//    public DPadUpCommand dPadUpCommand = new DPadUpCommand(this);
+    public LiftPositionCommand up = new LiftPositionCommand(this,Position.SCORE_LOW);
+    public LiftPositionCommand down = new LiftPositionCommand(this,Position.DOWN);
+    public  LiftPositionCommand preclip = new LiftPositionCommand(this,Position.PRECLIP);
+    public LiftPositionCommand postclip = new LiftPositionCommand(this,Position.POSTCLIP);
     
     public static class LiftPositionCommand extends CommandBase {
         Position position;

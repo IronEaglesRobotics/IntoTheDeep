@@ -9,9 +9,9 @@ import com.arcrobotics.ftclib.command.Subsystem;
 import java.util.Set;
 
 public class ActionCommand implements Command {
-    private final Action action;
+    public final Action action;
     private final Set<Subsystem> requirements;
-    private boolean finished = false;
+    public boolean finished = false;
 
     public ActionCommand(Action action, Set<Subsystem> requirements) {
         this.action = action;
