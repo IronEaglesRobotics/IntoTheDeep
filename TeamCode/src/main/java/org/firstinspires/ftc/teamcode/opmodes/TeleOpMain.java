@@ -63,7 +63,7 @@ public class TeleOpMain extends CommandOpMode {
                 .whenPressed(robot.getIntakeArm().extendCommand);
         // rotates intake arm up
             controller2.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
-                    .whenPressed(robot.getIntakeArm().raiseCommand);
+                    .whenPressed(robot.getIntakeArm().rotateCommand);
 
         controller2.getGamepadButton(GamepadKeys.Button.B)
                 .toggleWhenPressed(new Intake.runIntake(robot.getIntake()),new Intake.offIntake(robot.getIntake()));
@@ -90,7 +90,7 @@ public class TeleOpMain extends CommandOpMode {
         // drive controls
         if (robot.getDriveState() == Robot.DriveState.manuel) {
             robot.getDrive().setDrivePowers(new PoseVelocity2d(
-                    new Vector2d(-controller1.getLeftY(), controller1.getLeftX())
+                    new Vector2d(controller1.getLeftY(), controller1.getLeftX())
                     , -controller1.getRightX()
             ));
         }

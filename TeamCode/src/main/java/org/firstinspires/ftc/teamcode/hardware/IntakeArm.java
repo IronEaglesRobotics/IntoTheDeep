@@ -9,6 +9,7 @@ import static org.firstinspires.ftc.teamcode.lib.Config.extendhighscale2;
 import static org.firstinspires.ftc.teamcode.lib.Config.extendlowscale1;
 import static org.firstinspires.ftc.teamcode.lib.Config.extendlowscale2;
 
+import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.SubsystemBase;
@@ -36,10 +37,12 @@ public class IntakeArm extends SubsystemBase {
         extension1.scaleRange(extendlowscale1,extendhighscale1);
         extension2.scaleRange(extendlowscale2,extendhighscale2);
         slides = new Slides(HardwareMap);
+        periodic();
     }
 
     public void toggleRotation() {
-        if (!up){
+        up = !up;
+        if (up){
             motor.setTargetPosition(-200);
             motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             motor.setPower(-1);
@@ -60,7 +63,7 @@ public class IntakeArm extends SubsystemBase {
     }
 
     public boolean isUp() {
-        return up;
+        return !motor.isBusy();
     }
 
     public void periodic() {
@@ -73,7 +76,7 @@ public class IntakeArm extends SubsystemBase {
 
     public RaiseCommand raiseCommand = new RaiseCommand(this,slides);
 
-    public static class RotateCommand extends InstantCommand {
+    public static class RotateCommand extends CommandBase {
         private final IntakeArm arm;
 
         public RotateCommand(IntakeArm intakeArm) {
@@ -86,9 +89,13 @@ public class IntakeArm extends SubsystemBase {
                 arm.toggleRotation();
             }
         }
+        public boolean isFinished(){
+            return arm.isUp();
+        }
     }
-    public static class ExtendCommand extends InstantCommand {
+    public static class ExtendCommand extends CommandBase {
         private final IntakeArm arm;
+        private double time;
 
         public ExtendCommand(IntakeArm intakeArm) {
             arm = intakeArm;
@@ -97,6 +104,10 @@ public class IntakeArm extends SubsystemBase {
         @Override
         public void initialize() {
             arm.toggleExtension();
+            time = System.currentTimeMillis();
+        }
+        public boolean isFinished(){
+            return time + 500 < System.currentTimeMillis();
         }
     }
     public static class RaiseCommand extends SequentialCommandGroup {
@@ -110,7 +121,6 @@ public class IntakeArm extends SubsystemBase {
             if (arm.isOut()){
                 addCommands(
                     new ExtendCommand(arm),
-                    new Slides.LiftPositionCommand(slides, Slides.Position.SCORE_LOW),
                     new RotateCommand(arm),
                     new ExtendCommand(arm)
                 );
