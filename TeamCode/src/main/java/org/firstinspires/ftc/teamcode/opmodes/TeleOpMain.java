@@ -46,24 +46,24 @@ public class TeleOpMain extends CommandOpMode {
                 .whenPressed(new Hang.HangCommand(robot.getHang()));
         // controls lowering slides
         controller2.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
-                .whenPressed(robot.getSlides().down).whenPressed(new WaitCommand(300).andThen(new Claw.ClawCommand(robot.getClaw(),true)));
+                .whenPressed(robot.getSlides().down()).whenPressed(new WaitCommand(300).andThen(new Claw.ClawCommand(robot.getClaw(),true)));
         // controls raising slides
         controller2.getGamepadButton(GamepadKeys.Button.DPAD_UP)
-                .whenPressed(robot.getSlides().up);
+                .whenPressed(robot.getSlides().up());
         controller2.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
-                .whenPressed(robot.getSlides().postclip).whenPressed(new WaitCommand(300).andThen(new Claw.ClawCommand(robot.getClaw(),true)));
+                .whenPressed(robot.getSlides().postclip()).whenPressed(new WaitCommand(300).andThen(new Claw.ClawCommand(robot.getClaw(),true)));
         // controls raising slides
         controller2.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
-                .whenPressed(robot.getSlides().preclip);
+                .whenPressed(robot.getSlides().preclip());
         // macros rotating arm up and extending intake
         controller2.getGamepadButton(GamepadKeys.Button.X)
                 .toggleWhenPressed(new Intake.reverseIntake(robot.getIntake()),new Intake.offIntake(robot.getIntake()));
         // extends intake
         controller2.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
-                .whenPressed(robot.getIntakeArm().extendCommand);
+                .whenPressed(robot.getIntakeArm().extendCommand());
         // rotates intake arm up
             controller2.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
-                    .whenPressed(robot.getIntakeArm().rotateCommand);
+                    .whenPressed(robot.getIntakeArm().rotateCommand());
 
         controller2.getGamepadButton(GamepadKeys.Button.B)
                 .toggleWhenPressed(new Intake.runIntake(robot.getIntake()),new Intake.offIntake(robot.getIntake()));

@@ -8,6 +8,7 @@ import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.acmerobotics.roadrunner.ftc.GoBildaPinpointDriverRR;
+import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.command.Subsystem;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -76,6 +77,7 @@ public class Robot {
     public DriveState getDriveState() {
         return driveState;
     }
+    public runActionCommand runAction(Action action){return new runActionCommand(action,drive);}
 
     // drive macros
     public static class moveToClip extends ActionCommand {
@@ -102,5 +104,34 @@ public class Robot {
         public void end(boolean I){
             driveState = DriveState.manuel;
         }
+    }
+    public static class runActionCommand extends CommandBase {
+        PinpointDrive Drive;
+        Action action;
+        private boolean finished;
+        public runActionCommand(Action action,PinpointDrive drive) {
+            this.action = action;
+            Drive = drive;
+        }
+        @Override
+        public void initialize() {
+            driveState = DriveState.automatic;
+            Drive.setDrivePowers(new PoseVelocity2d(new Vector2d(0,0),0));
+            Actions.runBlocking(action);
+        }
+        @Override
+        public void execute() {
+            TelemetryPacket packet = new TelemetryPacket();
+            action.preview(packet.fieldOverlay());
+            finished = !action.run(packet);
+            FtcDashboard.getInstance().sendTelemetryPacket(packet);
+            Drive.updatePoseEstimate();
+        }
+        @Override
+        public void end(boolean I){
+            driveState = DriveState.manuel;
+        }
+        @Override
+        public boolean isFinished(){return finished;}
     }
 }

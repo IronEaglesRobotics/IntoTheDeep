@@ -82,12 +82,12 @@ public class Intake extends SubsystemBase {
         Wrist.setPosition(wrist);
     }
 
-    public onIntake onIntake = new onIntake(this);
-    public reverseIntake reverseIntake = new reverseIntake(this);
-    public offIntake offIntake = new offIntake(this);
+    public onIntake onIntake(){return new onIntake(this);}
+    public reverseIntake reverseIntake(){return new reverseIntake(this);}
+    public offIntake offIntake(){return new offIntake(this);}
     public colorSet setRed = new colorSet(colors.RED,this);
     public colorSet setBlue = new colorSet(colors.BLUE,this);
-    public runIntake runIntake = new runIntake(this);
+    public runIntake runIntake() {return new runIntake(this);}
     public static class onIntake extends InstantCommand{
         Intake intake;
         public onIntake(Intake tempIntake){
@@ -149,11 +149,11 @@ public class Intake extends SubsystemBase {
             }
         };
         if (this.getColor() == target){
-            output = intake.onIntake.andThen(new WaitCommand(1000000000)).interruptOn(booleanSupplier)
-                    .andThen(intake.offIntake)
-                    .andThen(intake.reverseIntake)
+            output = intake.onIntake().andThen(new WaitCommand(1000000000)).interruptOn(booleanSupplier)
+                    .andThen(intake.offIntake())
+                    .andThen(intake.reverseIntake())
                     .andThen(new WaitCommand(750))
-                    .andThen(intake.onIntake);
+                    .andThen(intake.onIntake());
         } else {
             output = new onIntake(this).andThen(new WaitCommand(100000000)).interruptOn(booleanSupplier).andThen(new offIntake(this));
         }

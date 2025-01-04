@@ -109,10 +109,10 @@ public class Slides extends SubsystemBase {
     }
 //    public DPadDownCommand dPadDownCommand = new DPadDownCommand(this);
 //    public DPadUpCommand dPadUpCommand = new DPadUpCommand(this);
-    public LiftPositionCommand up = new LiftPositionCommand(this,Position.SCORE_LOW);
-    public LiftPositionCommand down = new LiftPositionCommand(this,Position.DOWN);
-    public  LiftPositionCommand preclip = new LiftPositionCommand(this,Position.PRECLIP);
-    public LiftPositionCommand postclip = new LiftPositionCommand(this,Position.POSTCLIP);
+    public LiftPositionCommand up(){return new LiftPositionCommand(this,Position.SCORE_LOW);}
+    public LiftPositionCommand down(){return new LiftPositionCommand(this,Position.DOWN);}
+    public  LiftPositionCommand preclip(){return new LiftPositionCommand(this,Position.PRECLIP);}
+    public LiftPositionCommand postclip(){return new LiftPositionCommand(this,Position.POSTCLIP);}
     
     public static class LiftPositionCommand extends CommandBase {
         Position position;

@@ -70,11 +70,11 @@ public class IntakeArm extends SubsystemBase {
         extension1.setPosition(ex_save);
         extension2.setPosition(ex_save);
     }
-    public RotateCommand rotateCommand = new RotateCommand(this);
+    public RotateCommand rotateCommand(){return new RotateCommand(this);}
 
-    public final ExtendCommand extendCommand = new ExtendCommand(this);
+    public final ExtendCommand extendCommand(){return new ExtendCommand(this);}
 
-    public RaiseCommand raiseCommand = new RaiseCommand(this,slides);
+    public RaiseCommand raiseCommand(){return new RaiseCommand(this,slides);}
 
     public static class RotateCommand extends CommandBase {
         private final IntakeArm arm;
