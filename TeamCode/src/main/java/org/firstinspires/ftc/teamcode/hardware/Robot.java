@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
+import static org.firstinspires.ftc.teamcode.hardware.Robot.Wrist.SCORESPECWRIST;
+
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.controller.PDController;
 import com.arcrobotics.ftclib.controller.PIDController;
@@ -16,6 +18,7 @@ import com.qualcomm.robotcore.hardware.ServoImplEx;
 import org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.MecanumDrive;
 import org.firstinspires.ftc.teamcode.hardware.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
 
+import java.net.PortUnreachableException;
 import java.security.SecurityPermission;
 
 import lombok.Getter;
@@ -111,6 +114,7 @@ public class Robot {
         public static double INTAKESPEC = .475;
         public static double OUTTAKESPEC = .2;
         public static double OUTTAKESAMPLE = .05;
+        public static double SCORESPEC = .4;
         //PController
         public static double KP = 1.2;
         public static double KD = 0;
@@ -156,6 +160,12 @@ public class Robot {
             armTarget = position;
         }
 
+        private void moveFast(double position) {
+            armL.setPosition(position);
+            armR.setPosition(position);
+        }
+
+
         public boolean isAtTarget() {
             return armPDcontroller.atSetPoint();
         }
@@ -184,6 +194,7 @@ public class Robot {
         public static double INTAKE = .4;
         public static double OUTTAKESAMPLE = .58;
         public static double INTAKESPEC = .33;
+        public static double SCORESPECWRIST = .4;
         public static double OUTTAKESPEC = .62;
         //PController
         public static double KP = 1.2;
@@ -257,7 +268,7 @@ public class Robot {
         //Variables
 //        public static int SLIDESPOWER = 1;
         public static int SLIDEUP = 860;
-        public static int SLIDEHSPEC = 450;
+        public static int SLIDEHSPEC = 480;
 //        public static int SLIDELSPEC = 300;
         public static int SLIDELBUCKET = 350;
         public static int SLIDEDOWN = 0;

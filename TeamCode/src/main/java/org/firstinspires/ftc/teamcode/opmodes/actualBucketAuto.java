@@ -23,10 +23,10 @@ public class actualBucketAuto extends LinearOpMode {
     private boolean boo = true;
 
     final static Vector2d SPECIMEN = new Vector2d(-3,-32.5);
-    final static Vector2d PICKUP_1 = new Vector2d(-47,-21);
+    final static Vector2d PICKUP_1 = new Vector2d(-46,-21);
     final static Pose2d BUCKET_1 = new Pose2d(-51,-51, Math.toRadians(225));
-    final static Vector2d BUCKET_2 = new Vector2d(-61,-54);
-    final static Pose2d PICKUP_2 = new Pose2d(-57,-45,Math.toRadians(279));
+    final static Vector2d BUCKET_2 = new Vector2d(-62,-55);
+    final static Pose2d PICKUP_2 = new Pose2d(-57,-45,Math.toRadians(275));
     final static Pose2d PICKUP_3 = new Pose2d(-66,-48,Math.toRadians(285));
     final static Pose2d PARK = new Pose2d(-10,-4,Math.toRadians(90));
 
@@ -98,7 +98,7 @@ public class actualBucketAuto extends LinearOpMode {
                 MecanumDrive.getAccelerationConstraint(30)
         );
         this.robot.getDrive().followTrajectorySequenceAsync(builder.build());
-        timer = getRuntime() + 3;
+        timer = getRuntime() + 3.25;
         robot.scoringState = Robot.scoringStates.BUCKETR;
         robot.bucketStep = 0;
 //        sleep(1500);
@@ -123,7 +123,7 @@ public class actualBucketAuto extends LinearOpMode {
         builder.addTemporalMarker(0.1,robot.getIntake()::down);
         this.robot.getDrive().followTrajectorySequenceAsync(builder.build());
 
-        timer = getRuntime() + 3;
+        timer = getRuntime() + 3.75;
 //        sleep(1500);
         while (this.robot.getDrive().isBusy() || robot.intakeState != Robot.intakeStates.IDLE && timer > getRuntime()) {
             if(timer < getRuntime()+2.5 && timer > getRuntime() && foo) {
@@ -192,7 +192,7 @@ public class actualBucketAuto extends LinearOpMode {
             sleep(200);
 
             toSampleTwo();
-//            sleep(200);
+            sleep(200);
             toBucket(1,1);
             robot.AUTO = false;
             sleep(500);
@@ -202,6 +202,7 @@ public class actualBucketAuto extends LinearOpMode {
 
             toSampleThree();
 //            sleep(200);
+            sleep(200);
             toBucket(2,2);
             robot.AUTO = false;
             sleep(500);

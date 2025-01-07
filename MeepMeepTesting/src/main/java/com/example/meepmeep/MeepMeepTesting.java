@@ -14,7 +14,7 @@ public class MeepMeepTesting {
         Vector2d SPECIMEN = new Vector2d(2,-32);
         Pose2d PICKUP_1 = new Pose2d(34.25, -54,Math.toRadians(270));
         Pose2d SPECIMEN2 = new Pose2d(2,-32,Math.toRadians(90));
-        Vector2d PLOW1 = new Vector2d(36,-32);
+        Pose2d PLOW1 = new Pose2d(36,-32,Math.toRadians(270));
         Vector2d PLOW2 = new Vector2d(40,-12);
 
 
@@ -26,17 +26,17 @@ public class MeepMeepTesting {
                         .splineToConstantHeading(SPECIMEN,Math.toRadians(90))
 //                        .waitSeconds(1.5)
 //                        .setReversed(true)
-//                        .setTangent(Math.toRadians(0))
-                        .turn(-Math.toRadians(120))
-                        .splineToSplineHeading(PICKUP_1,Math.toRadians(270))
+                        .setTangent(Math.toRadians(270))
+//                        .turn(-Math.toRadians(120))
+                        .splineToLinearHeading(PICKUP_1,Math.toRadians(270))
                         .lineToLinearHeading(PICKUP_1.plus(new Pose2d(0,-3)))
                         .setReversed(true)
                         .splineToLinearHeading(SPECIMEN2, Math.toRadians(90))
-                        .turn(-Math.toRadians(180))
+//                        .turn(-Math.toRadians(180))
 
-                        .setTangent(0)
-                        .splineToConstantHeading(PLOW1, Math.toRadians(90))
-//                        .setTangent(90)
+                        .setTangent(270)
+                        .splineToLinearHeading(PLOW1, Math.toRadians(90))
+                        .setTangent(90)
                         .splineToConstantHeading(PLOW2, Math.toRadians(0))
 //                        .waitSeconds(1.5)
 //                        .splineTo(BUCKET_1,Math.toRadians(225))
