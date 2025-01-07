@@ -8,6 +8,7 @@ import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.acmerobotics.roadrunner.ftc.GoBildaPinpointDriverRR;
+import com.arcrobotics.ftclib.command.Command;
 import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.command.Subsystem;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -15,6 +16,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.teamcode.roadrunner.ActionCommand;
 import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
 
+import java.util.Collections;
 import java.util.Set;
 
 public class Robot {
@@ -105,7 +107,7 @@ public class Robot {
             driveState = DriveState.manuel;
         }
     }
-    public static class runActionCommand extends CommandBase {
+    public static class runActionCommand implements Command {
         PinpointDrive Drive;
         Action action;
         private boolean finished;
@@ -115,7 +117,6 @@ public class Robot {
         }
         @Override
         public void initialize() {
-            driveState = DriveState.automatic;
             Drive.setDrivePowers(new PoseVelocity2d(new Vector2d(0,0),0));
             Actions.runBlocking(action);
         }
@@ -128,10 +129,10 @@ public class Robot {
             Drive.updatePoseEstimate();
         }
         @Override
-        public void end(boolean I){
-            driveState = DriveState.manuel;
-        }
-        @Override
         public boolean isFinished(){return finished;}
+        @Override
+        public Set<Subsystem> getRequirements() {
+            return Collections.emptySet();
+        }
     }
 }

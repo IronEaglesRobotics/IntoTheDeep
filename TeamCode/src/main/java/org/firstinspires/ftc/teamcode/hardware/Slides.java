@@ -18,18 +18,19 @@ public class Slides extends SubsystemBase {
     public PIDController controller = new PIDController(KP, KI, KD);
     private int target = 0;
 
-    public static double KP = 0.0003;
-    public static double KI = 0;
+    public static double KP = 0.0007;
+    public static double KI = 0.0009;
     public static double KD = 0;
     public static double TOLERANCE = 200;
-    
+    // p:.001, I:0.000005, D:0.000035
+
     public static int POSITION_MIN = 0;
-    public static int POSITION_MAX = 43000;
+    public static int POSITION_MAX = 50000;
     
     public static int POSITION_DOWN = 1000;
-    public static int POSITION_AFTER_CLIP = 29000;
-    public int POSITION_BEFORE_CLIP = 33500;
-    public int POSITION_SCORE_HIGH = 43000;
+    public static int POSITION_AFTER_CLIP = 32000;
+    public static int POSITION_BEFORE_CLIP = 38000;
+    public static int POSITION_SCORE_HIGH = 44300;
 
     public Slides(HardwareMap hardwareMap) {
         slide = hardwareMap.get(DcMotor.class, SLIDES_FRONT);

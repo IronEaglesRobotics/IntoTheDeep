@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.lib;
 
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
-
+@com.acmerobotics.dashboard.config.Config
 public class Config {
     // -- hardware map start -- //
 
@@ -59,9 +59,9 @@ public class Config {
     public static double extendlowscale1 = 0;
     public static double extendhighscale1 = .58;
 
-    public static double wristFullLowscale = 0;
-    public static double wristFullhighscale = .75;
-    public static double wristFloorlowscale1 = .16;
+    public static double wristFullLowscale = 0.03;
+    public static double wristFullhighscale = .82;
+    public static double wristFloorlowscale1 = .15;
     public static double wristMedianhighscale1 = .35;
 
     // keybinds

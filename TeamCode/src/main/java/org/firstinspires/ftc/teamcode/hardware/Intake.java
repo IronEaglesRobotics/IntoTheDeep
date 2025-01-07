@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
 import static org.firstinspires.ftc.teamcode.lib.Config.wristFloorlowscale1;
+import static org.firstinspires.ftc.teamcode.lib.Config.wristFullhighscale;
 import static org.firstinspires.ftc.teamcode.lib.Config.wristMedianhighscale1;
 
 import com.acmerobotics.dashboard.config.Config;
@@ -35,6 +36,7 @@ public class Intake extends SubsystemBase {
     int g;
     int b;
     int a;
+    double highScale = wristMedianhighscale1;
 
     ColorSensor colorSensor;
     public Intake(HardwareMap hardwareMap) {
@@ -56,6 +58,11 @@ public class Intake extends SubsystemBase {
         wrist = 0;
     }
     public void wristDown(){
+        Wrist.scaleRange(wristFloorlowscale1,wristMedianhighscale1);
+        wrist = 1;
+    }
+    public void wristStore(){
+        Wrist.scaleRange(wristFloorlowscale1,wristFullhighscale);
         wrist = 1;
     }
     public colors getColor() {
@@ -111,6 +118,18 @@ public class Intake extends SubsystemBase {
         @Override
         public void initialize() {
             intake.reverseBeatBar();
+        }
+    }
+    public static class storeIntake extends InstantCommand{
+        Intake intake;
+        public storeIntake(Intake tempIntake){
+            intake = tempIntake;
+            addRequirements(intake);
+        }
+
+        @Override
+        public void initialize() {
+            intake.wristStore();
         }
     }
     public static class offIntake extends InstantCommand{

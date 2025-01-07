@@ -85,9 +85,7 @@ public class IntakeArm extends SubsystemBase {
         }
 
         public void initialize() {
-            if (!arm.isOut()) {
                 arm.toggleRotation();
-            }
         }
         public boolean isFinished(){
             return arm.isUp();

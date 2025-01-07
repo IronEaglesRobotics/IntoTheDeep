@@ -45,8 +45,10 @@ public class TeleOpMain extends CommandOpMode {
         controller2.getGamepadButton(GamepadKeys.Button.LEFT_STICK_BUTTON)
                 .whenPressed(new Hang.HangCommand(robot.getHang()));
         // controls lowering slides
-        controller2.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
-                .whenPressed(robot.getSlides().down()).whenPressed(new WaitCommand(300).andThen(new Claw.ClawCommand(robot.getClaw(),true)));
+        if (robot.getIntakeArm().isUp()) {
+            controller2.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
+                    .whenPressed(robot.getSlides().down()).whenPressed(new WaitCommand(300).andThen(new Claw.ClawCommand(robot.getClaw(), true)));
+        }
         // controls raising slides
         controller2.getGamepadButton(GamepadKeys.Button.DPAD_UP)
                 .whenPressed(robot.getSlides().up());
@@ -77,6 +79,8 @@ public class TeleOpMain extends CommandOpMode {
 
         controller2.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
                 .toggleWhenPressed(robot.getIntake().setBlue,robot.getIntake().setRed);
+        controller2.getGamepadButton(GamepadKeys.Button.Y)
+                .whenPressed(new Intake.storeIntake(robot.getIntake()));
 
         // manual control of slides
         new Trigger(() -> Math.abs(controller2.getLeftY()) > 0.1)
