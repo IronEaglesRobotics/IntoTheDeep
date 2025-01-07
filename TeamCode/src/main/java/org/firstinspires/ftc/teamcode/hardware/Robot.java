@@ -62,10 +62,10 @@ public class Robot {
     }
 
     //Trajectory Sequence Builder
-    public TrajectorySequenceBuilder getTrajectorySequenceBuilder() {
-        this.drive.update();
-        return this.drive.trajectorySequenceBuilder(this.drive.getPoseEstimate());
-    }
+//    public TrajectorySequenceBuilder getTrajectorySequenceBuilder() {
+//        this.drive.update();
+//        return this.drive.trajectorySequenceBuilder(this.drive.getPoseEstimate());
+//    }
 
     //Claw Class
     @Config
