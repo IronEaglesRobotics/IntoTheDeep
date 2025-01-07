@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.DualNum;
 import com.acmerobotics.roadrunner.Pose2d;
@@ -19,11 +20,13 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 
+
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
 import org.firstinspires.ftc.robotcore.external.navigation.UnnormalizedAngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.messages.TwoDeadWheelInputsMessage;
+
 
 @Config
 public final class TwoDeadWheelLocalizer implements Localizer {
@@ -32,19 +35,25 @@ public final class TwoDeadWheelLocalizer implements Localizer {
         public double perpXTicks = -3.11024; // x position of the perpendicular encoder (in tick units)
     }
 
+
     public static Params PARAMS = new Params();
+
 
     public final Encoder par, perp;
     public final IMU imu;
 
+
     private int lastParPos, lastPerpPos;
     private Rotation2d lastHeading;
 
+
     private final double inPerTick;
+
 
     private double lastRawHeadingVel, headingVelOffset;
     private boolean initialized;
     private Pose2d pose;
+
 
     public TwoDeadWheelLocalizer(HardwareMap hardwareMap, IMU imu, double inPerTick, Pose2d pose) {
         // TODO: make sure your config has **motors** with these names (or change them)
@@ -53,32 +62,41 @@ public final class TwoDeadWheelLocalizer implements Localizer {
         par = new OverflowEncoder(new RawEncoder(hardwareMap.get(DcMotorEx.class, "fld")));
         perp = new OverflowEncoder(new RawEncoder(hardwareMap.get(DcMotorEx.class, "perp")));
 
+
         // TODO: reverse encoder directions if needed
         perp.setDirection(DcMotorSimple.Direction.REVERSE);
 
+
         this.imu = imu;
+
 
         this.inPerTick = inPerTick;
 
+
         FlightRecorder.write("TWO_DEAD_WHEEL_PARAMS", PARAMS);
+
 
         this.pose = pose;
     }
+
 
     @Override
     public void setPose(Pose2d pose) {
         this.pose = pose;
     }
 
+
     @Override
     public Pose2d getPose() {
         return pose;
     }
 
+
     @Override
     public PoseVelocity2d update() {
         PositionVelocityPair parPosVel = par.getPositionAndVelocity();
         PositionVelocityPair perpPosVel = perp.getPositionAndVelocity();
+
 
         YawPitchRollAngles angles = imu.getRobotYawPitchRollAngles();
         // Use degrees here to work around https://github.com/FIRST-Tech-Challenge/FtcRobotController/issues/1070
@@ -91,9 +109,12 @@ public final class TwoDeadWheelLocalizer implements Localizer {
                 angularVelocityDegrees.acquisitionTime
         );
 
+
         FlightRecorder.write("TWO_DEAD_WHEEL_INPUTS", new TwoDeadWheelInputsMessage(parPosVel, perpPosVel, angles, angularVelocity));
 
+
         Rotation2d heading = Rotation2d.exp(angles.getYaw(AngleUnit.RADIANS));
+
 
         // see https://github.com/FIRST-Tech-Challenge/FtcRobotController/issues/617
         double rawHeadingVel = angularVelocity.zRotationRate;
@@ -103,19 +124,24 @@ public final class TwoDeadWheelLocalizer implements Localizer {
         lastRawHeadingVel = rawHeadingVel;
         double headingVel = headingVelOffset + rawHeadingVel;
 
+
         if (!initialized) {
             initialized = true;
+
 
             lastParPos = parPosVel.position;
             lastPerpPos = perpPosVel.position;
             lastHeading = heading;
 
+
             return new PoseVelocity2d(new Vector2d(0.0, 0.0), 0.0);
         }
+
 
         int parPosDelta = parPosVel.position - lastParPos;
         int perpPosDelta = perpPosVel.position - lastPerpPos;
         double headingDelta = heading.minus(lastHeading);
+
 
         Twist2dDual<Time> twist = new Twist2dDual<>(
                 new Vector2dDual<>(
@@ -134,11 +160,14 @@ public final class TwoDeadWheelLocalizer implements Localizer {
                 })
         );
 
+
         lastParPos = parPosVel.position;
         lastPerpPos = perpPosVel.position;
         lastHeading = heading;
+
 
         pose = pose.plus(twist.value());
         return twist.velocity().value();
     }
 }
+
