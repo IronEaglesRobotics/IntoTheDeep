@@ -12,12 +12,12 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.teamcode.hardware.Claw;
 import org.firstinspires.ftc.teamcode.hardware.Robot;
 
-@Autonomous(name = "clip_auto", preselectTeleOp = "Main Teleop")
+@Autonomous(name = "clipAutoCommand", preselectTeleOp = "Main Teleop")
 public class commandClipAuto extends CommandOpMode {
     Robot robot;
     Pose2d start = new Pose2d(0, 0, 0);
-    Vector2d toBar = new Vector2d(-26, -18);
-    Pose2d toPickup = new Pose2d(-13,0,Math.toRadians(135));
+    Vector2d toBar = new Vector2d(-32, -15);
+    Pose2d toPickup = new Pose2d(0,-13,Math.toRadians(135));
     Pose2d reset1 = new Pose2d(-20,0,Math.toRadians(135));
     TrajectoryActionBuilder builder;
 
@@ -39,7 +39,7 @@ public class commandClipAuto extends CommandOpMode {
     Command clip(){
         return new WaitCommand(20)
                 .andThen(robot.getSlides().preclip())
-                .alongWith(robot.runAction(builder.splineToConstantHeading(toBar, -Math.PI / 2).build()))
+                .alongWith(robot.runAction(builder.splineToConstantHeading(toBar, Math.toRadians(45)).build()))
                 .andThen(robot.getSlides().postclip())
                 .alongWith(new WaitCommand(2000).andThen(new Claw.ClawCommand(robot.getClaw(), true)));
     }
