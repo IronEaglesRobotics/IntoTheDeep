@@ -180,6 +180,10 @@ public class Robot {
             FR.setPower(FRPower);
             BR.setPower(BRPower);
 
+            FL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            BL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            FR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            BR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
         }
