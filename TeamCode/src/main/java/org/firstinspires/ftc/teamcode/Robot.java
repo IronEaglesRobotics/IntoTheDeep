@@ -166,8 +166,8 @@ public class Robot {
 
 
             //sets motor power based on input
-            double FLPower = ((y - x + rx) / denominator);
-            double BLPower = ((-y - x - rx) / denominator);
+            double FLPower = ((-y - x - rx) / denominator);
+            double BLPower = ((y - x + rx) / denominator);
             double FRPower = ((y - x - rx) / denominator);
             double BRPower = ((y + x - rx) / denominator);
 
@@ -192,42 +192,3 @@ public class Robot {
     }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
