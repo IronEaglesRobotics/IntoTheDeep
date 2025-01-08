@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.hardware;
 import static org.firstinspires.ftc.teamcode.hardware.Robot.Wrist.SCORESPECWRIST;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.Pose2d;
 import com.arcrobotics.ftclib.controller.PDController;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
@@ -15,14 +16,9 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 
-import org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.MecanumDrive;
-import org.firstinspires.ftc.teamcode.hardware.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
-
-import java.net.PortUnreachableException;
-import java.security.SecurityPermission;
+import org.firstinspires.ftc.teamcode.hardware.rr1.MecanumDrive;
 
 import lombok.Getter;
-import lombok.Setter;
 
 @Config
 public class Robot {
@@ -50,7 +46,7 @@ public class Robot {
 
     //Init Hardwaremap
     public Robot init(HardwareMap hardwareMap) {
-        this.drive = new MecanumDrive(hardwareMap);
+        this.drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
         this.wrist = new Wrist().init(hardwareMap);
         this.arm = new Arm().init(hardwareMap);
         this.claw = new Claw().init(hardwareMap);
@@ -62,10 +58,10 @@ public class Robot {
     }
 
     //Trajectory Sequence Builder
-//    public TrajectorySequenceBuilder getTrajectorySequenceBuilder() {
-//        this.drive.update();
-//        return this.drive.trajectorySequenceBuilder(this.drive.getPoseEstimate());
-//    }
+    public TrajectorySequenceBuilder getTrajectorySequenceBuilder() {
+        this.drive.update();
+        return this.drive.trajectorySequenceBuilder(this.drive.getPoseEstimate());
+    }
 
     //Claw Class
     @Config
@@ -110,7 +106,7 @@ public class Robot {
     @Config
     public static class Arm {
         //variables
-        public static double INTAKE = .7;
+        public static double INTAKE = .74;
         public static double INTAKESPEC = .475;
         public static double OUTTAKESPEC = .2;
         public static double OUTTAKESAMPLE = .05;
@@ -191,7 +187,7 @@ public class Robot {
     @Config
     public static class Wrist {
         //variables
-        public static double INTAKE = .4;
+        public static double INTAKE = .34;
         public static double OUTTAKESAMPLE = .58;
         public static double INTAKESPEC = .33;
         public static double SCORESPECWRIST = .4;
@@ -394,7 +390,7 @@ public class Robot {
 
 
         //Variables
-        public static double up = .29;
+        public static double up = .35;
         public static double spit = .65;
         public static double down = .8;
         public static double INTAKE = 1;
@@ -739,7 +735,6 @@ public class Robot {
     //Intake Macro
     public boolean mini;
 
-
     public intakeStates intakeState = intakeStates.IDLE;
 
     public enum intakeStates {
@@ -842,7 +837,7 @@ public class Robot {
     public void update() {
         wrist.update();
         arm.update();
-        drive.update();
+//        drive.update();
 //        slides.update();
     }
 }

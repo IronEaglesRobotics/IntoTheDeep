@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.PoseVelocity2d;
+import com.acmerobotics.roadrunner.Vector2d;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -35,7 +37,7 @@ public class TeleOp extends LinearOpMode {
         while (opModeIsActive()){
             //drive
             robot.getDrive().setInput(controller1);
-            robot.getDrive().update();
+//            robot.getDrive().update();
             controller1.readButtons();
             controller2.readButtons();
 
