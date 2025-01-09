@@ -2,8 +2,21 @@ package org.firstinspires.ftc.teamcode.hardware;
 
 import static org.firstinspires.ftc.teamcode.hardware.Robot.Wrist.SCORESPECWRIST;
 
+import androidx.annotation.NonNull;
+
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.InstantAction;
+import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.SequentialAction;
+import com.acmerobotics.roadrunner.SleepAction;
+import com.acmerobotics.roadrunner.ftc.Actions;
+import com.arcrobotics.ftclib.command.CommandBase;
+import com.arcrobotics.ftclib.command.InstantCommand;
+import com.arcrobotics.ftclib.command.Subsystem;
+import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.controller.PDController;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
@@ -58,18 +71,18 @@ public class Robot {
     }
 
     //Trajectory Sequence Builder
-    public TrajectorySequenceBuilder getTrajectorySequenceBuilder() {
-        this.drive.update();
-        return this.drive.trajectorySequenceBuilder(this.drive.getPoseEstimate());
-    }
+//    public TrajectorySequenceBuilder getTrajectorySequenceBuilder() {
+//        this.drive.update();
+//        return this.drive.trajectorySequenceBuilder(this.drive.getPoseEstimate());
+//    }
 
     //Claw Class
     @Config
-    public static class Claw {
+    public static class Claw extends SubsystemBase {
         //Variables
-        public static double OPEN = 1;
-        public static double OPENSMALL = .9;
-        public static double CLOSE = .6;
+        public static double OPEN = 7;
+        public static double OPENSMALL = .7;
+        public static double CLOSE = .45;
         //Servo
         public ServoImplEx claw;
 
@@ -102,15 +115,54 @@ public class Robot {
         }
     }
 
+    public class close extends CommandBase{
+        private Claw clawTest;
+
+        public close(Claw subsystem){
+            clawTest = subsystem;
+            addRequirements(clawTest);
+        }
+
+        @Override
+        public void initialize() {
+            clawTest.close();
+        }
+
+        @Override
+        public boolean isFinished() {
+            return true;
+        }
+    }
+
+    public class TestCommand extends InstantCommand{
+        Claw claw;
+        public TestCommand(Claw clawtemp){
+            claw = clawtemp;
+        }
+
+        public void initialized(){
+            claw.open();
+        }
+    }
+
+//    public class ClawSubsystem extends SubsystemBase{
+//
+//        private final ServoImplEx clawTest;
+//
+//        public ClawSubsystem(HardwareMap hardwareMap, String name){
+//            clawTest = hardwareMap.get(ServoImplEx.class, "claw");
+//        }
+//
+//    }
     //Arm Class
     @Config
     public static class Arm {
         //variables
-        public static double INTAKE = .74;
-        public static double INTAKESPEC = .475;
-        public static double OUTTAKESPEC = .2;
+        public static double INTAKE = .8;
+        public static double INTAKESPEC = .54;
+        public static double OUTTAKESPEC = .85;
         public static double OUTTAKESAMPLE = .05;
-        public static double SCORESPEC = .4;
+        public static double SCORESPEC = .85;
         //PController
         public static double KP = 1.2;
         public static double KD = 0;
@@ -187,11 +239,11 @@ public class Robot {
     @Config
     public static class Wrist {
         //variables
-        public static double INTAKE = .34;
+        public static double INTAKE = .28;
         public static double OUTTAKESAMPLE = .58;
-        public static double INTAKESPEC = .33;
-        public static double SCORESPECWRIST = .4;
-        public static double OUTTAKESPEC = .62;
+        public static double INTAKESPEC = .28;
+        public static double SCORESPECWRIST = .6;
+        public static double OUTTAKESPEC = .57;
         //PController
         public static double KP = 1.2;
         public static double KD = 0;
@@ -263,12 +315,13 @@ public class Robot {
         public DcMotorEx slidesR;
         //Variables
 //        public static int SLIDESPOWER = 1;
-        public static int SLIDEUP = 860;
-        public static int SLIDEHSPEC = 480;
-//        public static int SLIDELSPEC = 300;
-        public static int SLIDELBUCKET = 350;
+        public static int SLIDEUP = 2300;
+        public static int SLIDEHSPEC = 1100;
+        //        public static int SLIDELSPEC = 300;
+        public static int SLIDELBUCKET = 1200;
         public static int SLIDEDOWN = 0;
-        public static int SLIDEREST = 110;
+        public static int SLIDEREST = 280;
+        public static int SLIDESPECSCORE = -600;
         //PID
 //        private static int TARGET = 20;
         public static double KP = 0.0014;
@@ -432,6 +485,46 @@ public class Robot {
             intakeR.setPosition(down);
         }
 
+        public class DownAction implements Action {
+            private boolean initialized = false;
+
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                if (!initialized) {
+                    down();
+                    initialized = true;
+                }
+                return false;
+            }
+        }
+
+        public Action downAction() {
+            return new DownAction();
+        }
+
+        public class testMacro implements Action {
+            private boolean initialized = false;
+
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                if (!initialized) {
+                    Actions.runBlocking(new ParallelAction(
+                            new SequentialAction(
+                                    new SleepAction(1),
+                                    downAction()
+                            ),
+                            downAction()));
+                    initialized = true;
+                }
+                return false;
+            }
+        }
+
+        public Action test(){
+            return new testMacro();
+        }
+
+
         public void up() {
             intakeL.setPosition(up);
             intakeR.setPosition(up);
@@ -463,11 +556,11 @@ public class Robot {
 
             if (r + b + g < 190) {
                 color = colors.NULL;
-            } else if (b > g+10 && b > r+10) {
+            } else if (b > g + 10 && b > r + 10) {
                 color = colors.BLUE;
-            } else if (g > b+25 && g > r+25) {
+            } else if (g > b + 25 && g > r + 25) {
                 color = colors.YELLOW;
-            } else if (r > b+50 && r > g+50) {
+            } else if (r > b + 50 && r > g + 50) {
                 color = colors.RED;
             } else {
                 color = colors.NULL;
@@ -482,11 +575,11 @@ public class Robot {
     }
 
     @Config
-    public static class Hang{
+    public static class Hang {
         public DcMotorEx depression;
 
-        public Hang init(HardwareMap hardwareMap){
-            this.depression = hardwareMap.get(DcMotorEx.class,"depression");
+        public Hang init(HardwareMap hardwareMap) {
+            this.depression = hardwareMap.get(DcMotorEx.class, "depression");
             this.depression.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             depression.setTargetPosition(0);
             this.depression.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -494,7 +587,7 @@ public class Robot {
             return this;
         }
 
-        public void setPosition(int pos){
+        public void setPosition(int pos) {
             depression.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             depression.setTargetPosition(pos);
             depression.setPower(1);
@@ -502,7 +595,7 @@ public class Robot {
 
         }
 
-        public void pause(){
+        public void pause() {
             depression.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             depression.setPower(0);
         }
@@ -664,7 +757,7 @@ public class Robot {
                     case 4:
                         if (runtime > outtakeDelay) {
                             slides.slidesTo(Slides.SLIDEHSPEC);
-                            claw.passiveclose();
+                            claw.close();
                             outtakeDelay = runtime + .3;
                             specStep++;
                         }
@@ -680,12 +773,13 @@ public class Robot {
                         break;
                     case 6:
                         if (L1) {
-                            slides.slidesTo(slides.getPosition() - 400);
+                            slides.slidesTo(slides.getPosition() - Slides.SLIDESPECSCORE);
+                            wrist.moveWrist(SCORESPECWRIST);
                             scoringState = scoringStates.SPECIMENR;
                             specStep = 0;
                         }
-                        if (auto){
-                            slides.slidesTo(slides.getPosition() - 400);
+                        if (auto) {
+                            slides.slidesTo(slides.getPosition() - Slides.SLIDESPECSCORE);
                             scoringState = scoringStates.SPECIMENR;
                             specStep = 0;
                         }
@@ -698,11 +792,11 @@ public class Robot {
                         if (L2 || auto) {
                             outtakeDelay = runtime + .2;
                             specStep++;
-                        } else if (D1){
+                        } else if (D1) {
                             outtakeDelay = runtime + .1;
                             scoringState = scoringStates.SPECIMENGRAB;
                             specStep = 3;
-                        } else if (A){
+                        } else if (A) {
                             outtakeDelay = runtime + .051;
                             scoringState = scoringStates.SPECIMENGRAB;
                             specStep = 0;
@@ -762,13 +856,13 @@ public class Robot {
                 break;
             case EXTENDED:
                 //Actions
-                if(mini){
+                if (mini) {
                     extendo.mini();
                 } else {
                     extendo.extend();
                 }
                 //Switch States
-                if (((controller1.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > .3 || controller1.wasJustPressed(GamepadKeys.Button.B)) && runtime > intakeDelay ) || auto) {
+                if (((controller1.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > .3 || controller1.wasJustPressed(GamepadKeys.Button.B)) && runtime > intakeDelay) || auto) {
                     intakeState = intakeStates.INTAKING;
                     intakeDelay = runtime + .25;
                 }
@@ -776,7 +870,7 @@ public class Robot {
             case INTAKING:
                 //Actions
                 intake.down();
-                if (runtime>intakeDelay) {
+                if (runtime > intakeDelay) {
                     intake.intake();
                 }
 
@@ -792,8 +886,8 @@ public class Robot {
                     intakeState = intakeStates.DETECT;
                     intakeDelay = runtime + .005;
                 } else if (controller1.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
-                intakeState = intakeStates.HASSAMPLE;
-            }
+                    intakeState = intakeStates.HASSAMPLE;
+                }
                 break;
             case DETECT:
                 //Actions
