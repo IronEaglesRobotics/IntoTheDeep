@@ -11,22 +11,21 @@ import org.firstinspires.ftc.teamcode.hardware.Robot;
 public class TeleOp extends LinearOpMode {
     private Robot robot;
     GamepadEx controller1;
-    GamepadEx controller2;
-    public boolean EXTENDED = false;
-    public static int HANGUP = 0;
-    public static int HANGDOWN = -4600;
-    public static int HANGAUTO = 7000;
+//    GamepadEx controller2;
+//    public static int HANGUP = 0;
+//    public static int HANGDOWN = -4600;
+//    public static int HANGAUTO = 7000;
 
 
     @Override
     public void runOpMode() throws InterruptedException {
         this.robot = new Robot().init(hardwareMap);
         controller1 = new GamepadEx(gamepad1);
-        controller2 = new GamepadEx(gamepad2);
+//        controller2 = new GamepadEx(gamepad2);
 
         while (opModeInInit()) {
             controller1.readButtons();
-            controller2.readButtons();
+//            controller2.readButtons();
             getTeam();
             telemetry.addData("Team:", robot.team);
             telemetry.update();
@@ -37,18 +36,18 @@ public class TeleOp extends LinearOpMode {
             robot.getDrive().setInput(controller1);
             robot.getDrive().update();
             controller1.readButtons();
-            controller2.readButtons();
+//            controller2.readButtons();
 
             robot.intakeMacro(controller1,getRuntime(),false);
             robot.scoringMacro(controller1,getRuntime(),false);
 
-            if(controller2.isDown(GamepadKeys.Button.DPAD_UP)) {
-                robot.hang.setPosition(HANGUP);
-            } else if (controller2.isDown(GamepadKeys.Button.DPAD_DOWN)){
-                robot.hang.setPosition(HANGDOWN);
-            } else {
-                robot.hang.pause();
-            }
+//            if(controller2.isDown(GamepadKeys.Button.DPAD_UP)) {
+//                robot.hang.setPosition(HANGUP);
+//            } else if (controller2.isDown(GamepadKeys.Button.DPAD_DOWN)){
+//                robot.hang.setPosition(HANGDOWN);
+//            } else {
+//                robot.hang.pause();
+//            }
             robot.update();
 
             //Telemetry

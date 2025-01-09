@@ -40,8 +40,8 @@ public class Robot {
     @Getter
     public Hang hang;
 
-    public double intakeDelay;
-    public double outtakeDelay;
+    public double intakeDelay = 0;
+    public double outtakeDelay = 0;
     public String team;
 
 
@@ -68,9 +68,9 @@ public class Robot {
     @Config
     public static class Claw {
         //Variables
-        public static double OPEN = 1;
-        public static double OPENSMALL = .9;
-        public static double CLOSE = .6;
+        public static double OPEN = 7;
+        public static double OPENSMALL = .7;
+        public static double CLOSE = .45;
         //Servo
         public ServoImplEx claw;
 
@@ -107,10 +107,11 @@ public class Robot {
     @Config
     public static class Arm {
         //variables
-        public static double INTAKE = .7;
-        public static double INTAKESPEC = .475;
-        public static double OUTTAKESPEC = .2;
+        public static double INTAKE = .8;
+        public static double INTAKESPEC = .54;
+        public static double OUTTAKESPEC = .85;
         public static double OUTTAKESAMPLE = .05;
+        public static double SCORESPEC = .85;
         //PController
         public static double KP = 1.2;
         public static double KD = 0;
@@ -181,10 +182,11 @@ public class Robot {
     @Config
     public static class Wrist {
         //variables
-        public static double INTAKE = .4;
+        public static double INTAKE = .28;
         public static double OUTTAKESAMPLE = .58;
-        public static double INTAKESPEC = .33;
-        public static double OUTTAKESPEC = .62;
+        public static double INTAKESPEC = .28;
+        public static double SCORESPECWRIST = .6;
+        public static double OUTTAKESPEC = .57;
         //PController
         public static double KP = 1.2;
         public static double KD = 0;
@@ -256,12 +258,13 @@ public class Robot {
         public DcMotorEx slidesR;
         //Variables
 //        public static int SLIDESPOWER = 1;
-        public static int SLIDEUP = 860;
-        public static int SLIDEHSPEC = 450;
-//        public static int SLIDELSPEC = 300;
-        public static int SLIDELBUCKET = 350;
+        public static int SLIDEUP = 2300;
+        public static int SLIDEHSPEC = 1100;
+        //        public static int SLIDELSPEC = 300;
+        public static int SLIDELBUCKET = 1200;
         public static int SLIDEDOWN = 0;
-        public static int SLIDEREST = 110;
+        public static int SLIDEREST = 280;
+        public static int SLIDESPECSCORE = -600;
         //PID
 //        private static int TARGET = 20;
         public static double KP = 0.0014;
@@ -383,7 +386,7 @@ public class Robot {
 
 
         //Variables
-        public static double up = .29;
+        public static double up = .35;
         public static double spit = .65;
         public static double down = .8;
         public static double INTAKE = 1;
@@ -449,18 +452,25 @@ public class Robot {
 
         public colors getColor() {
             colors color;
-            b = intakeSensor.blue();
-            g = intakeSensor.green();
-            r = intakeSensor.red();
+
+            b = 0;
+            g = 0;
+            r = 0;
             a = intakeSensor.alpha();
+
+            for (int i = 0; i < 5; i++) {
+                b += intakeSensor.blue();
+                g += intakeSensor.green();
+                r += intakeSensor.red();
+            }
 
             if (r + b + g < 190) {
                 color = colors.NULL;
-            } else if (b > g+10 && b > r+10) {
+            } else if (b > g + 10 && b > r + 10) {
                 color = colors.BLUE;
-            } else if (g > b+25 && g > r+25) {
+            } else if (g > b + 25 && g > r + 25) {
                 color = colors.YELLOW;
-            } else if (r > b+50 && r > g+50) {
+            } else if (r > b + 50 && r > g + 50) {
                 color = colors.RED;
             } else {
                 color = colors.NULL;
@@ -475,11 +485,11 @@ public class Robot {
     }
 
     @Config
-    public static class Hang{
+    public static class Hang {
         public DcMotorEx depression;
 
-        public Hang init(HardwareMap hardwareMap){
-            this.depression = hardwareMap.get(DcMotorEx.class,"depression");
+        public Hang init(HardwareMap hardwareMap) {
+            this.depression = hardwareMap.get(DcMotorEx.class, "depression");
             this.depression.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             depression.setTargetPosition(0);
             this.depression.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -487,7 +497,7 @@ public class Robot {
             return this;
         }
 
-        public void setPosition(int pos){
+        public void setPosition(int pos) {
             depression.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             depression.setTargetPosition(pos);
             depression.setPower(1);
@@ -495,7 +505,7 @@ public class Robot {
 
         }
 
-        public void pause(){
+        public void pause() {
             depression.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             depression.setPower(0);
         }
@@ -657,7 +667,7 @@ public class Robot {
                     case 4:
                         if (runtime > outtakeDelay) {
                             slides.slidesTo(Slides.SLIDEHSPEC);
-                            claw.passiveclose();
+                            claw.close();
                             outtakeDelay = runtime + .3;
                             specStep++;
                         }
@@ -673,12 +683,13 @@ public class Robot {
                         break;
                     case 6:
                         if (L1) {
-                            slides.slidesTo(slides.getPosition() - 400);
+                            slides.slidesTo(slides.getPosition() - Slides.SLIDESPECSCORE);
+                            wrist.moveWrist(Wrist.SCORESPECWRIST);
                             scoringState = scoringStates.SPECIMENR;
                             specStep = 0;
                         }
-                        if (auto){
-                            slides.slidesTo(slides.getPosition() - 400);
+                        if (auto) {
+                            slides.slidesTo(slides.getPosition() - Slides.SLIDESPECSCORE);
                             scoringState = scoringStates.SPECIMENR;
                             specStep = 0;
                         }
@@ -691,13 +702,16 @@ public class Robot {
                         if (L2 || auto) {
                             outtakeDelay = runtime + .2;
                             specStep++;
-                        } else if (D1){
+                        } else if (D1) {
                             outtakeDelay = runtime + .1;
                             scoringState = scoringStates.SPECIMENGRAB;
-                            specStep = 3;
-                        } else if (A){
+                            specStep = 4;
+                        } else if (A) {
                             outtakeDelay = runtime + .051;
                             scoringState = scoringStates.SPECIMENGRAB;
+                            arm.intakeSpecimen();
+                            wrist.intakeSpecien();
+                            claw.passiveclose();
                             specStep = 0;
                         }
                         break;
@@ -727,7 +741,7 @@ public class Robot {
 
     //Intake Macro
     public boolean mini;
-
+    public boolean spit = false;
 
     public intakeStates intakeState = intakeStates.IDLE;
 
@@ -742,7 +756,12 @@ public class Robot {
                 //Actions
                 extendo.retract();
                 intake.up();
-                intake.pause();
+                if(intakeDelay > runtime && spit && runtime > intakeDelay - .75) {
+                    intake.outtake();
+                } else {
+//                    spit = false;
+                    intake.pause();
+                }
                 //Switch states
                 if (controller1.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > .3) {
                     intakeState = intakeStates.EXTENDED;
@@ -756,13 +775,13 @@ public class Robot {
                 break;
             case EXTENDED:
                 //Actions
-                if(mini){
+                if (mini) {
                     extendo.mini();
                 } else {
                     extendo.extend();
                 }
                 //Switch States
-                if (((controller1.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > .3 || controller1.wasJustPressed(GamepadKeys.Button.B)) && runtime > intakeDelay ) || auto) {
+                if (((controller1.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > .3 || controller1.wasJustPressed(GamepadKeys.Button.B)) && runtime > intakeDelay) || auto) {
                     intakeState = intakeStates.INTAKING;
                     intakeDelay = runtime + .25;
                 }
@@ -770,7 +789,7 @@ public class Robot {
             case INTAKING:
                 //Actions
                 intake.down();
-                if (runtime>intakeDelay) {
+                if (runtime > intakeDelay) {
                     intake.intake();
                 }
 
@@ -786,8 +805,8 @@ public class Robot {
                     intakeState = intakeStates.DETECT;
                     intakeDelay = runtime + .005;
                 } else if (controller1.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
-                intakeState = intakeStates.HASSAMPLE;
-            }
+                    intakeState = intakeStates.HASSAMPLE;
+                }
                 break;
             case DETECT:
                 //Actions
@@ -809,7 +828,8 @@ public class Robot {
                 extendo.retract();
                 //Switch States
                 if (runtime > intakeDelay) {
-                    intake.outtake();
+                    spit = true;
+                    intakeDelay = runtime+1;
                     intakeState = intakeStates.IDLE;
                 }
                 break;
@@ -826,12 +846,10 @@ public class Robot {
 
     }
 
-
     //Robot Update
     public void update() {
         wrist.update();
         arm.update();
         drive.update();
-//        slides.update();
     }
 }
