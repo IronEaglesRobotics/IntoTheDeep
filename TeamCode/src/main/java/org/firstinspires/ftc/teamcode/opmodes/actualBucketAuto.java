@@ -23,12 +23,12 @@ public class actualBucketAuto extends LinearOpMode {
     private boolean boo = true;
 
     final static Vector2d SPECIMEN = new Vector2d(-3,-32.5);
-    final static Vector2d PICKUP_1 = new Vector2d(-47,-21);
+    final static Vector2d PICKUP_1 = new Vector2d(-48,-21);
     final static Pose2d BUCKET_1 = new Pose2d(-51,-51, Math.toRadians(225));
-    final static Vector2d BUCKET_2 = new Vector2d(-61,-54);
-    final static Pose2d PICKUP_2 = new Pose2d(-57,-45,Math.toRadians(279));
-    final static Pose2d PICKUP_3 = new Pose2d(-66,-48,Math.toRadians(285));
-    final static Pose2d PARK = new Pose2d(-10,-4,Math.toRadians(90));
+    final static Vector2d BUCKET_2 = new Vector2d(-62,-53);
+    final static Pose2d PICKUP_2 = new Pose2d(-60,-40,Math.toRadians(279));
+    final static Pose2d PICKUP_3 = new Pose2d(-66,-42,Math.toRadians(285));
+    final static Pose2d PARK = new Pose2d(-10,-4,Math.toRadians(180));
 
 
     protected void specScore() {
@@ -68,9 +68,36 @@ public class actualBucketAuto extends LinearOpMode {
         TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
 
         builder.lineToSplineHeading(BUCKET_1.plus(new Pose2d(x,y)));
+        builder.lineTo(BUCKET_2.plus(new Vector2d(x,y)),
+                MecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                MecanumDrive.getAccelerationConstraint(30)
+        );
+//        builder.forward(8);
+
         this.robot.getDrive().followTrajectorySequenceAsync(builder.build());
         robot.AUTO = true;
 //        timer = getRuntime() + .4;
+//        sleep(1500);
+        while (this.robot.getDrive().isBusy() && robot.specStep != 1) {
+//            if (timer < getRuntime() && timer> getRuntime()-0.1) {
+//            }
+            this.robot.update();
+            this.robot.scoringMacro(controller1, this.getRuntime(), true);
+            this.robot.intakeMacro(controller1,getRuntime(), true);
+        }
+    }
+
+    protected void toBucketFirst() {
+        TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
+
+        builder.lineToSplineHeading(new Pose2d(-62,-53,Math.toRadians(225)));
+
+//        builder.forward(8);
+
+        this.robot.getDrive().followTrajectorySequenceAsync(builder.build());
+        robot.AUTO = true;
+//        timer = getRuntime() + .4;
+//        sleep(1500);
         while (this.robot.getDrive().isBusy() && robot.specStep != 1) {
 //            if (timer < getRuntime() && timer> getRuntime()-0.1) {
 //            }
@@ -82,9 +109,10 @@ public class actualBucketAuto extends LinearOpMode {
 
     protected void scoreBucket(double x, double y) {
         TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
-        builder.lineTo(BUCKET_2.plus(new Vector2d(x,y)),
-                MecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                MecanumDrive.getAccelerationConstraint(30)
+        builder.lineTo(BUCKET_2.plus(new Vector2d(x,y))
+//                ,
+//                MecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+//                MecanumDrive.getAccelerationConstraint(30)
         );
         this.robot.getDrive().followTrajectorySequence(builder.build());
     }
@@ -93,9 +121,10 @@ public class actualBucketAuto extends LinearOpMode {
         TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
 
         builder.lineToLinearHeading(PICKUP_2);
-        builder.lineToLinearHeading(PICKUP_2.plus(new Pose2d(0,5)),
-                MecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                MecanumDrive.getAccelerationConstraint(30)
+        builder.lineToLinearHeading(PICKUP_2.plus(new Pose2d(0,5))
+//                ,
+//                MecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+//                MecanumDrive.getAccelerationConstraint(30)
         );
         this.robot.getDrive().followTrajectorySequenceAsync(builder.build());
         timer = getRuntime() + 3;
@@ -160,6 +189,29 @@ public class actualBucketAuto extends LinearOpMode {
         }
     }
 
+    protected void toSampleFour() {
+        TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
+
+        builder.setReversed(true);
+        builder.splineToLinearHeading(PARK, Math.toRadians(0));
+        builder.setReversed(false);
+        this.robot.getDrive().followTrajectorySequenceAsync(builder.build());
+        timer = getRuntime() + 3;
+        robot.scoringState = Robot.scoringStates.BUCKETR;
+        robot.bucketStep = 0;
+//        sleep(1500);
+        robot.intakeState = Robot.intakeStates.EXTENDED;
+        while (this.robot.getDrive().isBusy() || robot.intakeState != Robot.intakeStates.IDLE && timer > getRuntime()) {
+            this.robot.update();
+            this.robot.scoringMacro(controller1, this.getRuntime(), true);
+            if(timer-1<getRuntime()) {
+                this.robot.intakeMacro(controller1, getRuntime(), true);
+            }
+        }
+        robot.intakeState = Robot.intakeStates.HASSAMPLE;
+
+    }
+
 
 
     @Override
@@ -173,21 +225,23 @@ public class actualBucketAuto extends LinearOpMode {
         while (!this.isStarted()) {
             robot.arm.intakeSpecimen();
             this.telemetry.update();
+            robot.scoringState = Robot.scoringStates.BUCKET;
+            robot.bucketStep = 0;
         }
 
-            toBucket(0,0);
+            toBucketFirst();
             robot.AUTO = false;
-            scoreBucket(0,0);
+//            scoreBucket(0,0);
             robot.claw.open();
             sleep(300);
             getSample();
             sleep(200);
 
-            robot.mini =false;
+            robot.mini = false;
             toBucket(0,0);
             robot.AUTO = false;
-            sleep(500);
-            scoreBucket(0,0);
+//            sleep(500);
+//            scoreBucket(0,0);
             robot.claw.open();
             sleep(200);
 
@@ -195,8 +249,8 @@ public class actualBucketAuto extends LinearOpMode {
 //            sleep(200);
             toBucket(1,1);
             robot.AUTO = false;
-            sleep(500);
-            scoreBucket(0,0);
+//            sleep(500);
+//            scoreBucket(0,0);
             robot.claw.open();
             sleep(200);
 
@@ -204,13 +258,13 @@ public class actualBucketAuto extends LinearOpMode {
 //            sleep(200);
             toBucket(2,2);
             robot.AUTO = false;
-            sleep(500);
-            scoreBucket(1,1);
+//            sleep(500);
+//            scoreBucket(1,1);
             robot.claw.open();
-            robot.getHang().setPosition(6900);
+//            robot.getHang().setPosition(6900);
             sleep(200);
 
-            park();
+            toSampleFour();
 
 
 

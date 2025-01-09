@@ -77,6 +77,7 @@ public class Robot {
         //init
         public Claw init(HardwareMap hardwareMap) {
             this.claw = hardwareMap.get(ServoImplEx.class, "claw");
+            this.claw.setPosition(CLOSE);
             return this;
         }
 
@@ -200,9 +201,9 @@ public class Robot {
         //init
         public Wrist init(HardwareMap hardwareMap) {
             this.wrist = hardwareMap.get(Servo.class, "wrist");
-            this.wrist.setPosition(INTAKE);
+//            this.wrist.setPosition(INTAKE);
             this.wristPDcontroller = new PDController(KP, KD);
-            this.wristPDcontroller.setSetPoint(INTAKE);
+//            this.wristPDcontroller.setSetPoint(INTAKE);
             return this;
         }
 
@@ -386,10 +387,11 @@ public class Robot {
 
 
         //Variables
-        public static double up = .35;
+        public static double up = .32;
         public static double spit = .65;
         public static double down = .8;
         public static double INTAKE = 1;
+
         public static double OUTTAKE = -.3;
 
         public static int ALPHA = 100;
@@ -569,7 +571,7 @@ public class Robot {
                 switch (bucketStep) {
                     case 0: // Slides go somewhere
                         if (runtime > outtakeDelay) {
-                            if (bucketH) {
+                            if (bucketH|| AUTO) {
                                 slides.slideUp();//slides to high bucket
                                 claw.close();
                             } else {
@@ -756,7 +758,7 @@ public class Robot {
                 //Actions
                 extendo.retract();
                 intake.up();
-                if(intakeDelay > runtime && spit && runtime > intakeDelay - .75) {
+                if(intakeDelay > runtime && spit && runtime > intakeDelay - .5) {
                     intake.outtake();
                 } else {
 //                    spit = false;

@@ -180,12 +180,12 @@ public class specAuto extends LinearOpMode {
         }
         specScore();
         getSpec();
-////        sleep(200);
-//        specScoreAgain();
-//        robot.AUTO=false;
-//        plow();
-//        specScoreAgain2();
-//        robot.AUTO=false;
+//        sleep(200);
+        specScoreAgain();
+        robot.AUTO=false;
+        plow();
+        specScoreAgain2();
+        robot.AUTO=false;
         park();
         robot.slides.slidesTo(0);
         while (timer > getRuntime()) {
