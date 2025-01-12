@@ -42,7 +42,7 @@ public class Intake extends SubsystemBase {
     public Intake(HardwareMap hardwareMap) {
         beatBar = hardwareMap.get(CRServo.class,"beatbar");
         Wrist = hardwareMap.get(Servo.class,"wrist");
-        Wrist.scaleRange(wristFloorlowscale1,wristMedianhighscale1);
+        Wrist.scaleRange(wristFloorlowscale1,wristFullhighscale);
         colorSensor = hardwareMap.get(ColorSensor.class,"c_sensor");
     }
     public void startBeatBar (){

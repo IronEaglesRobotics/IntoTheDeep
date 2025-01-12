@@ -46,8 +46,6 @@ public class Robot {
                 .afterDisp(1,()->{ this.getSlides().setTarget(Slides.Position.PRECLIP);})
                 .splineToSplineHeading(new Pose2d(-25,0,0),0)
                 .build();
-        toClip = new moveToClip(clipMovement,Set.of(slides),drive);
-        update();
         return this;
     }
 
@@ -80,6 +78,7 @@ public class Robot {
     public DriveState getDriveState() {
         return driveState;
     }
+
     public void update(){
         intake.periodic();
         intakeArm.periodic();

@@ -6,7 +6,6 @@ import org.firstinspires.ftc.teamcode.hardware.Intake;
 import org.firstinspires.ftc.teamcode.hardware.Robot;
 import org.firstinspires.ftc.teamcode.hardware.Slides;
 
-import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.arcrobotics.ftclib.command.CommandOpMode;
@@ -17,46 +16,47 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import java.util.function.BooleanSupplier;
-
 @TeleOp(name="Main Teleop", group="TeleOp")
 public class TeleOpMain extends CommandOpMode {
     private Robot robot;
     private GamepadEx controller1;
     private GamepadEx controller2;
+    private GamepadEx controller3;
+    private GamepadEx[] controllers;
+    private double speed = 1;
 
     @Override
     public void initialize() {
+        boolean first = true;
+        if (first){
+            CommandScheduler.getInstance().reset();
+            first = false;
+        }
         controller1 = new GamepadEx(gamepad1);
         controller2 = new GamepadEx(gamepad2);
+        controller3 = new GamepadEx(gamepad2);
+        controllers[2] = controller2;
+        controllers[3] = controller3;
         robot = new Robot().init(hardwareMap);
 
         controller1.readButtons();
         controller2.readButtons();
 
-        controller1.getGamepadButton(GamepadKeys.Button.A)
-                .whenPressed(robot.toClip.interruptOn(new BooleanSupplier() {
-                    @Override
-                    public boolean getAsBoolean() {
-                        return controller1.wasJustReleased(GamepadKeys.Button.X);
-                    }
-                }));
+
         // controls hang
         controller2.getGamepadButton(GamepadKeys.Button.LEFT_STICK_BUTTON)
                 .whenPressed(new Hang.HangCommand(robot.getHang()));
         // controls lowering slides
-        if (robot.getIntakeArm().isUp()) {
-            controller2.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
-                    .whenPressed(robot.getSlides().down()).whenPressed(new WaitCommand(300).andThen(new Claw.ClawCommand(robot.getClaw(), true)));
-        }
+        controller2.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
+                .whenPressed(robot.getSlides().down()).whenPressed(new WaitCommand(300).andThen(new Claw.ClawCommand(robot.getClaw(), true)));
         // controls raising slides
         controller2.getGamepadButton(GamepadKeys.Button.DPAD_UP)
                 .whenPressed(robot.getSlides().up());
         controller2.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
-                .whenPressed(robot.getSlides().postclip()).whenPressed(new WaitCommand(300).andThen(new Claw.ClawCommand(robot.getClaw(),true)));
+                .whenPressed(robot.getSlides().postclip().andThen(new Claw.ClawCommand(robot.getClaw(),true)));
         // controls raising slides
         controller2.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
-                .whenPressed(robot.getSlides().preclip());
+                .whenPressed(robot.getClaw().closeCommand().andThen(new WaitCommand(500)).andThen(robot.getSlides().preclip()));
         // macros rotating arm up and extending intake
         controller2.getGamepadButton(GamepadKeys.Button.X)
                 .toggleWhenPressed(new Intake.reverseIntake(robot.getIntake()),new Intake.offIntake(robot.getIntake()));
@@ -64,8 +64,10 @@ public class TeleOpMain extends CommandOpMode {
         controller2.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
                 .whenPressed(robot.getIntakeArm().extendCommand());
         // rotates intake arm up
-            controller2.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
-                    .whenPressed(robot.getIntakeArm().rotateCommand());
+        controller2.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
+                .whenPressed(robot.getIntakeArm().rotateCommand());
+        controller1.getGamepadButton(GamepadKeys.Button.Y)
+                .toggleWhenPressed(()->{speed = .5;},()->{speed = 1;});
 
         controller2.getGamepadButton(GamepadKeys.Button.B)
                 .toggleWhenPressed(new Intake.runIntake(robot.getIntake()),new Intake.offIntake(robot.getIntake()));
@@ -94,8 +96,8 @@ public class TeleOpMain extends CommandOpMode {
         // drive controls
         if (robot.getDriveState() == Robot.DriveState.manuel) {
             robot.getDrive().setDrivePowers(new PoseVelocity2d(
-                    new Vector2d(controller1.getLeftY(), controller1.getLeftX())
-                    , -controller1.getRightX()
+                    new Vector2d(-controller1.getLeftY() * speed, controller1.getLeftX() * speed)
+                    , -controller1.getRightX()*speed
             ));
         }
         telemetry.addData("target color",robot.getIntake().target);

@@ -18,7 +18,7 @@ public class Slides extends SubsystemBase {
     public PIDController controller = new PIDController(KP, KI, KD);
     private int target = 0;
 
-    public static double KP = 0.0007;
+    public static double KP = 0.0006;
     public static double KI = 0.0009;
     public static double KD = 0;
     public static double TOLERANCE = 200;
@@ -27,9 +27,9 @@ public class Slides extends SubsystemBase {
     public static int POSITION_MIN = 0;
     public static int POSITION_MAX = 50000;
     
-    public static int POSITION_DOWN = 1000;
-    public static int POSITION_AFTER_CLIP = 32000;
-    public static int POSITION_BEFORE_CLIP = 38000;
+    public static int POSITION_DOWN = 2000;
+    public static int POSITION_AFTER_CLIP = 28000;
+    public static int POSITION_BEFORE_CLIP = 40300;
     public static int POSITION_SCORE_HIGH = 44300;
 
     public Slides(HardwareMap hardwareMap) {

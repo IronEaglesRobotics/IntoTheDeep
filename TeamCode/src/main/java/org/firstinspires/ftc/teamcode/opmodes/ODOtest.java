@@ -6,6 +6,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.ftc.GoBildaPinpointDriverRR;
 import com.acmerobotics.roadrunner.ftc.LazyImu;
+import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -39,6 +40,7 @@ public final class ODOtest extends LinearOpMode {
         lazyImu = new LazyImu(hardwareMap,"imu",new RevHubOrientationOnRobot(logoFacingDirection, usbFacingDirection));
         imu = hardwareMap.get(IMU.class,"imu");
         odo.recalibrateIMU();
+        Rev2mDistanceSensor dSensor = hardwareMap.get(Rev2mDistanceSensor.class,"dsensor");
         waitForStart();
         while (opModeIsActive()) {
             odo.setYawScalar(yawscale);
@@ -50,6 +52,7 @@ public final class ODOtest extends LinearOpMode {
             telemetry.addData("ODO Heading: ",pose.getHeading(AngleUnit.RADIANS));
             telemetry.addData("trueIMU Headings",headings.toString());
             telemetry.addData("yawsacle",odo.getYawScalar());
+            telemetry.addData("distance",dSensor.getDistance(DistanceUnit.INCH));
             telemetry.update();
         }
     }

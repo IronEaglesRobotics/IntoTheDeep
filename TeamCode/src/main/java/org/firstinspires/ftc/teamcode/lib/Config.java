@@ -62,12 +62,9 @@ public class Config {
     public static double wristFullLowscale = 0.03;
     public static double wristFullhighscale = .82;
     public static double wristFloorlowscale1 = .15;
-    public static double wristMedianhighscale1 = .35;
+    public static double wristMedianhighscale1 = .4;
 
     // keybinds
-
-    // gamepad1
-    public static final GamepadKeys.Button BIND_SPEED = GamepadKeys.Button.Y;
 
     // gamepad2
     public static final GamepadKeys.Button BIND_TOGGLE_CLAW = GamepadKeys.Button.A;
