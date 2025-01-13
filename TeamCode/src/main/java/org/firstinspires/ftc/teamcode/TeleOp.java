@@ -32,7 +32,7 @@ public class TeleOp extends OpMode {
     public double swingTimer = 0;
 
     public static int SLIDES_DOWN = 0;
-    public static int SLIDES_PICKUP = 475;
+    public static int SLIDES_PICKUP = 550;
     public static int SLIDES_SCORE1 = 1750;
     public static int SLIDES_HIGH_BUCKET = 2750;
     public static int SLIDES_SCORE2 = 1350;
@@ -56,8 +56,6 @@ public class TeleOp extends OpMode {
         controller1 = new GamepadEx(gamepad1);
         controller2 = new GamepadEx(gamepad2);
 
-        robot.arm.setPosition(armInit);
-        robot.claw.setPosition(clawInit);
 
 
     }
