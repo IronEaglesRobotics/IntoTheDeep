@@ -2,20 +2,9 @@ package org.firstinspires.ftc.teamcode.hardware;
 
 import static org.firstinspires.ftc.teamcode.hardware.Robot.Wrist.SCORESPECWRIST;
 
-import androidx.annotation.NonNull;
-
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.acmerobotics.roadrunner.Action;
-import com.acmerobotics.roadrunner.InstantAction;
-import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
-import com.acmerobotics.roadrunner.SequentialAction;
-import com.acmerobotics.roadrunner.SleepAction;
-import com.acmerobotics.roadrunner.ftc.Actions;
-import com.arcrobotics.ftclib.command.CommandBase;
-import com.arcrobotics.ftclib.command.InstantCommand;
-import com.arcrobotics.ftclib.command.Subsystem;
+import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.controller.PDController;
 import com.arcrobotics.ftclib.controller.PIDController;
@@ -29,7 +18,9 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 
+import org.firstinspires.ftc.teamcode.hardware.rr1.Localizer;
 import org.firstinspires.ftc.teamcode.hardware.rr1.MecanumDrive;
+import org.firstinspires.ftc.teamcode.hardware.rr1.TwoDeadWheelLocalizer;
 
 import lombok.Getter;
 
@@ -59,7 +50,7 @@ public class Robot {
 
     //Init Hardwaremap
     public Robot init(HardwareMap hardwareMap) {
-        this.drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
+        this.drive = new MecanumDrive(hardwareMap,new Pose2d(0,0,0));
         this.wrist = new Wrist().init(hardwareMap);
         this.arm = new Arm().init(hardwareMap);
         this.claw = new Claw().init(hardwareMap);
@@ -70,15 +61,28 @@ public class Robot {
         return this;
     }
 
-    //Trajectory Sequence Builder
-//    public TrajectorySequenceBuilder getTrajectorySequenceBuilder() {
-//        this.drive.update();
-//        return this.drive.trajectorySequenceBuilder(this.drive.getPoseEstimate());
-//    }
+    public Robot init(HardwareMap hardwareMap, Pose2d startPos) {
+        this.drive = new MecanumDrive(hardwareMap, startPos);
+        this.wrist = new Wrist().init(hardwareMap);
+        this.arm = new Arm().init(hardwareMap);
+        this.claw = new Claw().init(hardwareMap);
+        this.slides = new Slides().init(hardwareMap);
+        this.extendo = new Extendo().init(hardwareMap);
+        this.intake = new Intake().init(hardwareMap);
+        this.hang = new Hang().init(hardwareMap);
+        return this;
+    }
+
+//    Trajectory Sequence Builde
+    public TrajectoryActionBuilder getTrajectoryActionBuilder() {
+
+        return this.drive.actionBuilder(this.getDrive().localizer.getPose());
+    }
+
 
     //Claw Class
     @Config
-    public static class Claw extends SubsystemBase {
+    public static class Claw {
         //Variables
         public static double OPEN = 7;
         public static double OPENSMALL = .7;
@@ -115,45 +119,6 @@ public class Robot {
         }
     }
 
-    public class close extends CommandBase{
-        private Claw clawTest;
-
-        public close(Claw subsystem){
-            clawTest = subsystem;
-            addRequirements(clawTest);
-        }
-
-        @Override
-        public void initialize() {
-            clawTest.close();
-        }
-
-        @Override
-        public boolean isFinished() {
-            return true;
-        }
-    }
-
-    public class TestCommand extends InstantCommand{
-        Claw claw;
-        public TestCommand(Claw clawtemp){
-            claw = clawtemp;
-        }
-
-        public void initialized(){
-            claw.open();
-        }
-    }
-
-//    public class ClawSubsystem extends SubsystemBase{
-//
-//        private final ServoImplEx clawTest;
-//
-//        public ClawSubsystem(HardwareMap hardwareMap, String name){
-//            clawTest = hardwareMap.get(ServoImplEx.class, "claw");
-//        }
-//
-//    }
     //Arm Class
     @Config
     public static class Arm {
@@ -483,45 +448,6 @@ public class Robot {
         public void down() {
             intakeL.setPosition(down);
             intakeR.setPosition(down);
-        }
-
-        public class DownAction implements Action {
-            private boolean initialized = false;
-
-            @Override
-            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                if (!initialized) {
-                    down();
-                    initialized = true;
-                }
-                return false;
-            }
-        }
-
-        public Action downAction() {
-            return new DownAction();
-        }
-
-        public class testMacro implements Action {
-            private boolean initialized = false;
-
-            @Override
-            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                if (!initialized) {
-                    Actions.runBlocking(new ParallelAction(
-                            new SequentialAction(
-                                    new SleepAction(1),
-                                    downAction()
-                            ),
-                            downAction()));
-                    initialized = true;
-                }
-                return false;
-            }
-        }
-
-        public Action test(){
-            return new testMacro();
         }
 
 
