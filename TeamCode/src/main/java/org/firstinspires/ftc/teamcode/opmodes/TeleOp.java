@@ -37,28 +37,21 @@ public class TeleOp extends LinearOpMode {
             //drive
             robot.getDrive().update();
             controller1.readButtons();
+            robot.getDrive().setInput(controller1);
 
-            if (gamepad1.left_stick_button){
-                robot.getDrive().setPoseEstimate(
-                        new Pose2d(
-                                robot.getDrive().getPoseEstimate().getX(),
-                                robot.getDrive().getPoseEstimate().getY(),
-                                Math.toRadians(0))
-                        );
+            robot.intakeMacroTEST(controller1,getRuntime(),false);
+
+            if (controller1.isDown(GamepadKeys.Button.LEFT_STICK_BUTTON)){
+                robot.claw.close();
+                robot.arm.intake();
+                robot.wrist.intake();
+                robot.slides.slidesTo(-1000);
+            }  else if (controller1.wasJustReleased(GamepadKeys.Button.LEFT_STICK_BUTTON)){
+                robot.slides.slidesReset();
             } else {
-                robot.getDrive().setInput(controller1);
+                robot.scoringMacro(controller1, getRuntime(), false);
             }
 
-            robot.intakeMacro(controller1,getRuntime(),false);
-            robot.scoringMacro(controller1,getRuntime(),false);
-
-//            if(controller2.isDown(GamepadKeys.Button.DPAD_UP)) {
-//                robot.hang.setPosition(HANGUP);
-//            } else if (controller2.isDown(GamepadKeys.Button.DPAD_DOWN)){
-//                robot.hang.setPosition(HANGDOWN);
-//            } else {
-//                robot.hang.pause();
-//            }
             robot.update();
 
             //Telemetry

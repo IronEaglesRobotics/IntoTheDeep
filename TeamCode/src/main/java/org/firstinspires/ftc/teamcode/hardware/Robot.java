@@ -42,7 +42,6 @@ public class Robot {
     public String team;
 
 
-
     //Init Hardwaremap
     public Robot init(HardwareMap hardwareMap) {
         this.drive = new MecanumDrive(hardwareMap);
@@ -334,6 +333,11 @@ public class Robot {
             slidesL.setPower(1);
         }
 
+        public void slidesReset(){
+            this.slidesR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            this.slidesL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        }
+
 //        public void update(){
 //            double pid,ff;
 //            slidesPID.setPID(KP,KI,KD);
@@ -595,7 +599,7 @@ public class Robot {
                 switch (bucketStep) {
                     case 0: // Slides go somewhere
                         if (runtime > outtakeDelay) {
-                            if (bucketH|| AUTO) {
+                            if (bucketH || AUTO) {
                                 slides.slideUp();//slides to high bucket
                                 claw.close();
                             } else {
@@ -774,23 +778,27 @@ public class Robot {
 
     public void intakeMacro(GamepadEx controller1, double runtime, boolean auto) {
 
+        boolean RT = controller1.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > .3;
+        boolean B = controller1.wasJustPressed(GamepadKeys.Button.B);
+        boolean LB = controller1.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER);
+
         switch (intakeState) {
             case IDLE:
                 //Actions
                 extendo.retract();
                 intake.up();
-                if(intakeDelay > runtime && spit && runtime > intakeDelay - .5) {
+                if (intakeDelay > runtime && spit && runtime > intakeDelay - .5) {
                     intake.outtake();
                 } else {
 //                    spit = false;
                     intake.pause();
                 }
                 //Switch states
-                if (controller1.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > .3) {
+                if (RT) {
                     intakeState = intakeStates.EXTENDED;
                     mini = false;
                     intakeDelay = runtime + .5;
-                } else if (controller1.wasJustPressed(GamepadKeys.Button.B)) {
+                } else if (B) {
                     intakeState = intakeStates.EXTENDED;
                     intakeDelay = runtime + .5;
                     mini = true;
@@ -806,7 +814,7 @@ public class Robot {
                     extendo.extend();
                 }
                 //Switch States
-                if (((controller1.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > .3 || controller1.wasJustPressed(GamepadKeys.Button.B)) && runtime > intakeDelay) || auto) {
+                if (((RT || B) && runtime > intakeDelay) || auto) {
                     intakeState = intakeStates.INTAKING;
                     intakeDelay = runtime + .25;
                 }
@@ -818,9 +826,9 @@ public class Robot {
                     intake.intake();
                 }
 
-                if (controller1.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > .3) {
+                if (RT) {
                     extendo.extend();
-                } else if (controller1.wasJustPressed(GamepadKeys.Button.B)) {
+                } else if (B) {
                     extendo.mini();
                 }
 
@@ -829,7 +837,7 @@ public class Robot {
                 if (intake.getAlpha(intake.intakeSensor) > Intake.ALPHA) {
                     intakeState = intakeStates.DETECT;
                     intakeDelay = runtime + .005;
-                } else if (controller1.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
+                } else if (LB) {
                     intakeState = intakeStates.HASSAMPLE;
                 }
                 break;
@@ -854,7 +862,7 @@ public class Robot {
                 //Switch States
                 if (runtime > intakeDelay) {
                     spit = true;
-                    intakeDelay = runtime+1;
+                    intakeDelay = runtime + 1;
                     intakeState = intakeStates.IDLE;
                 }
                 break;
@@ -873,24 +881,31 @@ public class Robot {
 
     public void intakeMacroTEST(GamepadEx controller1, double runtime, boolean auto) {
 
+
+        boolean RT = controller1.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > .3;
+        boolean B = controller1.wasJustPressed(GamepadKeys.Button.B);
+        boolean LB = controller1.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER);
+        boolean RIGHTSUBCOLOR = intake.subColor == Intake.colors.YELLOW || intake.subColor == getIntake().targetColor;
+        boolean RIGHTSAMPLECOLOR = intake.sampleColor == Intake.colors.YELLOW || intake.sampleColor == getIntake().targetColor;
+
         switch (intakeState) {
             case IDLE:
                 //Actions
                 extendo.retract();
                 intake.up();
-                if(intakeDelay > runtime && spit && runtime > intakeDelay - .5) {
+                if (intakeDelay > runtime && spit && runtime > intakeDelay - .5) {
                     intake.outtake();
                 } else {
 //                    spit = false;
                     intake.pause();
                 }
                 //Switch states
-                if (controller1.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > .3) {
+                if (RT) {
                     intakeState = intakeStates.EXTENDED;
                     mini = false;
                     intakeDelay = runtime + .5;
 //                    intake.color= Intake.colors.NULL;
-                } else if (controller1.wasJustPressed(GamepadKeys.Button.B)) {
+                } else if (B) {
                     intakeState = intakeStates.EXTENDED;
                     intakeDelay = runtime + .5;
                     mini = true;
@@ -907,17 +922,12 @@ public class Robot {
                     extendo.extend();
                 }
 
-                if (intake.getAlpha(intake.sampleSensor) > Intake.ALPHASAMPLE){
-                    intake.subColor = getColor(intake.sampleSensor);
-            }
-
-
+                if (intake.getAlpha(intake.sampleSensor) > Intake.ALPHASAMPLE) {
+                    intake.sampleColor = getColor(intake.sampleSensor);
+                }
 
                 //Switch States
-
-                if (((controller1.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > .3 || controller1.wasJustPressed(GamepadKeys.Button.B)) && runtime > intakeDelay) || auto ||
-                        intake.subColor == Intake.colors.YELLOW || intake.subColor == getIntake().targetColor)
-                 {
+                if (((RT || B) && runtime > intakeDelay) || auto || RIGHTSUBCOLOR) {
                     intakeState = intakeStates.INTAKING;
                     intakeDelay = runtime + .5;
                 }
@@ -930,9 +940,9 @@ public class Robot {
                     intake.intake();
                 }
 
-                if (controller1.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > .3) {
+                if (RT) {
                     extendo.extend();
-                } else if (controller1.wasJustPressed(GamepadKeys.Button.B)) {
+                } else if (B) {
                     extendo.mini();
                 }
 
@@ -941,22 +951,20 @@ public class Robot {
                 if (intake.getAlpha(intake.intakeSensor) > Intake.ALPHA) {
                     intakeState = intakeStates.DETECT;
                     intakeDelay = runtime + .005;
-                } else if (controller1.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
+                } else if (LB) {
                     intakeState = intakeStates.HASSAMPLE;
                 }
                 break;
             case DETECT:
                 //Actions
                 if (runtime > intakeDelay) {
-//                    intake.color = intake.getColor(intake.intakeSensor);
                     //Switch States
-                    if (getColor(intake.intakeSensor) != Intake.colors.YELLOW && getColor(intake.intakeSensor) != getIntake().targetColor) {
+                    if (!RIGHTSAMPLECOLOR) {
                         intakeState = intakeStates.OUTTAKE;
                         intakeDelay = runtime + 1.5;
                     } else {
                         intakeState = intakeStates.HASSAMPLE;
                         intakeDelay = runtime + .3;
-//                        intake.color = Intake.colors.NULL;
                     }
                 }
                 break;
@@ -967,7 +975,7 @@ public class Robot {
                 //Switch States
                 if (runtime > intakeDelay) {
                     spit = true;
-                    intakeDelay = runtime+1;
+                    intakeDelay = runtime + 1;
                     intakeState = intakeStates.IDLE;
                 }
                 break;
@@ -996,7 +1004,7 @@ public class Robot {
 
         Intake.colors color = null;
         if (intake.getAlpha(sensor) > Intake.ALPHASAMPLE) {
-           color = intake.getColor(sensor);
+            color = intake.getColor(sensor);
         }
         return color;
     }
