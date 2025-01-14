@@ -200,7 +200,7 @@ public class actualBucketAuto extends LinearOpMode {
         robot.scoringState = Robot.scoringStates.BUCKETR;
         robot.bucketStep = 0;
 //        sleep(1500);
-        robot.intakeState = Robot.intakeStates.EXTENDED;
+//        robot.intakeState = Robot.intakeStates.EXTENDED;
         while (this.robot.getDrive().isBusy() || robot.intakeState != Robot.intakeStates.IDLE && timer > getRuntime()) {
             this.robot.update();
             this.robot.scoringMacro(controller1, this.getRuntime(), true);

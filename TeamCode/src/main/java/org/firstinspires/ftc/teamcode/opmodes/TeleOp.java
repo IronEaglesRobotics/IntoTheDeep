@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -31,12 +32,22 @@ public class TeleOp extends LinearOpMode {
             telemetry.update();
         }
 
+
         while (opModeIsActive()){
             //drive
-            robot.getDrive().setInput(controller1);
             robot.getDrive().update();
             controller1.readButtons();
-//            controller2.readButtons();
+
+            if (gamepad1.left_stick_button){
+                robot.getDrive().setPoseEstimate(
+                        new Pose2d(
+                                robot.getDrive().getPoseEstimate().getX(),
+                                robot.getDrive().getPoseEstimate().getY(),
+                                Math.toRadians(0))
+                        );
+            } else {
+                robot.getDrive().setInput(controller1);
+            }
 
             robot.intakeMacro(controller1,getRuntime(),false);
             robot.scoringMacro(controller1,getRuntime(),false);
@@ -55,14 +66,15 @@ public class TeleOp extends LinearOpMode {
             telemetry.addData("Slide Pos L", (PositionLeft));
             int PositionRight = this.robot.getSlides().slidesR.getCurrentPosition();
             telemetry.addData("Slide Pos R", (PositionRight));
-            telemetry.addData("alpha:", robot.intake.getAlpha());
+            telemetry.addData("alpha:", robot.getIntake().getAlpha(robot.intake.sampleSensor));
+            telemetry.addData("alphaCOLOR:", robot.getIntake().getAlpha(robot.intake.intakeSensor));
             telemetry.addData("INTAKEMACRO:", robot.intakeState);
             telemetry.addData("SCORING STATE: ", robot.scoringState);
             telemetry.addData("SpecStates: ", robot.specStep);
             telemetry.addData("R", (robot.getIntake().getR()));
             telemetry.addData("G", (robot.getIntake().getG()));
             telemetry.addData("B", (robot.getIntake().getB()));
-            telemetry.addData("hang", (robot.getHang().depression.getCurrentPosition()));
+            telemetry.addData("color", (robot.getIntake().getColor(robot.intake.intakeSensor)));
 
             telemetry.update();
 

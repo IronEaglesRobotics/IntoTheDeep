@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.acmerobotics.dashboard.config.Config;
 
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -10,20 +11,23 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
+import org.firstinspires.ftc.teamcode.hardware.Robot;
 //import com.
 
-@Disabled
+//@Disabled
 @Config
 @TeleOp(name = "Colour Sensor")
 public class coligga extends OpMode {
     GamepadEx controller1;
-    public  intakeMacroStates intakemacrostate = intakeMacroStates.IDLE;
+//    public  intakeMacroStates intakemacrostate = intakeMacroStates.IDLE;
     public ColorSensor foo;
     public int b;
     public int r;
     public int g;
     public int a;
-    public String color;
+//    public String color;
     public DcMotor intake;
     public String targetColor = "yellow";
     public static double OUTTAKEDELAY = .75;
@@ -36,102 +40,121 @@ public class coligga extends OpMode {
         this.foo = hardwareMap.colorSensor.get("test");
         this.foo.enableLed(true);
         this.controller1 = new GamepadEx(this.gamepad1);
-        this.intake = hardwareMap.dcMotor.get("intake");
-        this.intake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        this.intake = hardwareMap.dcMotor.get("intake");
+//        this.intake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     @Override
     public void loop() {
-
+//        this.foo.enableLed(true);
         //Read controller buttons
         controller1.readButtons();
 
-        if (controller1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)){
+//        if (controller1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)){
             getColor();
-        }
+//        }
 
-        if (controller1.wasJustPressed(GamepadKeys.Button.Y)){
-            targetColor = "yellow";
-        } else if (controller1.wasJustPressed(GamepadKeys.Button.X)){
-            targetColor = "blue";
-        } else if (controller1.wasJustPressed(GamepadKeys.Button.B)){
-            targetColor = "red";
-        }
+//        if (controller1.wasJustPressed(GamepadKeys.Button.Y)){
+//            targetColor = "yellow";
+//        } else if (controller1.wasJustPressed(GamepadKeys.Button.X)){
+//            targetColor = "blue";
+//        } else if (controller1.wasJustPressed(GamepadKeys.Button.B)){
+//            targetColor = "red";
+//        }
 
-        intakeMacro(controller1,getRuntime(),targetColor);
 
-        telemetry.addData("color: ", color);
+//        intakeMacro(controller1,getRuntime(),targetColor);
+
+        telemetry.addData("color: ", getColor());
         telemetry.addData("blue: ", b);
         telemetry.addData("red: ", r);
         telemetry.addData("green: ", g);
         telemetry.addData("alpha live: ", foo.alpha());
         telemetry.addData("targetColor:", targetColor);
-        telemetry.addData("STATE:", intakemacrostate);
+//        telemetry.addData("STATE:", intakemacrostate);
+//        telemetry
         telemetry.update();
+
+
     }
 
-    //Get color function
-    public void getColor() {
-        b=foo.blue();
-        g=foo.green();
-        r=foo.red();
-        a=foo.alpha();
+    public enum colors {
+        RED, BLUE, YELLOW, NULL
+    }
 
-        if (r + b+ g < 200) {
-            color = "null";
-        } else if (b>g && b>r){
-            color = "blue";
-        } else if (g>b && g>r) {
-            color = "yellow";
-        } else if (r > b && r>g) {
-            color = "red";
-        } else {
-            color = "null";
+    colors color;
+
+    //Get color function
+    public colors getColor() {
+        colors color;
+
+        b = 0;
+        g = 0;
+        r = 0;
+        a = foo.alpha();
+
+        for (int i = 0; i < 5; i++) {
+            b += foo.blue();
+            g += foo.green();
+            r += foo.red();
         }
+
+        if (r + b + g < 190) {
+            color = colors.NULL;
+        } else if (b > g + 10 && b > r + 10) {
+            color = colors.BLUE;
+        } else if (g > b + 25 && g > r + 25) {
+            color = colors.YELLOW;
+        } else if (r > b + 20 && r > g + 20) {
+            color = colors.RED;
+        } else {
+            color = colors.NULL;
+        }
+        return color;
     }
 
     //IntakeMacroStates enum
-    public enum intakeMacroStates{
-        IDLE, INTAKE, DETECT ,OUTTAKE
-    }
-
-    //State machine for intake color filter
-    public void intakeMacro(GamepadEx gamepadEx, double runtime, String target){
-        switch (intakemacrostate){
-            case IDLE:
-                this.intake.setPower(0);
-                this.intake.setDirection(DcMotorSimple.Direction.FORWARD);
-                if (gamepadEx.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)){
-                    intakemacrostate = intakeMacroStates.INTAKE;
-                }
-                break;
-            case INTAKE:
-                this.intake.setPower(POWER);
-                this.intake.setDirection(DcMotorSimple.Direction.FORWARD);
-                if (foo.alpha()>ALPHA){
-                    intakemacrostate = intakeMacroStates.DETECT;
-                }
-                break;
-            case DETECT:
-                getColor();
-                delay = runtime + OUTTAKEDELAY;
-                if (!color.equals(target)){
-                    intakemacrostate = intakeMacroStates.OUTTAKE;
-                } else {
-                    intakemacrostate = intakeMacroStates.IDLE;
-                }
-                break;
-            case OUTTAKE:
-                this.intake.setPower(1);
-                this.intake.setDirection(DcMotorSimple.Direction.REVERSE);
-
-                if(runtime>delay){
-                    intakemacrostate = intakeMacroStates.INTAKE;
-                } else if(controller1.wasJustReleased(GamepadKeys.Button.LEFT_BUMPER)){
-                    intakemacrostate = intakeMacroStates.IDLE;
-                }
-                break;
-        }
-    }
+//    public enum intakeMacroStates{
+//        IDLE, INTAKE, DETECT ,OUTTAKE
+//    }
+//
+//    //State machine for intake color filter
+//    public void intakeMacro(GamepadEx gamepadEx, double runtime, String target){
+//        switch (intakemacrostate){
+//            case IDLE:
+//                this.intake.setPower(0);
+//                this.intake.setDirection(DcMotorSimple.Direction.FORWARD);
+//                if (gamepadEx.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)){
+//                    intakemacrostate = intakeMacroStates.INTAKE;
+//                }
+//                break;
+//            case INTAKE:
+//                this.intake.setPower(POWER);
+//                this.intake.setDirection(DcMotorSimple.Direction.FORWARD);
+//                if (foo.alpha()>ALPHA){
+//                    intakemacrostate = intakeMacroStates.DETECT;
+//                }
+//                break;
+//            case DETECT:
+//                getColor();
+//                delay = runtime + OUTTAKEDELAY;
+//                if (!color.equals(target)){
+//                    intakemacrostate = intakeMacroStates.OUTTAKE;
+//                } else {
+//                    intakemacrostate = intakeMacroStates.IDLE;
+//                }
+//                break;
+//            case OUTTAKE:
+//                this.intake.setPower(1);
+//                this.intake.setDirection(DcMotorSimple.Direction.REVERSE);
+//
+//                if(runtime>delay){
+//                    intakemacrostate = intakeMacroStates.INTAKE;
+//                } else if(controller1.wasJustReleased(GamepadKeys.Button.LEFT_BUMPER)){
+//                    intakemacrostate = intakeMacroStates.IDLE;
+//                }
+//                break;
+//        }
+//    }
 
 }

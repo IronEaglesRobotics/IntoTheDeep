@@ -20,6 +20,7 @@ import com.acmerobotics.roadrunner.drive.DriveSignal;
 import com.acmerobotics.roadrunner.followers.HolonomicPIDVAFollower;
 import com.acmerobotics.roadrunner.followers.TrajectoryFollower;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
 import com.acmerobotics.roadrunner.trajectory.constraints.AngularVelocityConstraint;
@@ -338,6 +339,10 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
 
     public void setInput(GamepadEx controller1) {
 
+        Pose2d poseEstimate = getPoseEstimate();
+
+        // Create a vector from the gamepad x/y inputs
+        // Then, rotate that vector by the inverse of that heading
         if(controller1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER) && slowmo){
             slowmo = !slowmo;
         } else if(controller1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER) && !slowmo){
