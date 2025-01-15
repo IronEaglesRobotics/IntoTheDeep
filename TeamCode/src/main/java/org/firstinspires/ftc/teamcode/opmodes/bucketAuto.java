@@ -1,48 +1,66 @@
-//package org.firstinspires.ftc.teamcode.opmodes;
-//
-//import com.acmerobotics.dashboard.config.Config;
-//import com.acmerobotics.roadrunner.Pose2d;
-//import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
-//
-//import com.acmerobotics.roadrunner.Vector2d;
-//import com.arcrobotics.ftclib.gamepad.GamepadEx;
-//import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-//import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-//
-//import org.firstinspires.ftc.teamcode.hardware.Robot;
-//import org.firstinspires.ftc.teamcode.hardware.rr1.MecanumDrive;
-//
-//@Config
-//@Autonomous(name = "BucketAuto")
-//public class bucketAuto extends LinearOpMode {
-//    private Robot robot;
-//    GamepadEx controller1;
-//    private double timer;
-//    private boolean foo = true;
-//    private boolean boo = true;
-//
-//    final static Pose2d initialPosition = new Pose2d(-35.5, -60, Math.toRadians(90));
-//    final static Vector2d SPECIMEN = new Vector2d(-3,-32.5);
-//    final static Vector2d PICKUP_1 = new Vector2d(-48,-21);
+package org.firstinspires.ftc.teamcode.opmodes;
+
+// RR-specific imports
+
+import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.InstantAction;
+import com.acmerobotics.roadrunner.ParallelAction;
+import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.Vector2d;
+
+// Non-RR imports
+import com.acmerobotics.roadrunner.ftc.Actions;
+import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+
+        import org.firstinspires.ftc.teamcode.hardware.Robot;
+import org.firstinspires.ftc.teamcode.hardware.Robot.scoringStates;
+
+@Config
+@Autonomous(name = "BucketAuto")
+public class bucketAuto extends LinearOpMode {
+    private Robot robot;
+    GamepadEx controller1;
+    private double timer;
+    private boolean foo = true;
+    private boolean boo = true;
+
+    final static Pose2d initialPosition = new Pose2d(-35.5, -60, Math.toRadians(90));
+    final static Vector2d SPECIMEN = new Vector2d(-3,-32.5);
+    final static Vector2d PICKUP_1 = new Vector2d(-48,-21);
 //    final static Pose2d BUCKET_1 = new Pose2d(-51,  -51, Math.toRadians(225));
-//    final static Vector2d BUCKET_2 = new Vector2d(-62,-53);
-//    final static Pose2d PICKUP_2 = new Pose2d(-60,-40,Math.toRadians(279));
-//    final static Pose2d PICKUP_3 = new Pose2d(-66,-42,Math.toRadians(285));
-//    final static Pose2d PARK = new Pose2d(-10,-4,Math.toRadians(180));
-//
-//
-//    protected void specScore() {
-//        TrajectoryActionBuilder builder = robot.getTrajectoryActionBuilder();
-//
+    final static Vector2d BUCKET_2 = new Vector2d(-62,-53);
+    final static Pose2d PICKUP_2 = new Pose2d(-60,-40,Math.toRadians(279));
+    final static Pose2d PICKUP_3 = new Pose2d(-66,-42,Math.toRadians(285));
+    final static Pose2d PARK = new Pose2d(-10,-4,Math.toRadians(180));
+
+
+    protected void specScore() {
+        Action builder = robot.getTrajectoryActionBuilder()
+                .strafeToLinearHeading(SPECIMEN,Math.toRadians(10))
+                .splineTo(SPECIMEN,1)
+                .build();
+
+        Actions.runBlocking(
+                new ParallelAction(
+                        builder,
+                        builder,
+                        new InstantAction(() -> robot.slides.slidesTo(10)),
+                        new InstantAction(()-> sleep(199999)),
+                        builder
+                )
+        );
+
 //        builder.splineTo(BUCKET_1.position,225);
-//        this.robot.getDrive().followTrajectorySequenceAsync(builder.build());
-//        robot.scoringState= Robot.scoringStates.BUCKET;
-////        robot.scoringState = Robot.scoringStates.SPECIMENGRAB;
+
+//        robot.scoringState = Robot.scoringStates.SPECIMENGRAB;
 //        while (this.robot.getDrive().isBusy()) {
 //            this.robot.update();
 //            this.robot.scoringMacro(controller1, this.getRuntime(), true);
 //        }
-//    }
+    }
 //
 //    protected void getSample() {
 //        TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
@@ -51,7 +69,7 @@
 //        builder.splineTo(PICKUP_1, Math.toRadians(90));
 //        builder.setReversed(false);
 //        this.robot.getDrive().followTrajectorySequenceAsync(builder.build());
-//        robot.scoringState = Robot.scoringStates.BUCKETR;
+//        robot.scoringState = scoringStates.BUCKETR;
 //        robot.bucketStep = 0;
 //        timer = getRuntime() + 3;
 //        robot.specStep = 6;
@@ -128,7 +146,7 @@
 //        );
 //        this.robot.getDrive().followTrajectorySequenceAsync(builder.build());
 //        timer = getRuntime() + 3;
-//        robot.scoringState = Robot.scoringStates.BUCKETR;
+//        robot.scoringState = scoringStates.BUCKETR;
 //        robot.bucketStep = 0;
 ////        sleep(1500);
 //        robot.intakeState = Robot.intakeStates.EXTENDED;
@@ -157,7 +175,7 @@
 //        while (this.robot.getDrive().isBusy() || robot.intakeState != Robot.intakeStates.IDLE && timer > getRuntime()) {
 //            if(timer < getRuntime()+2.5 && timer > getRuntime() && foo) {
 //                foo = false;
-//                robot.scoringState = Robot.scoringStates.BUCKETR;
+//                robot.scoringState = scoringStates.BUCKETR;
 //                robot.bucketStep = 0;
 //            }
 //            if(timer-2 < getRuntime() && boo) {
@@ -179,7 +197,7 @@
 //        builder.setReversed(false);
 //        this.robot.getDrive().followTrajectorySequenceAsync(builder.build());
 //
-//        robot.scoringState = Robot.scoringStates.BUCKETR;
+//        robot.scoringState = scoringStates.BUCKETR;
 //        robot.bucketStep = 0;
 //
 //        while (this.robot.getDrive().isBusy() || robot.intakeState != Robot.intakeStates.IDLE) {
@@ -197,7 +215,7 @@
 //        builder.setReversed(false);
 //        this.robot.getDrive().followTrajectorySequenceAsync(builder.build());
 //        timer = getRuntime() + 3;
-//        robot.scoringState = Robot.scoringStates.BUCKETR;
+//        robot.scoringState = scoringStates.BUCKETR;
 //        robot.bucketStep = 0;
 ////        sleep(1500);
 ////        robot.intakeState = Robot.intakeStates.EXTENDED;
@@ -211,21 +229,25 @@
 //        robot.intakeState = Robot.intakeStates.HASSAMPLE;
 //
 //    }
+
+
+
+    @Override
+    public void runOpMode() throws InterruptedException {
+        robot = new Robot().init(hardwareMap, initialPosition);
+        controller1 = new GamepadEx(gamepad1);
+        robot.arm.intakeSpecimen();
+        specScore();
+
+        while (!this.isStarted()) {
+            robot.arm.intakeSpecimen();
+            this.telemetry.update();
+            robot.scoringState = scoringStates.BUCKET;
+            robot.bucketStep = 0;
+        }
 //
-//
-//
-//    @Override
-//    public void runOpMode() throws InterruptedException {
-//        robot = new Robot().init(hardwareMap,initialPosition);
-//        controller1 = new GamepadEx(gamepad1);
-//        robot.arm.intakeSpecimen();
-//
-//        while (!this.isStarted()) {
-//            robot.arm.intakeSpecimen();
-//            this.telemetry.update();
-//            robot.scoringState = Robot.scoringStates.BUCKET;
-//            robot.bucketStep = 0;
-//        }
+////        Actions.runBlocking();
+//        specScore();
 //
 //        toBucketFirst();
 //        robot.AUTO = false;
@@ -264,8 +286,8 @@
 //
 //        toSampleFour();
 //
-//
-//
-//
-//    }
-//}
+
+
+
+    }
+}
