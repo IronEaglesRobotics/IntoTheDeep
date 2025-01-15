@@ -70,14 +70,16 @@ public final class MecanumDrive {
         // drive model parameters
         public double inPerTick = 0.00199;
         public double lateralInPerTick = inPerTick;
-        public double trackWidthTicks = 6030.150753768844221105527638191;
+        public double trackWidthTicks = 5778.8944723618090452261306532663;
 // trackWidthTicks = 6030.150753768844221105527638191 this should fix our turning issues
         //old trackWidthTicks = 5627.464072240568
+        //??? 5652.62498536371
 
         // feedforward parameters (in tick units)
         public double kS = 0.9022000642532051;
         public double kV = 0.0002713122854647611;
         public double kA = 0.00015;
+        //kA = 0.0000547;
 
 
         // path profile parameters (in inches)

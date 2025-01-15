@@ -32,15 +32,17 @@ public class BucketAuto extends LinearOpMode {
     public static double clawClose = 0.4;
     public static double armFloor = 0.05;
     public static int SLIDES_DOWN = 0;
-    public static int SLIDES_HIGH_BUCKET = 2750;
+    public static int SLIDES_HIGH_BUCKET = 2850;
     public static double armBucket = 0.25;
+    public static double armBucketS = 0.19;
 
-    Vector2d barPos = new Vector2d(-47, -20);
-    Vector2d scorePos = new Vector2d(-39, -20);
-    Vector2d groundPick = new Vector2d(-41.5, -57.5);
-    Vector2d toWall = new Vector2d(-50, -57.5);
-    Vector2d backup = new Vector2d(-45, -5);
+    Vector2d barPos = new Vector2d(-40, -33);
+    Vector2d scorePos = new Vector2d(-45, -30);
+    Vector2d groundPick = new Vector2d(-40, -45);
+    Vector2d sample1 = new Vector2d(-50, -57.5);
+    Vector2d backup = new Vector2d(-45, -20);
     Vector2d wallPos = new Vector2d(-55, -10);
+    Vector2d redo = new Vector2d(-42 , -32.2);
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -57,10 +59,14 @@ public class BucketAuto extends LinearOpMode {
         Drive = new MecanumDrive(hardwareMap, new Pose2d(-63, -20, 0));
         Pose2d pose = Drive.localizer.getPose();
         Action ready = Drive.actionBuilder(new Pose2d(-63, -20, 0)).splineToConstantHeading(barPos, Math.toRadians(0)).build();
-        Action score = Drive.actionBuilder(new Pose2d(barPos, 0)).splineToConstantHeading(scorePos, Math.toRadians(0)).build();
-        Action Back = Drive.actionBuilder(new Pose2d(barPos, 0)).lineToX(-45).build();
-        Action sample = Drive.actionBuilder(new Pose2d(scorePos, 0)).strafeTo(groundPick).build();
-        Action turn = Drive.actionBuilder(new Pose2d(groundPick, 0)).turnTo(Math.toRadians(185)).build();
+        Action recorrect = Drive.actionBuilder(new Pose2d(barPos, Math.toRadians(46.5))).splineToConstantHeading(redo, Math.toRadians(46.5)).build();
+        Action score = Drive.actionBuilder(new Pose2d(barPos, Math.toRadians(46.5))).splineToConstantHeading(scorePos, Math.toRadians(46.5)).build();
+        Action Back = Drive.actionBuilder(new Pose2d(barPos, 0)).splineToConstantHeading(backup, Math.toRadians(0)).build();
+        Action sample = Drive.actionBuilder(new Pose2d(barPos, Math.toRadians(-93))).splineToConstantHeading(groundPick, Math.toRadians(-93)).build();
+        Action turntobucket = Drive.actionBuilder(new Pose2d(barPos, 0)).turnTo(Math.toRadians(46.5)).build();
+        Action turntobucket2 = Drive.actionBuilder(new Pose2d(barPos, -93)).turnTo(Math.toRadians(46.5)).build();
+        Action drivetobucket = Drive.actionBuilder(new Pose2d(groundPick, Math.toRadians(-93))).splineToConstantHeading(barPos, Math.toRadians(-93)).build();
+        Action turntosample = Drive.actionBuilder(new Pose2d(barPos, Math.toRadians(46.5))).turnTo(Math.toRadians(-93)).build();
         claw.setPosition(0.4);
         arm.setPosition(armInit);
 
@@ -69,36 +75,77 @@ public class BucketAuto extends LinearOpMode {
 
         Actions.runBlocking(ready);
 
+        sleep(200);
+
+        Actions.runBlocking(turntobucket);
+
         sleep(500);
+
+        arm.setPosition(armBucket);
+
+        sleep(200);
 
         lift.setTargetPosition(SLIDES_HIGH_BUCKET);
         lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         lift.setPower(0.5);
 
-        arm.setPosition(armBucket);
+
 
         sleep(3000);
 
-        Actions.runBlocking(score);
+        arm.setPosition(armBucketS);
 
-        sleep(2000);
+        sleep(100);
 
         claw.setPosition(clawOpen);
 
-//        sleep(500);
-//
-//        arm.setPosition(armInit);
-//
-//Actions.runBlocking(turn);
+        sleep(500);
+
+        arm.setPosition(armBucket);
+
+        sleep(100);
+
+        lift.setTargetPosition(SLIDES_DOWN);
+        lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        lift.setPower(0.5);
+
+        sleep(3000);
+
+        Actions.runBlocking(turntosample);
+
+        sleep(500);
 
 
-//        sleep(100);
-//
-//        lift.setTargetPosition(SLIDES_DOWN);
-//        lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//        lift.setPower(0.5);
-//
-//        arm.setPosition(armFloor);
+
+        Actions.runBlocking(sample);
+
+        sleep(500);
+
+        arm.setPosition(armFloor);
+
+        sleep(500);
+
+        claw.setPosition(clawClose);
+
+        sleep(100);
+
+        arm.setPosition(armBucket);
+
+        Actions.runBlocking(drivetobucket);
+
+        sleep(1000);
+
+        Actions.runBlocking(turntobucket2);
+
+        sleep(200);
+
+        lift.setTargetPosition(SLIDES_HIGH_BUCKET);
+        lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        lift.setPower(0.5);
+
+        sleep(3000);
+
+        Actions.runBlocking(recorrect);
 
 
 

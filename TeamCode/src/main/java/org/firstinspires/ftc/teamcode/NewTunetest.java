@@ -18,8 +18,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 
 @Config
-@Autonomous(name = "TurnTest", group = "Autonomous")
-public class TurnTest extends LinearOpMode {
+@Autonomous(name = "NewTune", group = "Autonomous")
+public class NewTunetest extends LinearOpMode {
 
     MecanumDrive Drive;
     private Servo claw;
@@ -37,13 +37,7 @@ public class TurnTest extends LinearOpMode {
     public static double armFloor = 0.05;
     public static int SLIDES_DOWN = 0;
 
-    Vector2d barPos = new Vector2d(-40.5, -5);
-    Vector2d scorePos = new Vector2d(-39.5,-5);
-    Vector2d groundPick = new Vector2d(-41.5, -57.5);
-    Vector2d toWall = new Vector2d(-50, -57.5);
-    Vector2d backup = new Vector2d(-45, -5);
-    Vector2d wallPos = new Vector2d(-55, -10);
-    Vector2d parked = new Vector2d(-62, -60);
+    Vector2d barPos = new Vector2d(20, 0);
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -57,14 +51,10 @@ public class TurnTest extends LinearOpMode {
 
         arm.setDirection(Servo.Direction.REVERSE);
 
-        Drive = new MecanumDrive(hardwareMap, new Pose2d(-63, -20, 0));
+        Drive = new MecanumDrive(hardwareMap, new Pose2d(0,0, 0));
         Pose2d pose = Drive.localizer.getPose();
-        Action ready = Drive.actionBuilder(new Pose2d(-63, -20, 0)).splineToConstantHeading(barPos, Math.toRadians(0)).build();
-        Action park = Drive.actionBuilder(new Pose2d(groundPick, 0)).splineToConstantHeading(parked, 0).build();
-        Action score = Drive.actionBuilder(new Pose2d(barPos, 0)).splineToConstantHeading(scorePos, Math.toRadians(0)).build();
-        Action Back = Drive.actionBuilder(new Pose2d(barPos, 0)).lineToX(-45).build();
-        Action sample = Drive.actionBuilder(new Pose2d(scorePos, 0)).strafeTo(groundPick).build();
-        Action turn = Drive.actionBuilder(new Pose2d(groundPick, 0)).turnTo(Math.toRadians(180)).build();
+        Action ready = Drive.actionBuilder(new Pose2d(0, 0, 0)).splineToConstantHeading(barPos, Math.toRadians(0)).build();
+        Action turn = Drive.actionBuilder(new Pose2d(0,0, 0)).turnTo(Math.toRadians(93)).build();
         claw.setPosition(0.4);
         arm.setPosition(armInit);
 
