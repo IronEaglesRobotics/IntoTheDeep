@@ -1,42 +1,38 @@
-//package org.firstinspires.ftc.teamcode.opmodes;
-//
-//// RR-specific imports
-//
-//import com.acmerobotics.dashboard.config.Config;
-//import com.acmerobotics.roadrunner.Action;
-//import com.acmerobotics.roadrunner.InstantAction;
-//import com.acmerobotics.roadrunner.ParallelAction;
-//import com.acmerobotics.roadrunner.Pose2d;
-//import com.acmerobotics.roadrunner.Vector2d;
-//
-//// Non-RR imports
-//import com.acmerobotics.roadrunner.ftc.Actions;
-//import com.arcrobotics.ftclib.gamepad.GamepadEx;
-//import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-//import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-//
-//        import org.firstinspires.ftc.teamcode.hardware.Robot;
-//import org.firstinspires.ftc.teamcode.hardware.Robot.scoringStates;
-//
-//@Config
-//@Autonomous(name = "BucketAuto")
-//public class bucketAuto extends LinearOpMode {
-//    private Robot robot;
-//    GamepadEx controller1;
-//    private double timer;
-//    private boolean foo = true;
-//    private boolean boo = true;
-//
-//    final static Pose2d initialPosition = new Pose2d(-12, -60, Math.toRadians(270));
-//    final static Vector2d SPECIMEN = new Vector2d(-1, -25);
-//    final static Pose2d PICKUP_1YE = new Pose2d(-57, -41, Math.toRadians(263));
-//    final static Pose2d BUCKET_1 = new Pose2d(-53, -51, Math.toRadians(225));
-//    final static Vector2d BUCKET_2 = new Vector2d(-65, -55);
-//    final static Pose2d PICKUP_2 = new Pose2d(-63, -40, Math.toRadians(279));
-//    final static Pose2d PICKUP_3 = new Pose2d(-70, -40, Math.toRadians(289));
-//    final static Pose2d PARK = new Pose2d(-13, -4, Math.toRadians(90));
-//
-//
+package org.firstinspires.ftc.teamcode.opmodes;
+
+// RR-specific imports
+
+import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.Vector2d;
+import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+
+import org.firstinspires.ftc.teamcode.hardware.Robot;
+import org.firstinspires.ftc.teamcode.hardware.Robot.scoringStates;
+
+
+
+@Config
+@Autonomous(name = "BucketAutoPedro")
+public class bucketAutoPedro extends OpMode {
+    private Robot robot;
+    GamepadEx controller1;
+    private double timer;
+    private boolean foo = true;
+    private boolean boo = true;
+
+    final static Pose2d initialPosition = new Pose2d(-12, -60, Math.toRadians(270));
+    final static Vector2d SPECIMEN = new Vector2d(-1, -25);
+    final static Pose2d PICKUP_1YE = new Pose2d(-57, -41, Math.toRadians(263));
+    final static Pose2d BUCKET_1 = new Pose2d(-53, -51, Math.toRadians(225));
+    final static Vector2d BUCKET_2 = new Vector2d(-65, -55);
+    final static Pose2d PICKUP_2 = new Pose2d(-63, -40, Math.toRadians(279));
+    final static Pose2d PICKUP_3 = new Pose2d(-70, -40, Math.toRadians(289));
+    final static Pose2d PARK = new Pose2d(-13, -4, Math.toRadians(90));
+
+
 //    protected void specScore() {
 //        Action builder = robot.getTrajectoryActionBuilder()
 //                .strafeToLinearHeading(SPECIMEN,Math.toRadians(10))
@@ -50,12 +46,27 @@
 //                        new InstantAction(() -> robot.slides.slidesTo(10)),
 //                        new InstantAction(()-> sleep(199999)),
 //                        builder,
-//                        this.robot.scoringMacro(controller1, this.getRuntime(), true)
 //
 //                )
 //        );
 //    }
-////
+//protected void specScore() {
+//        Action builder = robot.getTrajectoryActionBuilder()
+//                .strafeToLinearHeading(SPECIMEN,Math.toRadians(10))
+//                .splineTo(SPECIMEN,1)
+//                .build();
+//
+//        Actions.runBlocking(
+//                new ParallelAction(
+//                        builder,
+//                        builder,
+//                        new InstantAction(() -> robot.slides.slidesTo(10)),
+//                        new InstantAction(()-> sleep(199999))
+//
+//                )
+//        );
+//    }
+//
 //
 //    protected void specScore1() {
 //        TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
@@ -66,7 +77,7 @@
 //        this.robot.getDrive().followTrajectorySequenceAsync(builder.build());
 //        robot.specStep = 4;
 //        timer = getRuntime() + 3;
-//        robot.scoringState = Robot.scoringStates.SPECIMENGRAB;
+//        robot.scoringState = scoringStates.SPECIMENGRAB;
 //        while (this.robot.getDrive().isBusy() || timer > getRuntime()) {
 //            this.robot.update();
 //            this.robot.scoringMacro(controller1, this.getRuntime(), true);
@@ -86,7 +97,7 @@
 //        this.robot.getDrive().followTrajectorySequenceAsync(builder.build());
 //
 //        timer = getRuntime() + 3;
-//        robot.scoringState = Robot.scoringStates.BUCKETR;
+//        robot.scoringState = scoringStates.BUCKETR;
 //        robot.bucketStep = 0;
 //        boolean initialized = false;
 //        while ((this.robot.getDrive().isBusy() || robot.intakeState != Robot.intakeStates.IDLE)) {
@@ -126,7 +137,7 @@
 //        builder.lineToLinearHeading(PICKUP_2.plus(new Pose2d(0, 5)));
 //        this.robot.getDrive().followTrajectorySequenceAsync(builder.build());
 //        timer = getRuntime() + 3;
-//        robot.scoringState = Robot.scoringStates.BUCKETR;
+//        robot.scoringState = scoringStates.BUCKETR;
 //        robot.bucketStep = 0;
 //        robot.intakeState = Robot.intakeStates.EXTENDED;
 //        while (this.robot.getDrive().isBusy() || robot.intakeState != Robot.intakeStates.IDLE && timer > getRuntime()) {
@@ -153,7 +164,7 @@
 //        while (this.robot.getDrive().isBusy() || robot.intakeState != Robot.intakeStates.IDLE && timer > getRuntime()) {
 //            if (timer < getRuntime() + 2.5 && timer > getRuntime() && foo) {
 //                foo = false;
-//                robot.scoringState = Robot.scoringStates.BUCKETR;
+//                robot.scoringState = scoringStates.BUCKETR;
 //                robot.bucketStep = 0;
 //            }
 //            if (timer - 2 < getRuntime() && boo) {
@@ -166,8 +177,8 @@
 //        }
 //        robot.intakeState = Robot.intakeStates.HASSAMPLE;
 //    }
-//
-//    protected void park() {
+
+    protected void park() {
 //        TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
 //
 //        builder.setReversed(true);
@@ -175,32 +186,19 @@
 //        builder.setReversed(false);
 //        this.robot.getDrive().followTrajectorySequenceAsync(builder.build());
 //
-//        robot.scoringState = Robot.scoringStates.BUCKETR;
+//        robot.scoringState = scoringStates.BUCKETR;
 //        robot.bucketStep = 0;
-//
+
 //        while (this.robot.getDrive().isBusy() || robot.intakeState != Robot.intakeStates.IDLE) {
 //            this.robot.update();
 //            this.robot.scoringMacro(controller1, this.getRuntime(), true);
 //            this.robot.intakeMacro(controller1, getRuntime(), true);
 //        }
-//    }
-//
-//
-//    @Override
-//    public void runOpMode() throws InterruptedException {
-//        robot = new Robot().init(hardwareMap, initialPosition);
-//        controller1 = new GamepadEx(gamepad1);
-//        robot.arm.intakeSpecimen();
-//
-//        while (!this.isStarted()) {
-//            this.telemetry.update();
-//            robot.specStep = 4;
-//            robot.scoringState = Robot.scoringStates.SPECIMENGRAB;
-//        }
-//
-//
+    }
+    @Override
+    public void loop() {
 //        robot.specStep = 4;
-//        robot.scoringState = Robot.scoringStates.SPECIMENGRAB;
+//        robot.scoringState = scoringStates.SPECIMENGRAB;
 //        specScore();
 //        robot.claw.openSmall();
 //        robot.AUTO = false;
@@ -226,7 +224,30 @@
 //        sleep(200);
 //
 //        park();
-//
-//
-//    }
-//}
+
+
+    }
+
+    @Override
+    public void init() {
+        robot = new Robot().init(hardwareMap, initialPosition);
+        controller1 = new GamepadEx(gamepad1);
+        robot.arm.intakeSpecimen();
+    }
+
+    @Override
+    public void init_loop() {
+        this.telemetry.update();
+        robot.specStep = 4;
+        robot.scoringState = scoringStates.SPECIMENGRAB;
+    }
+
+
+    @Override
+    public void start() {}
+
+    @Override
+    public void stop() {
+    }
+
+}
