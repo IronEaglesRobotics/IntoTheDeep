@@ -63,7 +63,10 @@ public class PermissionValidatorWrapper extends PermissionValidatorActivity {
             return Misc.formatForUser(R.string.permRcWriteExternalStorageExplain);
         } else if (permission.equals(Manifest.permission.READ_EXTERNAL_STORAGE)) {
             return Misc.formatForUser(R.string.permRcReadExternalStorageExplain);
-        } else if (permission.equals(Manifest.permission.CAMERA)) {
+        } else if (permission.equals(Manifes
+
+
+                t.permission.CAMERA)) {
             return Misc.formatForUser(R.string.permRcCameraExplain);
         } else if (permission.equals(Manifest.permission.ACCESS_COARSE_LOCATION)) {
             return Misc.formatForUser(R.string.permAccessLocationExplain);
