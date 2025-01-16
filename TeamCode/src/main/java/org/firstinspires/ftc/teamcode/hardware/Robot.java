@@ -79,8 +79,6 @@ public class Robot {
         return this.drive.actionBuilder(this.getDrive().localizer.getPose());
     }
 
-
-    //Claw Class
     @Config
     public static class Claw {
         //Variables
@@ -93,6 +91,7 @@ public class Robot {
         //init
         public Claw init(HardwareMap hardwareMap) {
             this.claw = hardwareMap.get(ServoImplEx.class, "claw");
+            this.claw.setPosition(CLOSE);
             return this;
         }
 
@@ -168,16 +167,15 @@ public class Robot {
             moveArm(OUTTAKESPEC);
         }
 
+        public void outtakeSpecimenNOW() {
+            armL.setPosition(OUTTAKESPEC);
+            armR.setPosition(OUTTAKESPEC);
+        }
+
         private void moveArm(double position) {
             armPDcontroller.setSetPoint(position);
             armTarget = position;
         }
-
-        private void moveFast(double position) {
-            armL.setPosition(position);
-            armR.setPosition(position);
-        }
-
 
         public boolean isAtTarget() {
             return armPDcontroller.atSetPoint();
@@ -206,7 +204,7 @@ public class Robot {
         //variables
         public static double INTAKE = .28;
         public static double OUTTAKESAMPLE = .58;
-        public static double INTAKESPEC = .28;
+        public static double INTAKESPEC = .30;
         public static double SCORESPECWRIST = .6;
         public static double OUTTAKESPEC = .57;
         //PController
@@ -222,9 +220,9 @@ public class Robot {
         //init
         public Wrist init(HardwareMap hardwareMap) {
             this.wrist = hardwareMap.get(Servo.class, "wrist");
-            this.wrist.setPosition(INTAKE);
+//            this.wrist.setPosition(INTAKE);
             this.wristPDcontroller = new PDController(KP, KD);
-            this.wristPDcontroller.setSetPoint(INTAKE);
+//            this.wristPDcontroller.setSetPoint(INTAKE);
             return this;
         }
 
@@ -244,9 +242,16 @@ public class Robot {
             moveWrist(OUTTAKESPEC);
         }
 
+
         private void moveWrist(double position) {
             wristPDcontroller.setSetPoint(position);
             wristTarget = position;
+
+        }
+
+        private void moveWristNOW(double position) {
+            wrist.setPosition(position);
+//            wristTarget = position;
 
         }
 
@@ -345,6 +350,11 @@ public class Robot {
             slidesL.setPower(1);
         }
 
+        public void slidesReset(){
+            this.slidesR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            this.slidesL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        }
+
 //        public void update(){
 //            double pid,ff;
 //            slidesPID.setPID(KP,KI,KD);
@@ -387,6 +397,12 @@ public class Robot {
             extendoR.setPosition(extend);
         }
 
+        public void adjust() {
+            extendoR.setPosition(mini);
+            extendoL.setPosition(mini);
+        }
+
+
         public void mini() {
             extendoL.setPosition(mini);
             extendoR.setPosition(mini);
@@ -404,17 +420,21 @@ public class Robot {
         private Servo intakeL;
         private Servo intakeR;
         private CRServo beater;
-        private ColorSensor intakeSensor;
+        public ColorSensor intakeSensor;
+        public ColorSensor sampleSensor;
 
 
         //Variables
-        public static double up = .35;
+        public static double up = .32;
         public static double spit = .65;
         public static double down = .8;
         public static double INTAKE = 1;
+
         public static double OUTTAKE = -.3;
 
         public static int ALPHA = 100;
+        public static int ALPHASAMPLE = 100;
+
 
         @Getter
         private int b;
@@ -430,7 +450,8 @@ public class Robot {
         }
 
         public colors targetColor = colors.BLUE;
-        public colors color;
+        public colors sampleColor;
+        public colors subColor;
 
 
         public Intake init(HardwareMap hardwareMap) {
@@ -440,6 +461,8 @@ public class Robot {
             this.intakeL.setDirection(Servo.Direction.REVERSE);
             this.intakeSensor = hardwareMap.colorSensor.get("colorSensor");
             this.intakeSensor.enableLed(true);
+            this.sampleSensor = hardwareMap.colorSensor.get("sampleSensor");
+            this.sampleSensor.enableLed(true);
             this.intakeL.setPosition(up);
             this.intakeR.setPosition(up);
             return this;
@@ -449,7 +472,6 @@ public class Robot {
             intakeL.setPosition(down);
             intakeR.setPosition(down);
         }
-
 
         public void up() {
             intakeL.setPosition(up);
@@ -473,12 +495,20 @@ public class Robot {
             beater.setPower(0);
         }
 
-        public colors getColor() {
+        public colors getColor(ColorSensor colorSensor) {
+//            this.color = colors.NULL;
             colors color;
-            b = intakeSensor.blue();
-            g = intakeSensor.green();
-            r = intakeSensor.red();
-            a = intakeSensor.alpha();
+
+            b = 0;
+            g = 0;
+            r = 0;
+            a = colorSensor.alpha();
+
+            for (int i = 0; i < 5; i++) {
+                b += colorSensor.blue();
+                g += colorSensor.green();
+                r += colorSensor.red();
+            }
 
             if (r + b + g < 190) {
                 color = colors.NULL;
@@ -486,7 +516,7 @@ public class Robot {
                 color = colors.BLUE;
             } else if (g > b + 25 && g > r + 25) {
                 color = colors.YELLOW;
-            } else if (r > b + 50 && r > g + 50) {
+            } else if (r > b + 20 && r > g + 20) {
                 color = colors.RED;
             } else {
                 color = colors.NULL;
@@ -494,8 +524,8 @@ public class Robot {
             return color;
         }
 
-        public int getAlpha() {
-            return intakeSensor.alpha();
+        public int getAlpha(ColorSensor colorSensor) {
+            return colorSensor.alpha();
         }
 
     }
@@ -530,10 +560,11 @@ public class Robot {
 
     //Scoring Macro
     public int bucketStep;
-    public boolean AUTO;
+    public boolean AUTO = false;
     public int specStep;
     boolean bucketH;
-    boolean specH;
+    public boolean AUTOSPEC = false;
+    public boolean END = false;
 
     public scoringStates scoringState = scoringStates.IDLE;
 
@@ -585,7 +616,7 @@ public class Robot {
                 switch (bucketStep) {
                     case 0: // Slides go somewhere
                         if (runtime > outtakeDelay) {
-                            if (bucketH) {
+                            if (bucketH || AUTO) {
                                 slides.slideUp();//slides to high bucket
                                 claw.close();
                             } else {
@@ -698,16 +729,12 @@ public class Robot {
                         }
                         break;
                     case 6:
-                        if (L1) {
+                        if (L1 || auto) {
                             slides.slidesTo(slides.getPosition() - Slides.SLIDESPECSCORE);
-                            wrist.moveWrist(SCORESPECWRIST);
-                            scoringState = scoringStates.SPECIMENR;
+                            wrist.moveWristNOW(Wrist.SCORESPECWRIST);
+                            arm.outtakeSpecimenNOW();
                             specStep = 0;
-                        }
-                        if (auto) {
-                            slides.slidesTo(slides.getPosition() - Slides.SLIDESPECSCORE);
                             scoringState = scoringStates.SPECIMENR;
-                            specStep = 0;
                         }
                         break;
                 }
@@ -715,17 +742,21 @@ public class Robot {
             case SPECIMENR:
                 switch (specStep) {
                     case 0:
-                        if (L2 || auto) {
-                            outtakeDelay = runtime + .2;
-                            specStep++;
+                        if (A || AUTOSPEC) {
+                            outtakeDelay = runtime + .051;
+                            scoringState = scoringStates.SPECIMENGRAB;
+                            arm.intakeSpecimen();
+                            wrist.intakeSpecien();
+                            claw.passiveclose();
+                            specStep = 0;
+                            AUTOSPEC = false;
                         } else if (D1) {
                             outtakeDelay = runtime + .1;
                             scoringState = scoringStates.SPECIMENGRAB;
-                            specStep = 3;
-                        } else if (A) {
-                            outtakeDelay = runtime + .051;
-                            scoringState = scoringStates.SPECIMENGRAB;
-                            specStep = 0;
+                            specStep = 4;
+                        } else if (L2 || END) {
+                            outtakeDelay = runtime + .2;
+                            specStep++;
                         }
                         break;
                     case 1:
@@ -754,6 +785,7 @@ public class Robot {
 
     //Intake Macro
     public boolean mini;
+    public boolean spit = false;
 
     public intakeStates intakeState = intakeStates.IDLE;
 
@@ -763,18 +795,27 @@ public class Robot {
 
     public void intakeMacro(GamepadEx controller1, double runtime, boolean auto) {
 
+        boolean RT = controller1.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > .3;
+        boolean B = controller1.wasJustPressed(GamepadKeys.Button.B);
+        boolean LB = controller1.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER);
+
         switch (intakeState) {
             case IDLE:
                 //Actions
                 extendo.retract();
                 intake.up();
-                intake.pause();
+                if (intakeDelay > runtime && spit && runtime > intakeDelay - .5) {
+                    intake.outtake();
+                } else {
+//                    spit = false;
+                    intake.pause();
+                }
                 //Switch states
-                if (controller1.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > .3) {
+                if (RT) {
                     intakeState = intakeStates.EXTENDED;
                     mini = false;
                     intakeDelay = runtime + .5;
-                } else if (controller1.wasJustPressed(GamepadKeys.Button.B)) {
+                } else if (B) {
                     intakeState = intakeStates.EXTENDED;
                     intakeDelay = runtime + .5;
                     mini = true;
@@ -783,12 +824,14 @@ public class Robot {
             case EXTENDED:
                 //Actions
                 if (mini) {
+                    intake.up();
                     extendo.mini();
                 } else {
+                    intake.up();
                     extendo.extend();
                 }
                 //Switch States
-                if (((controller1.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > .3 || controller1.wasJustPressed(GamepadKeys.Button.B)) && runtime > intakeDelay) || auto) {
+                if (((RT || B) && runtime > intakeDelay) || auto) {
                     intakeState = intakeStates.INTAKING;
                     intakeDelay = runtime + .25;
                 }
@@ -800,27 +843,27 @@ public class Robot {
                     intake.intake();
                 }
 
-                if (controller1.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > .3) {
+                if (RT) {
                     extendo.extend();
-                } else if (controller1.wasJustPressed(GamepadKeys.Button.B)) {
+                } else if (B) {
                     extendo.mini();
                 }
 
                 //Switch States
 
-                if (intake.getAlpha() > Intake.ALPHA) {
+                if (intake.getAlpha(intake.intakeSensor) > Intake.ALPHA) {
                     intakeState = intakeStates.DETECT;
                     intakeDelay = runtime + .005;
-                } else if (controller1.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
+                } else if (LB) {
                     intakeState = intakeStates.HASSAMPLE;
                 }
                 break;
             case DETECT:
                 //Actions
                 if (runtime > intakeDelay) {
-                    intake.color = intake.getColor();
+//                    intake.color = intake.getColor(intake.intakeSensor);
                     //Switch States
-                    if (intake.color != Intake.colors.YELLOW && intake.color != getIntake().targetColor) {
+                    if (getColor(intake.intakeSensor) != Intake.colors.YELLOW && getColor(intake.intakeSensor) != getIntake().targetColor) {
                         intakeState = intakeStates.OUTTAKE;
                         intakeDelay = runtime + 1.5;
                     } else {
@@ -835,7 +878,121 @@ public class Robot {
                 extendo.retract();
                 //Switch States
                 if (runtime > intakeDelay) {
+                    spit = true;
+                    intakeDelay = runtime + 1;
+                    intakeState = intakeStates.IDLE;
+                }
+                break;
+            case OUTTAKE:
+                //Actions
+                intake.outtake();
+                intake.spit();
+                //Switch States
+                if (runtime > intakeDelay) {
+                    intakeState = intakeStates.INTAKING;
+                }
+                break;
+        }
+
+    }
+
+    public void intakeMacroTEST(GamepadEx controller1, double runtime, boolean auto) {
+
+
+        boolean RT = controller1.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > .3;
+        boolean B = controller1.wasJustPressed(GamepadKeys.Button.B);
+        boolean LB = controller1.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER);
+        boolean RIGHTSUBCOLOR = intake.subColor == Intake.colors.YELLOW || intake.subColor == getIntake().targetColor;
+        boolean RIGHTSAMPLECOLOR = intake.sampleColor == Intake.colors.YELLOW || intake.sampleColor == getIntake().targetColor;
+
+        switch (intakeState) {
+            case IDLE:
+                //Actions
+                extendo.retract();
+                intake.up();
+                if (intakeDelay > runtime && spit && runtime > intakeDelay - .5) {
                     intake.outtake();
+                } else {
+//                    spit = false;
+                    intake.pause();
+                }
+                //Switch states
+                if (RT) {
+                    intakeState = intakeStates.EXTENDED;
+                    mini = false;
+                    intakeDelay = runtime + .5;
+//                    intake.color= Intake.colors.NULL;
+                } else if (B) {
+                    intakeState = intakeStates.EXTENDED;
+                    intakeDelay = runtime + .5;
+                    mini = true;
+//                    intake.color= Intake.colors.NULL;
+                }
+                break;
+            case EXTENDED:
+                //Actions
+                if (mini) {
+                    intake.up();
+                    extendo.mini();
+                } else {
+                    intake.up();
+                    extendo.extend();
+                }
+
+                if (intake.getAlpha(intake.sampleSensor) > Intake.ALPHASAMPLE) {
+                    intake.sampleColor = getColor(intake.sampleSensor);
+                }
+
+                //Switch States
+                if (((RT || B) && runtime > intakeDelay) || auto || RIGHTSUBCOLOR) {
+                    intakeState = intakeStates.INTAKING;
+                    intakeDelay = runtime + .5;
+                }
+                break;
+            case INTAKING:
+//                Actions
+                extendo.mini();
+                if (runtime > intakeDelay) {
+                    intake.down();
+                    intake.intake();
+                }
+
+                if (RT) {
+                    extendo.extend();
+                } else if (B) {
+                    extendo.mini();
+                }
+
+                //Switch States
+
+                if (intake.getAlpha(intake.intakeSensor) > Intake.ALPHA) {
+                    intakeState = intakeStates.DETECT;
+                    intakeDelay = runtime + .005;
+                } else if (LB) {
+                    intakeState = intakeStates.HASSAMPLE;
+                }
+                break;
+            case DETECT:
+                //Actions
+                if (runtime > intakeDelay) {
+                    //Switch States
+                    if (!RIGHTSAMPLECOLOR) {
+                        intakeState = intakeStates.OUTTAKE;
+                        intakeDelay = runtime + 1.5;
+                    } else {
+                        intakeState = intakeStates.HASSAMPLE;
+                        intakeDelay = runtime + .3;
+                    }
+                }
+                break;
+            case HASSAMPLE:
+                //Actions
+                intake.up();
+                extendo.retract();
+                //Switch States
+                if (runtime > intakeDelay) {
+                    spit = true;
+                    intakeDelay = runtime + 1;
                     intakeState = intakeStates.IDLE;
                 }
                 break;
@@ -858,6 +1015,14 @@ public class Robot {
         wrist.update();
         arm.update();
 //        drive.update();
-//        slides.update();
+    }
+
+    public Intake.colors getColor(ColorSensor sensor) {
+
+        Intake.colors color = null;
+        if (intake.getAlpha(sensor) > Intake.ALPHASAMPLE) {
+            color = intake.getColor(sensor);
+        }
+        return color;
     }
 }
