@@ -198,7 +198,7 @@ public class bucketAuto extends LinearOpMode {
             robot.scoringState = Robot.scoringStates.SPECIMENGRAB;
         }
 
-        
+
         robot.specStep = 4;
         robot.scoringState = Robot.scoringStates.SPECIMENGRAB;
         specScore();

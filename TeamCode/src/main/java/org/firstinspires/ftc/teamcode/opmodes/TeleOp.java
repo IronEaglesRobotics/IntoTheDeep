@@ -58,7 +58,7 @@ public class TeleOp extends LinearOpMode {
             telemetry.addData("Slide Pos L", (PositionLeft));
             int PositionRight = this.robot.getSlides().slidesR.getCurrentPosition();
             telemetry.addData("Slide Pos R", (PositionRight));
-            telemetry.addData("alpha:", robot.intake.getAlpha());
+            telemetry.addData("alpha:", robot.intake.getAlpha(robot.intake.sampleSensor));
             telemetry.addData("INTAKEMACRO:", robot.intakeState);
             telemetry.addData("SCORING STATE: ", robot.scoringState);
             telemetry.addData("SpecStates: ", robot.specStep);
