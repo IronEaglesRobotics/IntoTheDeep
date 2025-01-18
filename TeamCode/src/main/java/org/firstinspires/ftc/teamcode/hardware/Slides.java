@@ -21,15 +21,15 @@ public class Slides extends SubsystemBase {
     public static double KP = 0.0006;
     public static double KI = 0.0009;
     public static double KD = 0;
-    public static double TOLERANCE = 200;
+    public static double TOLERANCE = 400;
     // p:.001, I:0.000005, D:0.000035
 
     public static int POSITION_MIN = 0;
     public static int POSITION_MAX = 50000;
     
     public static int POSITION_DOWN = 2000;
-    public static int POSITION_AFTER_CLIP = 28000;
-    public static int POSITION_BEFORE_CLIP = 40300;
+    public static int POSITION_AFTER_CLIP = 25000;
+    public static int POSITION_BEFORE_CLIP = 36000;
     public static int POSITION_SCORE_HIGH = 44300;
 
     public Slides(HardwareMap hardwareMap) {
@@ -80,10 +80,10 @@ public class Slides extends SubsystemBase {
         return controller.atSetPoint();
     }
 
-    public int getPos(){return slide.getCurrentPosition();}
+    public int getPos(){return slide2.getCurrentPosition();}
 
     public void cancel() {
-        target = slide.getCurrentPosition();
+        target = slide2.getCurrentPosition();
     }
 
     public void targetReset() {
@@ -96,7 +96,7 @@ public class Slides extends SubsystemBase {
         controller.setPID(KP, KI, KD);
         controller.setTolerance(TOLERANCE);
 
-        result = controller.calculate(-slide.getCurrentPosition(), target);
+        result = controller.calculate(-slide2.getCurrentPosition(), target);
         result = Math.min(Math.max(result, -1), 1);
         slide.setPower((result));
         slide2.setPower((result));

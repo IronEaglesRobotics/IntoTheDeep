@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
 import static org.firstinspires.ftc.teamcode.lib.Config.wristFloorlowscale1;
+import static org.firstinspires.ftc.teamcode.lib.Config.wristFullLowscale;
 import static org.firstinspires.ftc.teamcode.lib.Config.wristFullhighscale;
 import static org.firstinspires.ftc.teamcode.lib.Config.wristMedianhighscale1;
 
@@ -55,7 +56,11 @@ public class Intake extends SubsystemBase {
         beatBar.setPower(-1);
     }
     public void wristUp(){
+        Wrist.scaleRange(wristFloorlowscale1,wristMedianhighscale1);
         wrist = 0;
+    }
+    public void wristLow(){
+        Wrist.scaleRange(wristFullLowscale,wristMedianhighscale1);
     }
     public void wristDown(){
         Wrist.scaleRange(wristFloorlowscale1,wristMedianhighscale1);
@@ -65,6 +70,7 @@ public class Intake extends SubsystemBase {
         Wrist.scaleRange(wristFloorlowscale1,wristFullhighscale);
         wrist = 1;
     }
+
     public colors getColor() {
         colors color;
         b = colorSensor.blue();
@@ -92,6 +98,7 @@ public class Intake extends SubsystemBase {
     public onIntake onIntake(){return new onIntake(this);}
     public reverseIntake reverseIntake(){return new reverseIntake(this);}
     public offIntake offIntake(){return new offIntake(this);}
+    public ejectIntake ejectIntake(){return new ejectIntake(this);}
     public colorSet setRed = new colorSet(colors.RED,this);
     public colorSet setBlue = new colorSet(colors.BLUE,this);
     public runIntake runIntake() {return new runIntake(this);}
@@ -143,6 +150,17 @@ public class Intake extends SubsystemBase {
         public void initialize() {
             intake.wristDown();
             intake.stopBeatBar();
+        }
+    }
+    public static class ejectIntake extends InstantCommand{
+        Intake intake;
+        public ejectIntake(Intake tempIntake){
+            intake = tempIntake;
+            addRequirements(intake);
+        }
+        @Override
+        public void initialize(){
+            intake.wristLow();
         }
     }
     public static class colorSet extends InstantCommand{

@@ -23,8 +23,8 @@ public class pusher extends SubsystemBase {
     public void periodic(){
         Pusher.setPosition(pusher);
     }
-    public activateCommand activateCommand = new activateCommand(this);
-    public offCommand offCommand = new offCommand(this);
+    public activateCommand activateCommand(){return new activateCommand(this);}
+    public offCommand offCommand(){return new offCommand(this);}
 
     public class activateCommand extends InstantCommand{
         pusher pusher;

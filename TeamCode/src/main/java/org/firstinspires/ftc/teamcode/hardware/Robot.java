@@ -9,11 +9,12 @@ import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.acmerobotics.roadrunner.ftc.GoBildaPinpointDriverRR;
 import com.arcrobotics.ftclib.command.Command;
-import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.command.Subsystem;
+import com.arcrobotics.ftclib.command.WaitCommand;
+import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.roadrunner.ActionCommand;
 import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
 
 import java.util.Collections;
@@ -30,11 +31,11 @@ public class Robot {
     public GoBildaPinpointDriverRR odo;
     public enum DriveState {manuel,automatic}
     public static DriveState driveState = DriveState.manuel;
+    public
     Action clipMovement;
-    public moveToClip toClip;
 
     public Robot init(HardwareMap hardwareMap) {
-        drive = new PinpointDrive(hardwareMap, new Pose2d(0, 0, 0));
+        drive = new PinpointDrive(hardwareMap, new Pose2d(0, 0, Math.toRadians(180)));
         intake = new Intake(hardwareMap);
         intakeArm = new IntakeArm(hardwareMap);
         claw = new Claw(hardwareMap);
@@ -85,34 +86,82 @@ public class Robot {
         slides.periodic();
         pusher.periodic();
     }
+    public void runTeleOp(GamepadEx controller, activeMode mode){
+        controller.readButtons();
+        switch (mode) {
+            case macro:
+                controller.getGamepadButton(GamepadKeys.Button.A)
+                        .toggleWhenPressed(getClaw().adaptClaw().andThen(new WaitCommand(250)).andThen(getSlides().preclip())
+                                ,getClaw().closeCommand());
+                // automates clip process
+                controller.getGamepadButton(GamepadKeys.Button.LEFT_STICK_BUTTON)
+                        .whenPressed(getSlides().postclip()
+                                .andThen(getClaw().openCommand())
+                                .andThen(new WaitCommand(300))
+                                .andThen(getSlides().down())
+                                .andThen(getClaw().adaptClaw())
+                                .andThen(new WaitCommand(250))
+                                .andThen(getSlides().preclip()));
+                // changes target color for intake
+                controller.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
+                        .toggleWhenPressed(getIntake().setBlue,getIntake().setRed);
+                // preps robot for high basket score
+                controller.getGamepadButton(GamepadKeys.Button.DPAD_UP)
+                        .whenPressed(getSlides().up()
+                                .andThen(getIntakeArm().outCommand())
+                                .andThen(getIntakeArm().upCommand())
+                                .andThen(getIntake().ejectIntake()));
+                // changes target color for intake
+                controller.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
+                        .toggleWhenPressed(getIntake().setBlue,getIntake().setRed);
+                break;
+            case standard:
+                // controls raising slides
+                controller.getGamepadButton(GamepadKeys.Button.DPAD_UP)
+                        .whenPressed(getSlides().up());
+                // controls slides
+                controller.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
+                        .whenPressed(getSlides().postclip().andThen(new Claw.ClawCommand(getClaw(),true)));
+                // controls raising slides
+                controller.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
+                        .whenPressed(getClaw().closeCommand().andThen(new WaitCommand(500)).andThen(getSlides().preclip()));
+                // controls lowering slides
+                controller.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
+                        .whenPressed(getSlides().down());
+                // rotates intake arm up
+                controller.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
+                        .toggleWhenPressed(getIntakeArm().upCommand(),getIntakeArm().downCommand());
+                // toggles claw
+                controller.getGamepadButton(GamepadKeys.Button.A)
+                        .toggleWhenPressed(new Claw.ClawCommand(getClaw(),true),new Claw.ClawCommand(getClaw(),false));
+                break;
+        }
+        // macros rotating arm up and extending intake
+        controller.getGamepadButton(GamepadKeys.Button.X)
+                .toggleWhenPressed(getIntake().reverseIntake(),getIntake().offIntake());
+        // puts intake all the way up
+        controller.getGamepadButton(GamepadKeys.Button.Y)
+                .whenPressed(new Intake.storeIntake(getIntake()));
+        // turns intake on and off
+        controller.getGamepadButton(GamepadKeys.Button.B)
+                .toggleWhenPressed(getIntake().runIntake(),getIntake().offIntake());
+        // controls pusher
+        controller.getGamepadButton(GamepadKeys.Button.RIGHT_STICK_BUTTON)
+                .whenPressed(getPusher().activateCommand())
+                .whenReleased(getPusher().offCommand());
+        // extends and retracts intake
+        controller.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
+                .toggleWhenPressed(getIntakeArm().inCommand(),getIntakeArm().outCommand());
+    }
+    public enum activeMode {macro, standard}
     public runActionCommand runAction(Action action){return new runActionCommand(action,drive);}
+    public Command toClip(){
+        driveState = DriveState.automatic;
+        return new runActionCommand(clipMovement,drive);
+    }
 
     // drive macros
-    public static class moveToClip extends ActionCommand {
-        PinpointDrive Drive;
-        public moveToClip(Action action, Set<Subsystem> requirements,PinpointDrive drive) {
-            super(action, requirements);
-            Drive = drive;
-        }
-        @Override
-        public void initialize() {
-            driveState = DriveState.automatic;
-            Drive.setDrivePowers(new PoseVelocity2d(new Vector2d(0,0),0));
-            Actions.runBlocking(action);
-        }
-        @Override
-        public void execute() {
-            TelemetryPacket packet = new TelemetryPacket();
-            action.preview(packet.fieldOverlay());
-            finished = !action.run(packet);
-            FtcDashboard.getInstance().sendTelemetryPacket(packet);
-            Drive.updatePoseEstimate();
-        }
-        @Override
-        public void end(boolean I){
-            driveState = DriveState.manuel;
-        }
-    }
+
     public static class runActionCommand implements Command {
         PinpointDrive Drive;
         Action action;
@@ -139,6 +188,9 @@ public class Robot {
         @Override
         public Set<Subsystem> getRequirements() {
             return Collections.emptySet();
+        }
+        public void end(boolean i){
+            driveState = DriveState.manuel;
         }
     }
 }

@@ -43,7 +43,7 @@ public class clip_auto  extends LinearOpMode {
                 .setTangent(0)
                 .afterDisp(0,()->{
                     robot.getSlides().setTarget(Slides.Position.DOWN);
-                    robot.getIntakeArm().toggleExtension();
+                    robot.getIntakeArm().outCommand();
                     robot.update();
                 })
                 .splineToLinearHeading(toPickup,Math.PI/2)
@@ -54,7 +54,7 @@ public class clip_auto  extends LinearOpMode {
                 .lineToX(-25)
                 .splineToLinearHeading(toPickup,0)
                 .afterDisp(0,robot.getIntake()::reverseBeatBar)
-                .afterTime(1,robot.getIntakeArm()::toggleExtension)
+                .afterTime(1,robot.getIntakeArm()::armOut)
                 .afterDisp(0,robot::update)
                 .splineToLinearHeading(new Pose2d(-20,0,Math.toRadians(135)),Math.PI/2)
                 .build();

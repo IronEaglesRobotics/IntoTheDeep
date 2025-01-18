@@ -1,17 +1,12 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
-import static org.firstinspires.ftc.teamcode.lib.Config.INTAKE_LEFT;
-import static org.firstinspires.ftc.teamcode.lib.Config.INTAKE_RIGHT;
-import static org.firstinspires.ftc.teamcode.lib.Config.LEFT_ARM;
-import static org.firstinspires.ftc.teamcode.lib.Config.RIGHT_ARM;
 import static org.firstinspires.ftc.teamcode.lib.Config.extendhighscale1;
 import static org.firstinspires.ftc.teamcode.lib.Config.extendhighscale2;
 import static org.firstinspires.ftc.teamcode.lib.Config.extendlowscale1;
 import static org.firstinspires.ftc.teamcode.lib.Config.extendlowscale2;
 
+import com.arcrobotics.ftclib.command.Command;
 import com.arcrobotics.ftclib.command.CommandBase;
-import com.arcrobotics.ftclib.command.InstantCommand;
-import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -40,95 +35,79 @@ public class IntakeArm extends SubsystemBase {
         periodic();
     }
 
-    public void toggleRotation() {
-        up = !up;
-        if (up){
-            motor.setTargetPosition(-200);
-            motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            motor.setPower(-1);
-        } else {
-            motor.setTargetPosition(0);
-            motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            motor.setPower(1);
-        }
+    public void armUp() {
+        motor.setTargetPosition(-200);
+        motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motor.setPower(-1);
+    }
+    public void armDown(){
+        motor.setTargetPosition(0);
+        motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motor.setPower(1);
     }
 
-    public void toggleExtension() {
-        ex_save = out ? 1 : 0;
-        out = !out;
+    public void armIn() {
+        ex_save = 0;;
     }
-
-    public boolean isOut() {
-        return out;
+    public void armOut(){
+        ex_save = 1;
     }
-
-    public boolean isUp() {
-        return !motor.isBusy();
+    public boolean isBusy(){
+        return motor.isBusy();
     }
 
     public void periodic() {
         extension1.setPosition(ex_save);
         extension2.setPosition(ex_save);
     }
-    public RotateCommand rotateCommand(){return new RotateCommand(this);}
+    public RotateCommand upCommand(){return new RotateCommand(this,true);}
+    public RotateCommand downCommand(){return new RotateCommand(this,false);}
 
-    public final ExtendCommand extendCommand(){return new ExtendCommand(this);}
-
-    public RaiseCommand raiseCommand(){return new RaiseCommand(this,slides);}
+    public final ExtendCommand outCommand(){return new ExtendCommand(this,true);}
+    public final ExtendCommand inCommand(){return new ExtendCommand(this,false);}
 
     public static class RotateCommand extends CommandBase {
         private final IntakeArm arm;
+        private boolean target;
 
-        public RotateCommand(IntakeArm intakeArm) {
+        public RotateCommand(IntakeArm intakeArm,boolean up) {
             arm = intakeArm;
             addRequirements(intakeArm);
+            target = up;
         }
 
         public void initialize() {
-                arm.toggleRotation();
+            if(target){
+                arm.armUp();
+            } else {
+                arm.armDown();
+            }
         }
         public boolean isFinished(){
-            return arm.isUp();
+            return arm.isBusy();
         }
     }
     public static class ExtendCommand extends CommandBase {
         private final IntakeArm arm;
         private double time;
+        private boolean target;
 
-        public ExtendCommand(IntakeArm intakeArm) {
+        public ExtendCommand(IntakeArm intakeArm,boolean out) {
             arm = intakeArm;
             addRequirements(intakeArm);
+            target = out;
         }
         @Override
         public void initialize() {
-            arm.toggleExtension();
+            if(target){
+                arm.armOut();
+            } else {
+                arm.armIn();
+            }
             time = System.currentTimeMillis();
         }
         public boolean isFinished(){
             return time + 500 < System.currentTimeMillis();
         }
-    }
-    public static class RaiseCommand extends SequentialCommandGroup {
-        private final IntakeArm arm;
-        private final Slides slides;
-
-        public RaiseCommand(IntakeArm intakeArm,Slides tslides) {
-            arm = intakeArm;
-            slides = tslides;
-            addRequirements(intakeArm);
-            if (arm.isOut()){
-                addCommands(
-                    new ExtendCommand(arm),
-                    new RotateCommand(arm),
-                    new ExtendCommand(arm)
-                );
-            } else {
-                addCommands(
-                        new RotateCommand(arm),
-                        new ExtendCommand(arm)
-                );
-            }
-        }
-
     }
 }

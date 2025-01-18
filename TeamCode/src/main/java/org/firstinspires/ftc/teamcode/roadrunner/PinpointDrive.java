@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.roadrunner;
 
 
 
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.ftc.FlightRecorder;
@@ -20,6 +21,7 @@ import org.firstinspires.ftc.teamcode.roadrunner.messages.PoseMessage;
  * Portions of this code made and released under the MIT License by Gobilda (Base 10 Assets, LLC)
  * Unless otherwise noted, comments are from Gobilda
  */
+@Config
 public class PinpointDrive extends MecanumDrive {
     public static class Params {
         /*
@@ -32,7 +34,7 @@ public class PinpointDrive extends MecanumDrive {
          */
         //These are tuned for 3110-0002-0001 Product Insight #1
         // RR localizer note: These units are inches, presets are converted from mm (which is why they are inexact)
-        public double xOffset = 4.409;
+        public double xOffset = -4.6;
         public double yOffset = -.945;
 
         /*
