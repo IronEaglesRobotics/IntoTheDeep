@@ -37,153 +37,156 @@
 //    final static Pose2d PARK = new Pose2d(-13, -4, Math.toRadians(90));
 //
 //
-//    protected void specScore() {
-//        Action builder = robot.getTrajectoryActionBuilder()
-//                .strafeToLinearHeading(SPECIMEN,Math.toRadians(10))
-//                .splineTo(SPECIMEN,1)
-//                .build();
 //
-//        Actions.runBlocking(
-//                new ParallelAction(
-//                        builder,
-//                        builder,
-//                        new InstantAction(() -> robot.slides.slidesTo(10)),
-//                        new InstantAction(()-> sleep(199999)),
-//                        builder,
-//                        this.robot.scoringMacro(controller1, this.getRuntime(), true)
 //
-//                )
-//        );
-//    }
+//
+////    protected void specScore() {
+////        Action builder = robot.getTrajectoryActionBuilder()
+////                .strafeToLinearHeading(SPECIMEN,Math.toRadians(10))
+////                .splineTo(SPECIMEN,1)
+////                .build();
 ////
-//
-//    protected void specScore1() {
-//        TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
-//
-//        builder.setReversed(true);
-//        builder.setTangent(0);
-//        builder.splineToConstantHeading(SPECIMEN, Math.toRadians(90));
-//        this.robot.getDrive().followTrajectorySequenceAsync(builder.build());
-//        robot.specStep = 4;
-//        timer = getRuntime() + 3;
-//        robot.scoringState = Robot.scoringStates.SPECIMENGRAB;
-//        while (this.robot.getDrive().isBusy() || timer > getRuntime()) {
-//            this.robot.update();
-//            this.robot.scoringMacro(controller1, this.getRuntime(), true);
-//            if (getRuntime() > timer - 1) {
-//                robot.AUTO = true;
-//                robot.specStep = 6;
-//            }
-//        }
-//    }
-//
-//    protected void getSample() {
-//        TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
-//
-//        builder.setTangent(270);
-//        builder.setReversed(true);
-//        builder.splineToLinearHeading(PICKUP_1YE, Math.toRadians(265));
-//        this.robot.getDrive().followTrajectorySequenceAsync(builder.build());
-//
-//        timer = getRuntime() + 3;
-//        robot.scoringState = Robot.scoringStates.BUCKETR;
-//        robot.bucketStep = 0;
-//        boolean initialized = false;
-//        while ((this.robot.getDrive().isBusy() || robot.intakeState != Robot.intakeStates.IDLE)) {
-//            this.robot.update();
-//            this.robot.scoringMacro(controller1, this.getRuntime(), true);
-//            this.robot.intakeMacro(controller1, getRuntime(), true);
-//            if (getRuntime() > timer - 1 && !initialized) {
-//                robot.intakeState = Robot.intakeStates.EXTENDED;
-//                initialized = true;
-//            }
-//
-//        }
-//    }
-//
-//    protected void toBucket(double x, double y) {
-//        TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
-//
-//        builder.lineToSplineHeading(BUCKET_1.plus(new Pose2d(x, y)));
-//        builder.lineTo(BUCKET_2.plus(new Vector2d(x, y)),
-//                MecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-//                MecanumDrive.getAccelerationConstraint(30)
-//        );
-//        this.robot.getDrive().followTrajectorySequenceAsync(builder.build());
-//
-//        robot.AUTO = true;
-//        while (this.robot.getDrive().isBusy() && robot.specStep != 1) {
-//            this.robot.update();
-//            this.robot.scoringMacro(controller1, this.getRuntime(), true);
-//            this.robot.intakeMacro(controller1, getRuntime(), true);
-//        }
-//    }
-//
-//    protected void toSampleTwo() {
-//        TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
-//
-//        builder.lineToLinearHeading(PICKUP_2);
-//        builder.lineToLinearHeading(PICKUP_2.plus(new Pose2d(0, 5)));
-//        this.robot.getDrive().followTrajectorySequenceAsync(builder.build());
-//        timer = getRuntime() + 3;
-//        robot.scoringState = Robot.scoringStates.BUCKETR;
-//        robot.bucketStep = 0;
-//        robot.intakeState = Robot.intakeStates.EXTENDED;
-//        while (this.robot.getDrive().isBusy() || robot.intakeState != Robot.intakeStates.IDLE && timer > getRuntime()) {
-//            this.robot.update();
-//            this.robot.scoringMacro(controller1, this.getRuntime(), true);
-//            this.robot.intakeMacro(controller1, getRuntime(), true);
-//        }
-//        robot.intakeState = Robot.intakeStates.HASSAMPLE;
-//
-//    }
-//
-//    protected void toSampleThree() {
-//        TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
-//
-//        builder.lineToLinearHeading(PICKUP_3);
-//        builder.lineToLinearHeading(PICKUP_3.plus(new Pose2d(1, 5)),
-//                MecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-//                MecanumDrive.getAccelerationConstraint(30)
-//        );
-//        builder.addTemporalMarker(0.1, robot.getIntake()::down);
-//        this.robot.getDrive().followTrajectorySequenceAsync(builder.build());
-//
-//        timer = getRuntime() + 3;
-//        while (this.robot.getDrive().isBusy() || robot.intakeState != Robot.intakeStates.IDLE && timer > getRuntime()) {
-//            if (timer < getRuntime() + 2.5 && timer > getRuntime() && foo) {
-//                foo = false;
-//                robot.scoringState = Robot.scoringStates.BUCKETR;
-//                robot.bucketStep = 0;
-//            }
-//            if (timer - 2 < getRuntime() && boo) {
-//                robot.intakeState = Robot.intakeStates.EXTENDED;
-//                boo = false;
-//            }
-//            this.robot.update();
-//            this.robot.scoringMacro(controller1, this.getRuntime(), true);
-//            this.robot.intakeMacro(controller1, getRuntime(), true);
-//        }
-//        robot.intakeState = Robot.intakeStates.HASSAMPLE;
-//    }
-//
-//    protected void park() {
-//        TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
-//
-//        builder.setReversed(true);
-//        builder.splineToLinearHeading(PARK, Math.toRadians(0));
-//        builder.setReversed(false);
-//        this.robot.getDrive().followTrajectorySequenceAsync(builder.build());
-//
-//        robot.scoringState = Robot.scoringStates.BUCKETR;
-//        robot.bucketStep = 0;
-//
-//        while (this.robot.getDrive().isBusy() || robot.intakeState != Robot.intakeStates.IDLE) {
-//            this.robot.update();
-//            this.robot.scoringMacro(controller1, this.getRuntime(), true);
-//            this.robot.intakeMacro(controller1, getRuntime(), true);
-//        }
-//    }
+////        Actions.runBlocking(
+////                new ParallelAction(
+////                        builder,
+////                        builder,
+////                        new InstantAction(() -> robot.slides.slidesTo(10)),
+////                        new InstantAction(()-> sleep(199999)),
+////                        builder,
+////                        this.robot.scoringMacro(controller1, this.getRuntime(), true)
+////
+////                )
+////        );
+////    }
+//////
+////
+////    protected void specScore1() {
+////        TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
+////
+////        builder.setReversed(true);
+////        builder.setTangent(0);
+////        builder.splineToConstantHeading(SPECIMEN, Math.toRadians(90));
+////        this.robot.getDrive().followTrajectorySequenceAsync(builder.build());
+////        robot.specStep = 4;
+////        timer = getRuntime() + 3;
+////        robot.scoringState = Robot.scoringStates.SPECIMENGRAB;
+////        while (this.robot.getDrive().isBusy() || timer > getRuntime()) {
+////            this.robot.update();
+////            this.robot.scoringMacro(controller1, this.getRuntime(), true);
+////            if (getRuntime() > timer - 1) {
+////                robot.AUTO = true;
+////                robot.specStep = 6;
+////            }
+////        }
+////    }
+////
+////    protected void getSample() {
+////        TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
+////
+////        builder.setTangent(270);
+////        builder.setReversed(true);
+////        builder.splineToLinearHeading(PICKUP_1YE, Math.toRadians(265));
+////        this.robot.getDrive().followTrajectorySequenceAsync(builder.build());
+////
+////        timer = getRuntime() + 3;
+////        robot.scoringState = Robot.scoringStates.BUCKETR;
+////        robot.bucketStep = 0;
+////        boolean initialized = false;
+////        while ((this.robot.getDrive().isBusy() || robot.intakeState != Robot.intakeStates.IDLE)) {
+////            this.robot.update();
+////            this.robot.scoringMacro(controller1, this.getRuntime(), true);
+////            this.robot.intakeMacro(controller1, getRuntime(), true);
+////            if (getRuntime() > timer - 1 && !initialized) {
+////                robot.intakeState = Robot.intakeStates.EXTENDED;
+////                initialized = true;
+////            }
+////
+////        }
+////    }
+////
+////    protected void toBucket(double x, double y) {
+////        TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
+////
+////        builder.lineToSplineHeading(BUCKET_1.plus(new Pose2d(x, y)));
+////        builder.lineTo(BUCKET_2.plus(new Vector2d(x, y)),
+////                MecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+////                MecanumDrive.getAccelerationConstraint(30)
+////        );
+////        this.robot.getDrive().followTrajectorySequenceAsync(builder.build());
+////
+////        robot.AUTO = true;
+////        while (this.robot.getDrive().isBusy() && robot.specStep != 1) {
+////            this.robot.update();
+////            this.robot.scoringMacro(controller1, this.getRuntime(), true);
+////            this.robot.intakeMacro(controller1, getRuntime(), true);
+////        }
+////    }
+////
+////    protected void toSampleTwo() {
+////        TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
+////
+////        builder.lineToLinearHeading(PICKUP_2);
+////        builder.lineToLinearHeading(PICKUP_2.plus(new Pose2d(0, 5)));
+////        this.robot.getDrive().followTrajectorySequenceAsync(builder.build());
+////        timer = getRuntime() + 3;
+////        robot.scoringState = Robot.scoringStates.BUCKETR;
+////        robot.bucketStep = 0;
+////        robot.intakeState = Robot.intakeStates.EXTENDED;
+////        while (this.robot.getDrive().isBusy() || robot.intakeState != Robot.intakeStates.IDLE && timer > getRuntime()) {
+////            this.robot.update();
+////            this.robot.scoringMacro(controller1, this.getRuntime(), true);
+////            this.robot.intakeMacro(controller1, getRuntime(), true);
+////        }
+////        robot.intakeState = Robot.intakeStates.HASSAMPLE;
+////
+////    }
+////
+////    protected void toSampleThree() {
+////        TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
+////
+////        builder.lineToLinearHeading(PICKUP_3);
+////        builder.lineToLinearHeading(PICKUP_3.plus(new Pose2d(1, 5)),
+////                MecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+////                MecanumDrive.getAccelerationConstraint(30)
+////        );
+////        builder.addTemporalMarker(0.1, robot.getIntake()::down);
+////        this.robot.getDrive().followTrajectorySequenceAsync(builder.build());
+////
+////        timer = getRuntime() + 3;
+////        while (this.robot.getDrive().isBusy() || robot.intakeState != Robot.intakeStates.IDLE && timer > getRuntime()) {
+////            if (timer < getRuntime() + 2.5 && timer > getRuntime() && foo) {
+////                foo = false;
+////                robot.scoringState = Robot.scoringStates.BUCKETR;
+////                robot.bucketStep = 0;
+////            }
+////            if (timer - 2 < getRuntime() && boo) {
+////                robot.intakeState = Robot.intakeStates.EXTENDED;
+////                boo = false;
+////            }
+////            this.robot.update();
+////            this.robot.scoringMacro(controller1, this.getRuntime(), true);
+////            this.robot.intakeMacro(controller1, getRuntime(), true);
+////        }
+////        robot.intakeState = Robot.intakeStates.HASSAMPLE;
+////    }
+////
+////    protected void park() {
+////        TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
+////
+////        builder.setReversed(true);
+////        builder.splineToLinearHeading(PARK, Math.toRadians(0));
+////        builder.setReversed(false);
+////        this.robot.getDrive().followTrajectorySequenceAsync(builder.build());
+////
+////        robot.scoringState = Robot.scoringStates.BUCKETR;
+////        robot.bucketStep = 0;
+////
+////        while (this.robot.getDrive().isBusy() || robot.intakeState != Robot.intakeStates.IDLE) {
+////            this.robot.update();
+////            this.robot.scoringMacro(controller1, this.getRuntime(), true);
+////            this.robot.intakeMacro(controller1, getRuntime(), true);
+////        }
+////    }
 //
 //
 //    @Override

@@ -10,6 +10,7 @@ import com.arcrobotics.ftclib.controller.PDController;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.pedropathing.follower.Follower;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -31,7 +32,7 @@ public class Robot {
     @Getter
     public Wrist wrist;
     @Getter
-    private MecanumDrive drive;
+    private Follower follower;
     @Getter
     public Arm arm;
     @Getter
@@ -42,6 +43,8 @@ public class Robot {
     public Intake intake;
     @Getter
     public Hang hang;
+    @Getter
+    public MecanumDrive mecDrive;
 
     public double intakeDelay;
     public double outtakeDelay;
@@ -49,8 +52,9 @@ public class Robot {
 
 
     //Init Hardwaremap
-    public Robot init(HardwareMap hardwareMap) {
-        this.drive = new MecanumDrive(hardwareMap,new Pose2d(0,0,0));
+    public Robot init(HardwareMap hardwareMap, Boolean drive) {
+        this.mecDrive = new MecanumDrive(hardwareMap,new Pose2d(0,0,0));
+        this.follower = new Follower(hardwareMap);
         this.wrist = new Wrist().init(hardwareMap);
         this.arm = new Arm().init(hardwareMap);
         this.claw = new Claw().init(hardwareMap);
@@ -61,8 +65,8 @@ public class Robot {
         return this;
     }
 
-    public Robot init(HardwareMap hardwareMap, Pose2d startPos) {
-        this.drive = new MecanumDrive(hardwareMap, startPos);
+    public Robot init(HardwareMap hardwareMap) {
+//        this.drive = new MecanumDrive(hardwareMap, startPos);
         this.wrist = new Wrist().init(hardwareMap);
         this.arm = new Arm().init(hardwareMap);
         this.claw = new Claw().init(hardwareMap);
@@ -74,10 +78,10 @@ public class Robot {
     }
 
 //    Trajectory Sequence Builde
-    public TrajectoryActionBuilder getTrajectoryActionBuilder() {
-
-        return this.drive.actionBuilder(this.getDrive().localizer.getPose());
-    }
+//    public TrajectoryActionBuilder getTrajectoryActionBuilder() {
+//
+//        return this.drive.actionBuilder(this.getDrive().localizer.getPose());
+//    }
 
     @Config
     public static class Claw {
@@ -122,7 +126,7 @@ public class Robot {
     @Config
     public static class Arm {
         //variables
-        public static double INTAKE = .8;
+        public static double INTAKE = .76;
         public static double INTAKESPEC = .54;
         public static double OUTTAKESPEC = .85;
         public static double OUTTAKESAMPLE = .05;
@@ -202,7 +206,7 @@ public class Robot {
     @Config
     public static class Wrist {
         //variables
-        public static double INTAKE = .28;
+        public static double INTAKE = .34;
         public static double OUTTAKESAMPLE = .58;
         public static double INTAKESPEC = .30;
         public static double SCORESPECWRIST = .6;
@@ -289,7 +293,7 @@ public class Robot {
         public static int SLIDEHSPEC = 1100;
         //        public static int SLIDELSPEC = 300;
         public static int SLIDELBUCKET = 1200;
-        public static int SLIDEDOWN = 0;
+        public static int SLIDEDOWN = 50;
         public static int SLIDEREST = 280;
         public static int SLIDESPECSCORE = -600;
         //PID
@@ -658,20 +662,28 @@ public class Robot {
                 switch (bucketStep) {
                     case 0:
                         claw.close();
-                        outtakeDelay = runtime + .2;
+                        outtakeDelay = runtime + .25;
                         bucketStep++;
                         break;
                     case 1:
                         if (runtime > outtakeDelay) {
+//                            arm.get
                             arm.intake();
                             wrist.intake();
-                            outtakeDelay = runtime + .5;
+//                            outtakeDelay = runtime + .5;
                             bucketStep++;
                         }
                         break;
                     case 2:
-                        if (runtime > outtakeDelay) {
+                        if (arm.isAtTarget()) {
                             slides.slideDown();
+                            outtakeDelay = runtime + .5;
+                            bucketStep++;
+//                            scoringState = scoringStates.IDLE;
+                        }
+                        break;
+                    case 3:
+                        if (runtime > outtakeDelay) {
                             claw.openSmall();
                             scoringState = scoringStates.IDLE;
                         }
@@ -755,15 +767,16 @@ public class Robot {
                             scoringState = scoringStates.SPECIMENGRAB;
                             specStep = 4;
                         } else if (L2 || END) {
-                            outtakeDelay = runtime + .2;
+                            claw.close();
+                            outtakeDelay = runtime + .3;
                             specStep++;
                         }
                         break;
                     case 1:
                         if (runtime > outtakeDelay) {
+                            claw.close();
                             arm.intake();
                             wrist.intake();
-                            claw.close();
                             outtakeDelay = runtime + .5;
                             specStep++;
                         }

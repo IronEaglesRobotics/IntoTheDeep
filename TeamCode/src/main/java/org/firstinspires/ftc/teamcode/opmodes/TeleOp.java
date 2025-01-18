@@ -5,9 +5,13 @@ import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.pedropathing.util.Constants;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.hardware.Robot;
+import org.firstinspires.ftc.teamcode.hardware.pedroPathing.constants.FConstants;
+import org.firstinspires.ftc.teamcode.hardware.pedroPathing.constants.LConstants;
+
 @Config
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOp")
 public class TeleOp extends LinearOpMode {
@@ -32,11 +36,12 @@ public class TeleOp extends LinearOpMode {
             getTeam();
             telemetry.addData("Team:", robot.team);
             telemetry.update();
+            Constants.setConstants(FConstants.class, LConstants.class);
         }
 
         while (opModeIsActive()){
             //drive
-            robot.getDrive().setInput(controller1);
+//            robot.getDrive().setInput(controller1);
 //            robot.getDrive().update();
             controller1.readButtons();
             controller2.readButtons();
