@@ -36,7 +36,7 @@ public class IntakeArm extends SubsystemBase {
     }
 
     public void armUp() {
-        motor.setTargetPosition(-200);
+        motor.setTargetPosition(-400);
         motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motor.setPower(-1);
     }
@@ -47,10 +47,10 @@ public class IntakeArm extends SubsystemBase {
     }
 
     public void armIn() {
-        ex_save = 0;;
+        ex_save = 1;
     }
     public void armOut(){
-        ex_save = 1;
+        ex_save = 0;
     }
     public boolean isBusy(){
         return motor.isBusy();
@@ -79,8 +79,10 @@ public class IntakeArm extends SubsystemBase {
         public void initialize() {
             if(target){
                 arm.armUp();
+                arm.armOut();
             } else {
                 arm.armDown();
+                arm.armIn();
             }
         }
         public boolean isFinished(){

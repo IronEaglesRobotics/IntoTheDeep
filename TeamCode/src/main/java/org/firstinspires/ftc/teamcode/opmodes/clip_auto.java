@@ -21,7 +21,7 @@ public class clip_auto  extends LinearOpMode {
     Pose2d reset1 = new Pose2d(-20,0,Math.toRadians(-135));
     @Override
     public void runOpMode() throws InterruptedException {
-        robot = new Robot().init(hardwareMap);
+        robot = new Robot().init(hardwareMap,new Pose2d(0,0,0));
         robot.getSlides().setTarget(Slides.Position.DOWN);
         TrajectoryActionBuilder builder = robot.getDrive().actionBuilder(start);
         Action act1 = builder

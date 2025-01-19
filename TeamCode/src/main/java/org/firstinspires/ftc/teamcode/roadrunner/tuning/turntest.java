@@ -29,7 +29,7 @@ public class turntest extends OpMode {
     @Override
     public void init() {
         this.telemetry = FtcDashboard.getInstance().getTelemetry();
-        robot = new Robot().init(hardwareMap);
+        robot = new Robot().init(hardwareMap,new Pose2d(0,0,0));
         this.robot.getDrive().pinpoint.setYawScalar(1f);
         this.gamepadEx = new GamepadEx(this.gamepad1);
     }

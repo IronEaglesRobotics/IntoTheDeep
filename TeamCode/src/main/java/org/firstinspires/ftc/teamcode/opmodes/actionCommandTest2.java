@@ -37,7 +37,7 @@ public class actionCommandTest2 extends OpMode {
     @Override
     public void init() {
         controller1 = new GamepadEx(gamepad1);
-        robot = new Robot().init(hardwareMap);
+        robot = new Robot().init(hardwareMap,new Pose2d(0,0,0));
         builder = robot.getDrive().actionBuilder(start);
     }
 

@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.opmodes;
 
 import org.firstinspires.ftc.teamcode.hardware.Robot;
 
+import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.arcrobotics.ftclib.command.CommandOpMode;
@@ -30,7 +31,7 @@ public class TeleOpMain extends CommandOpMode {
         controller1 = new GamepadEx(gamepad1);
         controller2 = new GamepadEx(gamepad2);
         controllers[2] = controller2;
-        robot = new Robot().init(hardwareMap);
+        robot = new Robot().init(hardwareMap,new Pose2d(0,0,0));
     }
     @Override
     public void run(){

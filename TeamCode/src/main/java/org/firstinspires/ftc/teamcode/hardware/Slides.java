@@ -83,7 +83,7 @@ public class Slides extends SubsystemBase {
     public int getPos(){return slide2.getCurrentPosition();}
 
     public void cancel() {
-        target = slide2.getCurrentPosition();
+        target = -slide2.getCurrentPosition();
     }
 
     public void targetReset() {
@@ -118,6 +118,7 @@ public class Slides extends SubsystemBase {
     public static class LiftPositionCommand extends CommandBase {
         Position position;
         Slides slides;
+        double time = System.currentTimeMillis();
 
         public LiftPositionCommand(Slides slides, Position position) {
             this.slides = slides;
@@ -133,7 +134,14 @@ public class Slides extends SubsystemBase {
 
         @Override
         public boolean isFinished() {
-            return slides.atTarget();
+            return slides.atTarget() && (System.currentTimeMillis() > time + 200);
+        }
+
+        @Override
+        public void end(boolean i){
+            if (!i) {
+                slides.cancel();
+            }
         }
     }
 

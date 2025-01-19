@@ -5,6 +5,7 @@ import static org.firstinspires.ftc.teamcode.lib.Config.BR_WHEEL;
 import static org.firstinspires.ftc.teamcode.lib.Config.FL_WHEEL;
 import static org.firstinspires.ftc.teamcode.lib.Config.FR_WHEEL;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -12,12 +13,13 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.teamcode.hardware.Slides;
 
 @TeleOp(name = "presentation_op")
+@Config
 public class presentation_op extends OpMode {
     //Drive drive;
     private DcMotor fl, fr, bl, br;
     DcMotor Motor1;
     DcMotor Motor2;
-    int target_pos = 0;
+    public static int target_pos = 0;
     Slides slides;
 
     private double increment = 0.000001;
@@ -50,11 +52,9 @@ public class presentation_op extends OpMode {
         Motor1.setPower(gamepad1.left_stick_y);
         Motor2.setPower(gamepad1.left_stick_y);
 
-        telemetry.addData("encoder",Motor1.getCurrentPosition());
+        telemetry.addData("encoder",Motor2.getCurrentPosition());
         telemetry.addData("target",slides.getTarget());
         telemetry.addData("motor2", slides.controller.calculate(-Motor2.getCurrentPosition(), slides.getTarget()));
-        telemetry.addData("increment", increment);
-        telemetry.addData("PID", slides.controller.getP()+"", slides.controller.getI()+"", slides.controller.getD()+"");
         telemetry.update();
     }
 }

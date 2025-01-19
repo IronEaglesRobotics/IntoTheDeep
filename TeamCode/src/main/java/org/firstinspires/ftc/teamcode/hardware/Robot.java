@@ -34,8 +34,8 @@ public class Robot {
     public
     Action clipMovement;
 
-    public Robot init(HardwareMap hardwareMap) {
-        drive = new PinpointDrive(hardwareMap, new Pose2d(0, 0, Math.toRadians(180)));
+    public Robot init(HardwareMap hardwareMap,Pose2d pose) {
+        drive = new PinpointDrive(hardwareMap, pose);
         intake = new Intake(hardwareMap);
         intakeArm = new IntakeArm(hardwareMap);
         claw = new Claw(hardwareMap);
@@ -108,7 +108,6 @@ public class Robot {
                 // preps robot for high basket score
                 controller.getGamepadButton(GamepadKeys.Button.DPAD_UP)
                         .whenPressed(getSlides().up()
-                                .andThen(getIntakeArm().outCommand())
                                 .andThen(getIntakeArm().upCommand())
                                 .andThen(getIntake().ejectIntake()));
                 // changes target color for intake
@@ -125,9 +124,6 @@ public class Robot {
                 // controls raising slides
                 controller.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
                         .whenPressed(getClaw().closeCommand().andThen(new WaitCommand(500)).andThen(getSlides().preclip()));
-                // controls lowering slides
-                controller.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
-                        .whenPressed(getSlides().down());
                 // rotates intake arm up
                 controller.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
                         .toggleWhenPressed(getIntakeArm().upCommand(),getIntakeArm().downCommand());
@@ -152,12 +148,15 @@ public class Robot {
         // extends and retracts intake
         controller.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
                 .toggleWhenPressed(getIntakeArm().inCommand(),getIntakeArm().outCommand());
+        // controls lowering slides
+        controller.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
+                .whenPressed(getIntakeArm().downCommand().andThen(getSlides().down()));
     }
     public enum activeMode {macro, standard}
-    public runActionCommand runAction(Action action){return new runActionCommand(action,drive);}
+    public runActionCommand runAction(Action action){return new runActionCommand(action,drive,this);}
     public Command toClip(){
         driveState = DriveState.automatic;
-        return new runActionCommand(clipMovement,drive);
+        return new runActionCommand(clipMovement,drive,this);
     }
 
     // drive macros
@@ -166,15 +165,17 @@ public class Robot {
         PinpointDrive Drive;
         Action action;
         private boolean finished;
-        public runActionCommand(Action action,PinpointDrive drive) {
+        private Robot robot;
+        public runActionCommand(Action action,PinpointDrive drive,Robot robot) {
             this.action = action;
             Drive = drive;
+            this.robot = robot;
         }
         @Override
         public void initialize() {
             Drive.setDrivePowers(new PoseVelocity2d(new Vector2d(0,0),0));
-            Actions.runBlocking(action);
         }
+
         @Override
         public void execute() {
             TelemetryPacket packet = new TelemetryPacket();
@@ -182,6 +183,7 @@ public class Robot {
             finished = !action.run(packet);
             FtcDashboard.getInstance().sendTelemetryPacket(packet);
             Drive.updatePoseEstimate();
+            robot.update();
         }
         @Override
         public boolean isFinished(){return finished;}
