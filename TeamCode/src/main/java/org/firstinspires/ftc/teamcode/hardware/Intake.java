@@ -60,7 +60,8 @@ public class Intake extends SubsystemBase {
         wrist = 0;
     }
     public void wristLow(){
-        Wrist.scaleRange(wristFullLowscale,wristMedianhighscale1);
+        Wrist.scaleRange(wristFloorlowscale1,wristMedianhighscale1);
+        wrist = .3;
     }
     public void wristDown(){
         Wrist.scaleRange(wristFloorlowscale1,wristMedianhighscale1);

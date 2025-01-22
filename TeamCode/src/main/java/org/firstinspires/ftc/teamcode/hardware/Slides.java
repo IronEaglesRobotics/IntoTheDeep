@@ -27,7 +27,7 @@ public class Slides extends SubsystemBase {
     public static int POSITION_MIN = 0;
     public static int POSITION_MAX = 50000;
     
-    public static int POSITION_DOWN = 2000;
+    public static int POSITION_DOWN = 1500;
     public static int POSITION_AFTER_CLIP = 25000;
     public static int POSITION_BEFORE_CLIP = 36000;
     public static int POSITION_SCORE_HIGH = 44300;
@@ -134,12 +134,12 @@ public class Slides extends SubsystemBase {
 
         @Override
         public boolean isFinished() {
-            return slides.atTarget() && (System.currentTimeMillis() > time + 200);
+            return slides.atTarget() && (System.currentTimeMillis() > time + 500);
         }
 
         @Override
         public void end(boolean i){
-            if (!i) {
+            if (i) {
                 slides.cancel();
             }
         }

@@ -87,70 +87,7 @@ public class Robot {
         pusher.periodic();
     }
     public void runTeleOp(GamepadEx controller, activeMode mode){
-        controller.readButtons();
-        switch (mode) {
-            case macro:
-                controller.getGamepadButton(GamepadKeys.Button.A)
-                        .toggleWhenPressed(getClaw().adaptClaw().andThen(new WaitCommand(250)).andThen(getSlides().preclip())
-                                ,getClaw().closeCommand());
-                // automates clip process
-                controller.getGamepadButton(GamepadKeys.Button.LEFT_STICK_BUTTON)
-                        .whenPressed(getSlides().postclip()
-                                .andThen(getClaw().openCommand())
-                                .andThen(new WaitCommand(300))
-                                .andThen(getSlides().down())
-                                .andThen(getClaw().adaptClaw())
-                                .andThen(new WaitCommand(250))
-                                .andThen(getSlides().preclip()));
-                // changes target color for intake
-                controller.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
-                        .toggleWhenPressed(getIntake().setBlue,getIntake().setRed);
-                // preps robot for high basket score
-                controller.getGamepadButton(GamepadKeys.Button.DPAD_UP)
-                        .whenPressed(getSlides().up()
-                                .andThen(getIntakeArm().upCommand())
-                                .andThen(getIntake().ejectIntake()));
-                // changes target color for intake
-                controller.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
-                        .toggleWhenPressed(getIntake().setBlue,getIntake().setRed);
-                break;
-            case standard:
-                // controls raising slides
-                controller.getGamepadButton(GamepadKeys.Button.DPAD_UP)
-                        .whenPressed(getSlides().up());
-                // controls slides
-                controller.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
-                        .whenPressed(getSlides().postclip().andThen(new Claw.ClawCommand(getClaw(),true)));
-                // controls raising slides
-                controller.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
-                        .whenPressed(getClaw().closeCommand().andThen(new WaitCommand(500)).andThen(getSlides().preclip()));
-                // rotates intake arm up
-                controller.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
-                        .toggleWhenPressed(getIntakeArm().upCommand(),getIntakeArm().downCommand());
-                // toggles claw
-                controller.getGamepadButton(GamepadKeys.Button.A)
-                        .toggleWhenPressed(new Claw.ClawCommand(getClaw(),true),new Claw.ClawCommand(getClaw(),false));
-                break;
-        }
-        // macros rotating arm up and extending intake
-        controller.getGamepadButton(GamepadKeys.Button.X)
-                .toggleWhenPressed(getIntake().reverseIntake(),getIntake().offIntake());
-        // puts intake all the way up
-        controller.getGamepadButton(GamepadKeys.Button.Y)
-                .whenPressed(new Intake.storeIntake(getIntake()));
-        // turns intake on and off
-        controller.getGamepadButton(GamepadKeys.Button.B)
-                .toggleWhenPressed(getIntake().runIntake(),getIntake().offIntake());
-        // controls pusher
-        controller.getGamepadButton(GamepadKeys.Button.RIGHT_STICK_BUTTON)
-                .whenPressed(getPusher().activateCommand())
-                .whenReleased(getPusher().offCommand());
-        // extends and retracts intake
-        controller.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
-                .toggleWhenPressed(getIntakeArm().inCommand(),getIntakeArm().outCommand());
-        // controls lowering slides
-        controller.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
-                .whenPressed(getIntakeArm().downCommand().andThen(getSlides().down()));
+
     }
     public enum activeMode {macro, standard}
     public runActionCommand runAction(Action action){return new runActionCommand(action,drive,this);}
@@ -193,6 +130,7 @@ public class Robot {
         }
         public void end(boolean i){
             driveState = DriveState.manuel;
+            Drive.setDrivePowers(new PoseVelocity2d(new Vector2d(0,0),0));
         }
     }
 }

@@ -45,7 +45,7 @@ public class commandClipAuto extends CommandOpMode {
         }
     }
     Command move(){
-        return clip().andThen(placeBlock1()).andThen(Clip2(true)).andThen(Clip2(false));
+        return clip().andThen(placeBlock1()).andThen(Clip2(true)).andThen(Clip2(false)).andThen(new WaitCommand(100)).andThen(robot.getSlides().down());
     }
     Command clip(){
         return new Intake.colorSet(Intake.colors.NULL,robot.getIntake())
@@ -72,11 +72,11 @@ public class commandClipAuto extends CommandOpMode {
                 .andThen(robot.runAction(robot.getDrive().actionBuilder(toWall).setTangent(Math.toRadians(0)).lineToX(-4).build()))
                 .andThen(robot.getPusher().offCommand())
                 .andThen(robot.getClaw().adaptClaw())
-                .andThen(new WaitCommand(200))
+                .andThen(new WaitCommand(600))
                 .andThen(robot.getSlides().preclip()
                 .alongWith(robot.runAction(robot.getDrive().actionBuilder(toWall).splineToLinearHeading(toBar2.plus(new Twist2d(new Vector2d(0,first ? 0 : 4),0)),Math.toRadians(-110)).build())))
                 .andThen(robot.getSlides().preclip())
-                .andThen(robot.runAction(robot.getDrive().actionBuilder(toBar2).setTangent(Math.toRadians(190)).lineToX(34).build()))
+                .andThen(robot.runAction(robot.getDrive().actionBuilder(toBar2).setTangent(Math.toRadians(190)).lineToX(34.5).build()))
                 .andThen(robot.getSlides().postclip()
                 .alongWith(new WaitCommand(200)
                 .andThen(robot.getClaw().openCommand())));

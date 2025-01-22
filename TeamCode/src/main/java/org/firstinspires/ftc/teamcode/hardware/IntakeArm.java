@@ -36,7 +36,7 @@ public class IntakeArm extends SubsystemBase {
     }
 
     public void armUp() {
-        motor.setTargetPosition(-400);
+        motor.setTargetPosition(-700);
         motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motor.setPower(-1);
     }
