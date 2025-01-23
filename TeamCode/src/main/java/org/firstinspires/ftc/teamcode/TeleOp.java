@@ -32,19 +32,19 @@ public class TeleOp extends OpMode {
     public double swingTimer = 0;
 
     public static int SLIDES_DOWN = 0;
-    public static int SLIDES_PICKUP = 550;
-    public static int SLIDES_SCORE1 = 1750;
+    public static int SLIDES_PICKUP = 400;
+    public static int SLIDES_SCORE1 = 2000;
     public static int SLIDES_HIGH_BUCKET = 2750;
-    public static int SLIDES_SCORE2 = 1350;
-    public static double armPickUp = 0.06;
-    public static double armFloor = 0.05;
+    public static int SLIDES_SCORE2 = 2350;
+    public static double armPickUp = 0.57;
+    public static double armFloor = 0;
     public static double armInit = 0.25;
     public static double armBucket = 0.25;
-    public static double armScore2 = 0.015;
-    public static double armScore = 0.08;
+    public static double armScore2 = 0.03;
+    public static double armScore = 0.03;
     public static double clawOpen = 0.75;
     public static double clawInit = 0.4;
-    public static double clawClose = 0.4;
+    public static double clawClose = 0.35;
     public static double wristFloor;
     public static double wristScore;
     public static double armSub;
@@ -75,7 +75,7 @@ public class TeleOp extends OpMode {
         telemetry.update();
 
         if (gamepad2.dpad_up) {
-            robot.lift.setTargetPosition(SLIDES_HIGH_BUCKET, 0.5);
+            robot.lift.setTargetPosition(SLIDES_HIGH_BUCKET, 1);
             robot.arm.setPosition(armBucket);
             //robot.wrist.setPosition(wristScore);
         }
@@ -88,13 +88,14 @@ public class TeleOp extends OpMode {
         }
 
         if (gamepad2.dpad_left) {
-            robot.lift.setTargetPosition(SLIDES_PICKUP, 0.2);
+            robot.lift.setTargetPosition(SLIDES_PICKUP, 0.5);
             robot.arm.setPosition(armPickUp);
+            robot.claw.setPosition(clawClose);
         }
 
         if(gamepad2.y){
             robot.lift.setTargetPosition(SLIDES_SCORE2, 1);
-            robot.arm.setPosition(armScore2);
+            //robot.arm.setPosition(armScore2);
         }
 
 //        swingMacro(controller2);
@@ -106,7 +107,7 @@ public class TeleOp extends OpMode {
 
 
         if (gamepad2.dpad_right) {
-            robot.lift.setTargetPosition(SLIDES_SCORE1, 0.5);
+            robot.lift.setTargetPosition(SLIDES_SCORE1, 1);
             robot.arm.setPosition(armScore);
         }
 
@@ -116,21 +117,26 @@ public class TeleOp extends OpMode {
             robot.claw.setPosition(clawClose);
         }
 
-        if(gamepad1.right_trigger > 0.1){
-          robot.hang.hang.setDirection(DcMotorSimple.Direction.FORWARD);
-          robot.hang.hang.setPower(1);
-        }
-        else if(gamepad1.right_trigger < 0.3) {
-            robot.hang.hang.setPower(0);
+        if (gamepad2.right_bumper){
+            robot.arm.setPosition(0.05);
+            robot.lift.setTargetPosition(SLIDES_PICKUP, 0.5);
         }
 
-        if(gamepad1.left_trigger > 0.1){
-            robot.hang.hang.setDirection(DcMotorSimple.Direction.REVERSE);
-            robot.hang.hang.setPower(1);
-        }
-        else if(gamepad1.left_trigger < 0.3){
-            robot.hang.hang.setPower(0);
-        }
+//        if(gamepad1.right_trigger > 0.1){
+//          robot.hang.hang.setDirection(DcMotorSimple.Direction.FORWARD);
+//          robot.hang.hang.setPower(1);
+//        }
+//        else if(gamepad1.right_trigger < 0.3) {
+//            robot.hang.hang.setPower(0);
+//        }
+//
+//        if(gamepad1.left_trigger > 0.1){
+//            robot.hang.hang.setDirection(DcMotorSimple.Direction.REVERSE);
+//            robot.hang.hang.setPower(1);
+//        }
+//        else if(gamepad1.left_trigger < 0.3){
+//            robot.hang.hang.setPower(0);
+//        }
 
         
 

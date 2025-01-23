@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.arcrobotics.ftclib.drivebase.MecanumDrive;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -14,7 +15,7 @@ public class Robot {
     Claw claw;
     Wrist wrist;
     Arm arm;
-    Hang hang;
+    //Hang hang;
     public static double test = 0.0;
 
     public Robot(HardwareMap hardwareMap) {
@@ -23,27 +24,43 @@ public class Robot {
         this.lift = new Lift(hardwareMap);
         this.arm = new Arm(hardwareMap);
         this.wrist = new Wrist(hardwareMap);
-        this.hang = new Hang(hardwareMap);
+        //this.hang = new Hang(hardwareMap);
     }
 
+
+
     public static class Lift {
-        public DcMotor lift;
+        public DcMotor lift1;
+        public DcMotor lift2;
         // double ticks = 384.5;
         // double newTarget;
 
         public Lift(HardwareMap hardwareMap) {
-            lift = hardwareMap.get(DcMotor.class, "lift");
-            lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            lift1 = hardwareMap.get(DcMotor.class, "lift1");
+            lift1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            lift1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-            lift.setDirection(DcMotorSimple.Direction.FORWARD);
+            lift2 = hardwareMap.get(DcMotor.class, "lift2");
+            lift2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            lift2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+            lift2.setDirection(DcMotorSimple.Direction.FORWARD);
+
+            lift1.setDirection(DcMotorSimple.Direction.REVERSE);
 
         }
 
         public void setTargetPosition(int pos, double p) {
-            this.lift.setTargetPosition(pos);
-            this.lift.setPower(p);
-            this.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            this.lift1.setTargetPosition(pos);
+            this.lift1.setPower(p);
+            this.lift1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            this.lift2.setTargetPosition(pos);
+            this.lift2.setPower(p);
+            this.lift2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+
+
             //  this.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         }
@@ -52,26 +69,29 @@ public class Robot {
         }
 
         public void setMode(DcMotor.RunMode mode) {
-            this.lift.setMode(mode);
-            this.lift.setMode(mode);
+            this.lift1.setMode(mode);
+            this.lift1.setMode(mode);
+
+            this.lift2.setMode(mode);
+            this.lift2.setMode(mode);
         }
 
     }
 
-    public static class Hang {
-        public DcMotor hang;
-        // double ticks = 384.5;
-        // double newTarget;
-
-        public Hang(HardwareMap hardwareMap) {
-            hang = hardwareMap.get(DcMotor.class, "hang");
-            hang.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        }
-        public void setPower (double h) {
-            this.hang.setPower(h);
-        }
-
-    }
+//    public static class Hang {
+//        public DcMotor hang;
+//        // double ticks = 384.5;
+//        // double newTarget;
+//
+//        public Hang(HardwareMap hardwareMap) {
+//            hang = hardwareMap.get(DcMotor.class, "hang");
+//            hang.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        }
+//        public void setPower (double h) {
+//            this.hang.setPower(h);
+//        }
+//
+//    }
 
     public static class Claw {
         private Servo claw;
@@ -95,16 +115,20 @@ public class Robot {
     }
 
     public static class Arm {
-        private Servo Arm;
+     //   private Servo Arm1;
+        private Servo Arm2;
 
         public void setPosition(double position){
-            this.Arm.setPosition(position);
+     //       this.Arm1.setPosition(position-0.2);
+            this.Arm2.setPosition(position);
             // this.rightArm.setPosition(position);
         }
         public Arm(HardwareMap hardwareMap){
-            Arm = hardwareMap.servo.get("arm");
+        //    Arm1 = hardwareMap.servo.get("arm1");
+            Arm2 = hardwareMap.servo.get("arm2");
             //  rightArm = hardwareMap.servo.get("j3R");
-            Arm.setDirection(Servo.Direction.REVERSE);
+            Arm2.setDirection(Servo.Direction.REVERSE);
+
         }
     }
 
