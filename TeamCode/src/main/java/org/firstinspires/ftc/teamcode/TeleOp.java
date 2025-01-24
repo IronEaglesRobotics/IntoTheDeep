@@ -33,8 +33,8 @@ public class TeleOp extends OpMode {
 
     public static int SLIDES_DOWN = 0;
     public static int SLIDES_PICKUP = 400;
-    public static int SLIDES_SCORE1 = 2000;
-    public static int SLIDES_HIGH_BUCKET = 2750;
+    public static int SLIDES_SCORE1 = 2100;
+    public static int SLIDES_HIGH_BUCKET = 2400;
     public static int SLIDES_SCORE2 = 2350;
     public static double armPickUp = 0.57;
     public static double armFloor = 0;
@@ -44,7 +44,7 @@ public class TeleOp extends OpMode {
     public static double armScore = 0.03;
     public static double clawOpen = 0.75;
     public static double clawInit = 0.4;
-    public static double clawClose = 0.35;
+    public static double clawClose = 0.34;
     public static double wristFloor;
     public static double wristScore;
     public static double armSub;

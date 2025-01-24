@@ -45,8 +45,8 @@ public class BucketAuto extends LinearOpMode {
 
     Vector2d barPos = new Vector2d(-40, -33);
     Vector2d scorePos = new Vector2d(-45, -30);
-    Vector2d sample1 = new Vector2d(-41.5, -44);
-    Vector2d sample2 = new Vector2d(-32, -39.5);
+    Vector2d sample1 = new Vector2d(-41.5, -43.5);
+    Vector2d sample2 = new Vector2d(-30.7, -41.5);
     Vector2d backup = new Vector2d(-45, -20);
     Vector2d wallPos = new Vector2d(-55, -10);
     Vector2d redo = new Vector2d(-42 , -32.2);
@@ -75,8 +75,8 @@ public class BucketAuto extends LinearOpMode {
         Action recorrect = Drive.actionBuilder(new Pose2d(barPos, Math.toRadians(46.5))).splineToConstantHeading(redo, Math.toRadians(46.5)).build();
         Action score = Drive.actionBuilder(new Pose2d(barPos, Math.toRadians(46.5))).splineToConstantHeading(scorePos, Math.toRadians(46.5)).build();
         Action Back = Drive.actionBuilder(new Pose2d(barPos, 0)).splineToConstantHeading(backup, Math.toRadians(0)).build();
-        Action firstsample = Drive.actionBuilder(new Pose2d(forward, Math.toRadians(-93))).splineToConstantHeading(sample1, Math.toRadians(-93)).build();
-        Action secondsample = Drive.actionBuilder(new Pose2d(forward, Math.toRadians(-93))).splineToConstantHeading(sample2, Math.toRadians(-93)).build();
+        Action firstsample = Drive.actionBuilder(new Pose2d(forward, Math.toRadians(-93))).splineToConstantHeading(sample1, Math.toRadians(-93), null, new ProfileAccelConstraint(-25, 25)).build();
+        Action secondsample = Drive.actionBuilder(new Pose2d(forward, Math.toRadians(-93))).splineToConstantHeading(sample2, Math.toRadians(-93), null, new ProfileAccelConstraint(-25, 25)).build();
         Action turntobucket = Drive.actionBuilder(new Pose2d(barPos, 0)).turnTo(Math.toRadians(46.5)).build();
         Action turntobucket2 = Drive.actionBuilder(new Pose2d(barPos, -93)).turnTo(Math.toRadians(46.5), new TurnConstraints(10, -2, 2)).build();
         Action turntobucket3 = Drive.actionBuilder(new Pose2d(barPos, -93)).turnTo(Math.toRadians(46.5), new TurnConstraints(10, -2, 2)).build();
@@ -104,15 +104,15 @@ public class BucketAuto extends LinearOpMode {
 
         Actions.runBlocking(turntobucket);
 
-        sleep(500);
+        sleep(250);
 
         arm.setPosition(armBucketdown);
 
-        sleep(500);
+        sleep(250);
 
         claw.setPosition(clawOpen);
 
-        sleep(100);
+        sleep(200);
 
         arm.setPosition(armInit);
 
@@ -133,25 +133,25 @@ public class BucketAuto extends LinearOpMode {
 
         Actions.runBlocking(firstsample);
 
-        sleep(500);
+        sleep(250);
 
         arm.setPosition(armFloor);
 
-        sleep(250);
+        sleep(350);
 
         claw.setPosition(clawClose);
 
-        sleep(500);
+        sleep(300);
 
         arm.setPosition(armInit);
 
         Actions.runBlocking(drivetobucket);
 
-        sleep(1000);
+        sleep(500);
 
         Actions.runBlocking(turntobucket2);
 
-        sleep(1000);
+        sleep(500);
 
 
 
@@ -162,22 +162,23 @@ public class BucketAuto extends LinearOpMode {
         lift2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         lift2.setPower(1);
 
-        sleep(2000);
+        sleep(1500);
 
         Actions.runBlocking(inch);
 
-        sleep(500);
+        sleep(250);
+
         arm.setPosition(armBucketdown);
 
         sleep(100);
 
         claw.setPosition(clawOpen);
 
-        sleep(500);
+        sleep(100);
 
         arm.setPosition(armInit);
 
-        sleep(500);
+        sleep(100);
 
         lift1.setTargetPosition(SLIDES_DOWN);
         lift1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -186,25 +187,31 @@ public class BucketAuto extends LinearOpMode {
         lift2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         lift2.setPower(1);
 
+        sleep(500);
+
+        Actions.runBlocking(ready2);
+
+        sleep(250);
+
         Actions.runBlocking(secondsample);
 
-        sleep(500);
+        sleep(1000);
 
         arm.setPosition(armFloor);
 
-        sleep(500);
+        sleep(350);
 
         claw.setPosition(clawClose);
 
-        sleep(500);
+        sleep(300);
 
         arm.setPosition(armInit);
 
-        sleep(500);
+        sleep(100);
 
         Actions.runBlocking(drivetobucket2);
 
-        sleep(1500);
+        sleep(1000);
 
         Actions.runBlocking(turntobucket3);
 
@@ -215,7 +222,7 @@ public class BucketAuto extends LinearOpMode {
         lift2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         lift2.setPower(1);
 
-        sleep(2000);
+        sleep(1500);
 
         Actions.runBlocking(inchAGAIN);
 
@@ -227,7 +234,7 @@ public class BucketAuto extends LinearOpMode {
 
         claw.setPosition(clawOpen);
 
-        sleep(500);
+        sleep(250);
 
         arm.setPosition(armInit);
 
