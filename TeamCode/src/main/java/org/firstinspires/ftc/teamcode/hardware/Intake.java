@@ -53,7 +53,7 @@ public class Intake extends SubsystemBase {
         beatBar.setPower(0);
     }
     public void reverseBeatBar(){
-        beatBar.setPower(-1);
+        beatBar.setPower(-.5);
     }
     public void wristUp(){
         Wrist.scaleRange(wristFloorlowscale1,wristMedianhighscale1);
@@ -100,9 +100,11 @@ public class Intake extends SubsystemBase {
     public reverseIntake reverseIntake(){return new reverseIntake(this);}
     public offIntake offIntake(){return new offIntake(this);}
     public ejectIntake ejectIntake(){return new ejectIntake(this);}
+    public storeIntake storeIntake(){return new storeIntake(this);}
     public colorSet setRed = new colorSet(colors.RED,this);
     public colorSet setBlue = new colorSet(colors.BLUE,this);
     public runIntake runIntake() {return new runIntake(this);}
+    public adaptEject adaptEject() {return new adaptEject(this);}
     public static class onIntake extends InstantCommand{
         Intake intake;
         public onIntake(Intake tempIntake){
@@ -161,7 +163,7 @@ public class Intake extends SubsystemBase {
         }
         @Override
         public void initialize(){
-            intake.wristLow();
+            intake.wristUp();
         }
     }
     public static class colorSet extends InstantCommand{
@@ -180,36 +182,53 @@ public class Intake extends SubsystemBase {
     public Command actionChoice() {
         Command output;
         Intake intake = this;
-        BooleanSupplier booleanSupplier = new BooleanSupplier() {
-            @Override
-            public boolean getAsBoolean() {
-                return intake.getColor() != colors.NULL;
-            }
-        };
         if (this.getColor() == target){
-            output = intake.onIntake().andThen(new WaitCommand(1000000000)).interruptOn(booleanSupplier)
-                    .andThen(intake.offIntake())
+            output = intake.offIntake()
                     .andThen(intake.reverseIntake())
                     .andThen(new WaitCommand(750))
                     .andThen(intake.onIntake());
         } else {
-            output = new onIntake(this).andThen(new WaitCommand(100000000)).interruptOn(booleanSupplier).andThen(new offIntake(this));
+            output = new offIntake(this);
         }
         return output;
     }
-    public static class runIntake extends CommandBase {
+    public class runIntake extends CommandBase {
         Intake intake;
         public runIntake(Intake tIntake){
             intake = tIntake;
             addRequirements(intake);
         }
         @Override
-        public void execute() {
-            intake.actionChoice().schedule();
+        public void initialize(){
+            intake.onIntake().schedule();
         }
         @Override
         public boolean isFinished(){
             return (intake.getColor() == intake.target);
+        }
+        @Override
+        public void end(boolean i){
+            intake.actionChoice().schedule();
+        }
+    }
+    public class adaptEject extends CommandBase{
+        Intake intake;
+        public adaptEject(Intake tintake){
+            intake = tintake;
+            addRequirements(intake);
+        }
+        @Override
+        public void initialize() {
+            intake.reverseBeatBar();
+        }
+        @Override
+        public boolean isFinished() {
+            return intake.getColor() == colors.NULL;
+        }
+
+        @Override
+        public void end(boolean interrupted) {
+            intake.offIntake().schedule();
         }
     }
 }

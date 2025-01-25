@@ -24,33 +24,47 @@ public class commandBasketAuto extends CommandOpMode {
     public void runOpMode(){
         initialize();
         waitForStart();
-        score().andThen(pickUp1()).schedule();
+        score().andThen(pickUp1()).andThen(score()).andThen(pickUp2()).andThen(score()).andThen(park()).schedule();
         while (opModeIsActive() && !isStopRequested()) {
             CommandScheduler.getInstance().run();
         }
     }
     Command score() {
         return robot.getSlides().up()
-                .andThen(robot.getIntakeArm().upCommand()
-                .alongWith(robot.runAction(robot.getDrive().actionBuilder(new Pose2d(0,0,Math.toRadians(90))).splineToLinearHeading(new Pose2d(25,6,Math.toRadians(150)),Math.toRadians(90)).build())))
+                .alongWith(robot.runAction(robot.getDrive().actionBuilder(robot.getDrive().pose).splineToLinearHeading(new Pose2d(26,6,Math.toRadians(139)),Math.toRadians(-90)).build()))
+                .andThen(robot.getIntakeArm().upCommand())
                 .andThen(robot.getIntake().ejectIntake())
-                .andThen(new WaitCommand(500))
+                .andThen(new WaitCommand(1000))
                 .andThen(robot.getIntake().reverseIntake())
                 .andThen(new WaitCommand(1500));
     }
     Command pickUp1(){
         return robot.getIntake().offIntake()
-                .andThen(new Intake.storeIntake(robot.getIntake()))
+                .andThen(new Intake.storeIntake(robot.getIntake()).alongWith(new WaitCommand(400)))
                 .andThen(robot.getIntakeArm().downCommand())
+                .andThen(new WaitCommand(1000))
                 .andThen(robot.getSlides().down())
-                .andThen(robot.runAction(robot.getDrive().actionBuilder(new Pose2d(0,12,Math.toRadians(90))).setTangent(Math.toRadians(0)).lineToX(10).turnTo(0).build()))
+                .andThen(robot.runAction(robot.getDrive().actionBuilder(new Pose2d(0,12,Math.toRadians(90))).setTangent(Math.toRadians(0)).lineToX(14).turnTo(0).build()))
                 .andThen(robot.getIntake().onIntake())
-                .andThen(robot.runAction(robot.getDrive().actionBuilder(new Pose2d(0,12,0)).splineToConstantHeading(new Vector2d(33,first ? 12 : 22),Math.toRadians(first ? 90 : 20)).build()))
+                .andThen(robot.runAction(robot.getDrive().actionBuilder(new Pose2d(0,12,0)).splineToConstantHeading(new Vector2d(33,12),Math.toRadians(90)).build()))
                 .andThen(robot.getIntake().offIntake())
-                .andThen(robot.runAction(robot.getDrive().actionBuilder(new Pose2d(33,first ? 12 : 22,0)).splineToLinearHeading(new Pose2d(0,0,Math.toRadians(90)),Math.toRadians(210)).build()))
+                .andThen(robot.getIntake().storeIntake())
                 .whenFinished(()->first = false);
     }
-    Command pickup2(){
+    Command pickUp2(){
+        return robot.getIntake().offIntake()
+                .andThen(robot.getIntake().storeIntake().alongWith(new WaitCommand(400)))
+                .andThen(robot.getIntakeArm().downCommand())
+                .andThen(new WaitCommand(500))
+                .andThen(robot.getSlides().down())
+                .andThen(robot.runAction(robot.getDrive().actionBuilder(new Pose2d(0,12,Math.toRadians(90))).setTangent(Math.toRadians(0)).splineToConstantHeading(new Vector2d(8,22),Math.toRadians(0)).turnTo(0).build()))
+                .andThen(robot.getIntake().onIntake())
+                .andThen(robot.runAction(robot.getDrive().actionBuilder(new Pose2d(0,12,0)).splineToConstantHeading(new Vector2d(33,22.5),Math.toRadians(20)).build()))
+                .andThen(robot.getIntake().offIntake())
+                .andThen(robot.getIntake().storeIntake())
+                .whenFinished(()->first = false);
+    }
+    Command pickup3(){
         return robot.getIntake().offIntake()
                 .andThen(robot.getIntakeArm().downCommand())
                 .andThen(robot.getSlides().down())
@@ -60,6 +74,10 @@ public class commandBasketAuto extends CommandOpMode {
                 .andThen(robot.runAction(robot.getDrive().actionBuilder(new Pose2d(24,26,0)).splineToLinearHeading(new Pose2d(0,0,Math.toRadians(90)),Math.toRadians(210)).build()));
     }
     Command park(){
-        return robot.runAction(robot.getDrive().actionBuilder(new Pose2d(0,12,Math.toRadians(90))).splineToLinearHeading(new Pose2d(50,0,Math.toRadians(-90)),Math.toRadians(90)).build());
+        return robot.getIntake().offIntake()
+                .andThen(new Intake.storeIntake(robot.getIntake()).alongWith(new WaitCommand(400)))
+                .andThen(robot.getIntakeArm().downCommand())
+                .andThen(new WaitCommand(1000))
+                .andThen(robot.getSlides().down());
     }
 }

@@ -46,6 +46,9 @@ public final class ODOtest extends LinearOpMode {
             odo.setYawScalar(yawscale);
             YawPitchRollAngles headings = imu.getRobotYawPitchRollAngles();
             Pose2D pose = odo.getPosition();
+            if (gamepad1.a){
+                odo.setPosition(new Pose2d(0,0,0));
+            }
             odo.update();
             telemetry.addData("x: ", pose.getX(DistanceUnit.INCH));
             telemetry.addData("y: ",pose.getY(DistanceUnit.INCH));

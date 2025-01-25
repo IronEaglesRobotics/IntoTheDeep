@@ -86,23 +86,37 @@ public class Robot {
         slides.periodic();
         pusher.periodic();
     }
-    public void runTeleOp(GamepadEx controller, activeMode mode){
-
-    }
     public enum activeMode {macro, standard}
     public runActionCommand runAction(Action action){return new runActionCommand(action,drive,this);}
     public Command toClip(){
         driveState = DriveState.automatic;
-        return new runActionCommand(clipMovement,drive,this);
+        getDrive().setPose(new Pose2d(0,0,0));
+        return runAction(getDrive().actionBuilder(new Pose2d(0,0,0)).splineToLinearHeading(new Pose2d(20,35,Math.toRadians(180)),Math.toRadians(-110)).build())
+                .alongWith(getSlides().preclip())
+                .andThen(runAction(getDrive().actionBuilder(new Pose2d(20,35,Math.toRadians(180))).setTangent(Math.toRadians(190)).lineToX(34.5).build()));
+    }
+    public Command toObservation(){
+        driveState = DriveState.automatic;
+        getDrive().setPose(new Pose2d(0,0,0));
+        return runAction(getDrive().actionBuilder(new Pose2d(0,0,0))
+                .setTangent(0).lineToX(36)
+                .setTangent(Math.toRadians(90)).lineToYLinearHeading(48,Math.toRadians(-90)).build());
+    }
+    public Command toBasket(){
+        driveState = DriveState.automatic;
+        getDrive().setPose(new Pose2d(0,0,0));
+        return runAction(getDrive().actionBuilder(new Pose2d(0,0,0))
+                .setTangent(Math.toRadians(0)).lineToX(-36)
+                .setTangent(Math.toRadians(90)).lineToYLinearHeading(-48,getDrive().pose.heading.plus(Math.toRadians(135))).build());
     }
 
     // drive macros
 
-    public static class runActionCommand implements Command {
+    public class runActionCommand implements Command {
         PinpointDrive Drive;
         Action action;
-        private boolean finished;
-        private Robot robot;
+        private boolean finished = false;
+        private final Robot robot;
         public runActionCommand(Action action,PinpointDrive drive,Robot robot) {
             this.action = action;
             Drive = drive;
@@ -111,6 +125,7 @@ public class Robot {
         @Override
         public void initialize() {
             Drive.setDrivePowers(new PoseVelocity2d(new Vector2d(0,0),0));
+            driveState = DriveState.automatic;
         }
 
         @Override
