@@ -7,10 +7,13 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.pedropathing.util.Constants;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.hardware.Robot;
 import org.firstinspires.ftc.teamcode.hardware.pedroPathing.constants.FConstants;
 import org.firstinspires.ftc.teamcode.hardware.pedroPathing.constants.LConstants;
+
+import java.util.Locale;
 
 @Config
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOp")
@@ -26,7 +29,7 @@ public class TeleOp extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        this.robot = new Robot().init(hardwareMap);
+        this.robot = new Robot().init(hardwareMap,true);
         controller1 = new GamepadEx(gamepad1);
         controller2 = new GamepadEx(gamepad2);
 
@@ -37,26 +40,41 @@ public class TeleOp extends LinearOpMode {
             telemetry.addData("Team:", robot.team);
             telemetry.update();
             Constants.setConstants(FConstants.class, LConstants.class);
+
         }
 
         while (opModeIsActive()){
             //drive
-//            robot.getDrive().setInput(controller1);
-//            robot.getDrive().update();
+            robot.mecDrive.setInput(controller1);
+            robot.limelight.enableLimeligh();
+//            robot.mecDrive.up
             controller1.readButtons();
             controller2.readButtons();
 
             robot.intakeMacro(controller1,getRuntime(),false);
-            robot.scoringMacro(controller1,getRuntime(),false);
 
-            if(controller2.isDown(GamepadKeys.Button.DPAD_UP)) {
-                robot.hang.setPosition(HANGUP);
-            } else if (controller2.isDown(GamepadKeys.Button.DPAD_DOWN)){
-                robot.hang.setPosition(HANGDOWN);
+            if (controller1.isDown(GamepadKeys.Button.LEFT_STICK_BUTTON)){
+                robot.slides.slidesL.setTargetPosition(-600);
+                robot.slides.slidesL.setPower(.3);
+                robot.slides.slidesR.setTargetPosition(-600);
+                robot.slides.slidesR.setPower(.3);
+            } else if (controller1.wasJustReleased(GamepadKeys.Button.LEFT_STICK_BUTTON)){
+                robot.getSlides().slidesL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                robot.getSlides().slidesR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.getSlides().slidesL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.getSlides().slidesR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             } else {
-                robot.hang.pause();
+                robot.scoringMacro(controller1, getRuntime(), false);
             }
             robot.update();
+
+//            if(controller2.isDown(GamepadKeys.Button.DPAD_UP)) {
+//                robot.hang.setPosition(HANGUP);
+//            } else if (controller2.isDown(GamepadKeys.Button.DPAD_DOWN)){
+//                robot.hang.setPosition(HANGDOWN);
+//            } else {
+//                robot.hang.pause();
+//            }
 
             //Telemetry
             int PositionLeft = this.robot.getSlides().slidesL.getCurrentPosition();
@@ -70,7 +88,10 @@ public class TeleOp extends LinearOpMode {
             telemetry.addData("R", (robot.getIntake().getR()));
             telemetry.addData("G", (robot.getIntake().getG()));
             telemetry.addData("B", (robot.getIntake().getB()));
-            telemetry.addData("hang", (robot.getHang().depression.getCurrentPosition()));
+//            telemetry.addData("hang", (robot.getHang().depression.getCurrentPosition()));
+            telemetry.addData("Tx",(robot.limelight.getSampleTx()));
+            telemetry.addData("Ty",robot.limelight.getSampleTY());
+            telemetry.addData("Corrected Pose",robot.calcCorrection(robot.limelight.getSampleTx(),robot.limelight.getSampleTY()));
 
             telemetry.update();
 

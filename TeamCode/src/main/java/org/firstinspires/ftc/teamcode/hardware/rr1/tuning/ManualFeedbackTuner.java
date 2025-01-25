@@ -2,12 +2,14 @@ package org.firstinspires.ftc.teamcode.hardware.rr1.tuning;
 
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.hardware.rr1.MecanumDrive;
 import org.firstinspires.ftc.teamcode.hardware.rr1.TankDrive;
 import org.firstinspires.ftc.teamcode.hardware.rr1.ThreeDeadWheelLocalizer;
 import org.firstinspires.ftc.teamcode.hardware.rr1.TwoDeadWheelLocalizer;
+@Disabled
 
 public final class ManualFeedbackTuner extends LinearOpMode {
     public static double DISTANCE = 64;

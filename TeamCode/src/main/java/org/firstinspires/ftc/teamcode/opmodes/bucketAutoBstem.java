@@ -5,12 +5,9 @@ package org.firstinspires.ftc.teamcode.opmodes;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.acmerobotics.roadrunner.Pose2d;
-import com.acmerobotics.roadrunner.Vector2d;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.localization.Pose;
-import com.pedropathing.localization.PoseUpdater;
 import com.pedropathing.pathgen.BezierCurve;
 import com.pedropathing.pathgen.BezierLine;
 import com.pedropathing.pathgen.MathFunctions;
@@ -29,8 +26,8 @@ import org.firstinspires.ftc.teamcode.hardware.pedroPathing.constants.LConstants
 
 
 @Config
-@Autonomous(name = "BucketAutoPedro")
-public class bucketAutoPedro extends OpMode {
+@Autonomous(name = "BucketAutoBstem")
+public class bucketAutoBstem extends OpMode {
     private Robot robot;
     private Telemetry telemetryA;
     GamepadEx controller1;
@@ -46,10 +43,10 @@ public class bucketAutoPedro extends OpMode {
     //    private final Pose control1 = new Pose(30, 24,P);
     private final Pose bucket = new Pose(16, 24, Math.toRadians(-135));
     private final Pose bucket2 = new Pose(18, 26, Math.toRadians(-135));
-    private final Pose bucket3 = new Pose(13, 26, Math.toRadians(-135));
-    private final Pose get1 = new Pose(20, 48, Math.toRadians(-100));
-    private final Pose get2 = new Pose(12, 48, Math.toRadians(-90));
-    private final Pose get3 = new Pose(11, 48, Math.toRadians(-45));
+    private final Pose bucket3 = new Pose(14, 27, Math.toRadians(-135));
+    private final Pose get1 = new Pose(21, 48, Math.toRadians(-100));
+    private final Pose get2 = new Pose(13.5, 48, Math.toRadians(-90));
+    private final Pose get3 = new Pose(11.3, 50, Math.toRadians(-45));
     private final Pose getSubControl = new Pose(24, 68, Point.CARTESIAN);
     private final Pose getSubControl2 = new Pose(32, 40, Point.CARTESIAN);
     private final Pose getSub = new Pose(43, 68, Math.toRadians(180));
@@ -76,10 +73,10 @@ public class bucketAutoPedro extends OpMode {
         scorePreload.setLinearHeadingInterpolation(initialPosition.getHeading(), bucket.getHeading());
 
         getSample1 = new Path(new BezierLine(
-                new Point(bucket),
+                new Point(bucket2),
                 new Point(get1)
         ));
-        getSample1.setLinearHeadingInterpolation(bucket.getHeading(), get1.getHeading());
+        getSample1.setLinearHeadingInterpolation(bucket2.getHeading(), get1.getHeading());
 
         getSample2 = new Path(new BezierLine(
                 new Point(bucket),
@@ -168,10 +165,10 @@ public class bucketAutoPedro extends OpMode {
                 if (!follower.isBusy()) {
                     robot.AUTO = false;
                     robot.claw.open();
-                    if (getRuntime() > timer + 1.85) {
-                        robot.mini = true;
+                    if (getRuntime() > timer + 1.8) {
+                        robot.mini = false;
                         robot.intakeState = Robot.intakeStates.EXTENDED;
-                        setPathState(2); // End the autonomous routine
+                        setPathState(10); // End the autonomous routine
 //                        robot.claw.close();
                     }
                 }
@@ -187,6 +184,7 @@ public class bucketAutoPedro extends OpMode {
 //                    follower.breakFollowing();
                     setPathState(3); // End the autonomous routine
                     foo = false;
+                    step = 0;
                 }
                 break;
 //                if (follower.atParametricEnd()){
@@ -222,7 +220,7 @@ public class bucketAutoPedro extends OpMode {
                 if (!follower.isBusy()) {
                     robot.AUTO = false;
                     robot.claw.open();
-                    if (getRuntime() > timer + 1.75) {
+                    if (getRuntime() > timer + 1.6) {
                         robot.mini = true;
                         robot.intakeState = Robot.intakeStates.EXTENDED;
                         setPathState(5); // End the autonomous routine
@@ -278,7 +276,7 @@ public class bucketAutoPedro extends OpMode {
                 if (!follower.isBusy()) {
                     robot.AUTO = false;
                     robot.claw.open();
-                    if (getRuntime() > timer + 1.75) {
+                    if (getRuntime() > timer + 1.6) {
                         robot.mini = true;
                         robot.intakeState = Robot.intakeStates.EXTENDED;
                         setPathState(8); // End the autonomous routine
@@ -328,7 +326,7 @@ public class bucketAutoPedro extends OpMode {
                             follower.followPath(scoreBucket3);
                             timer = getRuntime();
                             foo = false;
-                            setPathState(10); // End the autonomous routine
+                            setPathState(13); // End the autonomous routine
                         }
                         break;
                 }
@@ -338,6 +336,7 @@ public class bucketAutoPedro extends OpMode {
                     robot.claw.open();
                     robot.AUTO = false;
                     robot.mini = false;
+//                                        robot.stay   = true;
                     robot.intakeState = Robot.intakeStates.EXTENDED;
                     if (getRuntime() > timer + 2) {
 //                        robot.mini = true;
@@ -378,21 +377,21 @@ public class bucketAutoPedro extends OpMode {
                             if (!foo) {
                                 robot.bucketStep = 0;
                                 foo = true;
-                                timer = getRuntime();
-                            }
-                            if (getRuntime() > timer + .3) {
-                                robot.AUTO = true;
                                 follower.followPath(scoreBucket4);
+                                timer = getRuntime();
                                 step++;
                             }
+//                            if (getRuntime() > timer + .3) {
+//                            }
                         }
                         break;
                     case 1:
+                        robot.AUTO = true;
                         robot.scoringState = scoringStates.BUCKET;
                         if (robot.slides.getPosition() > 300) {
                             timer = getRuntime();
                             foo = false;
-                            setPathState(13); // End the autonomous routine
+                            setPathState(17); // End the autonomous routine
                         }
                         break;
                 }
@@ -402,8 +401,10 @@ public class bucketAutoPedro extends OpMode {
                     robot.claw.open();
                     robot.AUTO = false;
                     robot.mini = false;
-                    robot.stay   = true;
-                    if (getRuntime() > timer + 2.3) {
+//                    robot.stay   = true;
+                    if (getRuntime() > timer + 2.2) {
+//                        robot.intakeState = Robot.intakeStates.EXTENDED;
+                        foo = false;
                         setPathState(14); // End the autonomous routine
                         timer = getRuntime();
 
@@ -413,6 +414,7 @@ public class bucketAutoPedro extends OpMode {
             case 14:
                 if (!follower.isBusy()) {
                     robot.claw.close();
+                    robot.stay   = true;
                     follower.followPath(getFromSub);
                 }
                 if (getRuntime() > timer + 2) {
@@ -485,6 +487,21 @@ public class bucketAutoPedro extends OpMode {
                     robot.AUTO = false;
                     if (getRuntime() > timer + 2) {
                         setPathState(-1); // End the autonomous routine
+                        timer = getRuntime();
+
+                    }
+                }
+                break;
+            case 17:
+                if (!follower.isBusy()) {
+                    robot.claw.open();
+                    robot.AUTO = false;
+                    robot.mini = true;
+//                    robot.stay   = true;
+                    if (getRuntime() > timer + 2.6) {
+                        robot.intakeState = Robot.intakeStates.EXTENDED;
+                        foo = false;
+                        setPathState(2); // End the autonomous routine
                         timer = getRuntime();
 
                     }

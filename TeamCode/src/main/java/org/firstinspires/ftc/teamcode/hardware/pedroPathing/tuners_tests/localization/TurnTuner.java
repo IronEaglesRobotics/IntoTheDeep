@@ -8,6 +8,7 @@ import com.pedropathing.util.Constants;
 import com.pedropathing.util.DashboardPoseTracker;
 import com.pedropathing.util.Drawing;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -25,8 +26,11 @@ import org.firstinspires.ftc.teamcode.hardware.pedroPathing.constants.LConstants
  * You can adjust the target angle on FTC Dashboard: 192/168/43/1:8080/dash
  *
  * @author Anyi Lin - 10158 Scott's Bots
- * @version 1.0, 5/6/2024
+ * @vers
+ * on 1.0, 5/6/2024
  */
+@Disabled
+
 @Config
 @Autonomous(name = "Turn Localizer Tuner", group = ".Localization")
 public class TurnTuner extends OpMode {

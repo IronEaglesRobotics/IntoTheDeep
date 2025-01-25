@@ -1,27 +1,24 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
-import static org.firstinspires.ftc.teamcode.hardware.Robot.Wrist.SCORESPECWRIST;
-
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Pose2d;
-import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
-import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.controller.PDController;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.pedropathing.follower.Follower;
+import com.pedropathing.localization.Pose;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
+import com.qualcomm.hardware.limelightvision.Limelight3A;
 
-import org.firstinspires.ftc.teamcode.hardware.rr1.Localizer;
 import org.firstinspires.ftc.teamcode.hardware.rr1.MecanumDrive;
-import org.firstinspires.ftc.teamcode.hardware.rr1.TwoDeadWheelLocalizer;
 
 import lombok.Getter;
 
@@ -42,9 +39,11 @@ public class Robot {
     @Getter
     public Intake intake;
     @Getter
-    public Hang hang;
-    @Getter
+//    public Hang hang;
+//    @Getter
     public MecanumDrive mecDrive;
+//    @Getter
+    public Limelight limelight;
 
     public double intakeDelay;
     public double outtakeDelay;
@@ -61,7 +60,8 @@ public class Robot {
         this.slides = new Slides().init(hardwareMap);
         this.extendo = new Extendo().init(hardwareMap);
         this.intake = new Intake().init(hardwareMap);
-        this.hang = new Hang().init(hardwareMap);
+//        this.hang = new Hang().init(hardwareMap);
+        this.limelight = new Limelight().init(hardwareMap);
         return this;
     }
 
@@ -73,7 +73,8 @@ public class Robot {
         this.slides = new Slides().init(hardwareMap);
         this.extendo = new Extendo().init(hardwareMap);
         this.intake = new Intake().init(hardwareMap);
-        this.hang = new Hang().init(hardwareMap);
+//        this.hang = new Hang().init(hardwareMap);
+        this.limelight = new Limelight().init(hardwareMap);
         return this;
     }
 
@@ -82,6 +83,50 @@ public class Robot {
 //
 //        return this.drive.actionBuilder(this.getDrive().localizer.getPose());
 //    }
+
+    public Pose calcCorrection(double x, double y){
+        final double H = 1;
+        final double L = 1;
+        final double multiplier = .2;
+
+        //move X this many inches: L/x * multiplier
+        //move Y this many: inches: H/y * multiplier
+
+        return new Pose(L*y*multiplier, H*-x*multiplier);
+    }
+
+    public static class Limelight{
+
+        private Limelight3A limelight;
+
+        public Limelight init(HardwareMap hardwareMap) {
+            this.limelight = hardwareMap.get(Limelight3A.class, "Ethernet Device");
+            this.limelight.pipelineSwitch(0);
+            this.limelight.setPollRateHz(100);
+            return this;
+        }
+
+        public void enableLimeligh() {
+            limelight.start();
+        }
+
+        public void disableLimelight() {
+            limelight.start();
+        }
+
+        public double getSampleTx() {
+            return limelight.getLatestResult().getTx();
+        }
+
+        public double getSampleTY() {
+            return limelight.getLatestResult().getTy();
+        }
+
+
+
+
+
+    }
 
     @Config
     public static class Claw {
@@ -126,9 +171,9 @@ public class Robot {
     @Config
     public static class Arm {
         //variables
-        public static double INTAKE = .76;
-        public static double INTAKESPEC = .54;
-        public static double OUTTAKESPEC = .85;
+        public static double INTAKE = .7;
+        public static double INTAKESPEC = .6;
+        public static double OUTTAKESPEC = .87;
         public static double OUTTAKESAMPLE = .05;
         public static double SCORESPEC = .85;
         //PController
@@ -206,9 +251,9 @@ public class Robot {
     @Config
     public static class Wrist {
         //variables
-        public static double INTAKE = .34;
+        public static double INTAKE = .41;
         public static double OUTTAKESAMPLE = .58;
-        public static double INTAKESPEC = .30;
+        public static double INTAKESPEC = .2;
         public static double SCORESPECWRIST = .6;
         public static double OUTTAKESPEC = .57;
         //PController
@@ -289,13 +334,13 @@ public class Robot {
         public DcMotorEx slidesR;
         //Variables
 //        public static int SLIDESPOWER = 1;
-        public static int SLIDEUP = 2300;
-        public static int SLIDEHSPEC = 1100;
+        public static int SLIDEUP = 800;
+        public static int SLIDEHSPEC = 340;
         //        public static int SLIDELSPEC = 300;
-        public static int SLIDELBUCKET = 1200;
-        public static int SLIDEDOWN = 50;
-        public static int SLIDEREST = 280;
-        public static int SLIDESPECSCORE = -600;
+        public static int SLIDELBUCKET = 300;
+        public static int SLIDEDOWN = 0;
+        public static int SLIDEREST = 65;
+        public static int SLIDESPECSCORE = -350;
         //PID
 //        private static int TARGET = 20;
         public static double KP = 0.0014;
@@ -315,6 +360,8 @@ public class Robot {
             slidesL.setTargetPosition(10);
             this.slidesL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             this.slidesR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            this.slidesL.setDirection(DcMotorSimple.Direction.REVERSE);
+            this.slidesR.setDirection(DcMotorSimple.Direction.REVERSE);
             this.slidesL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             this.slidesR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 //            this.slidesR.
@@ -344,6 +391,9 @@ public class Robot {
 
         public int getPosition() {
             return slidesR.getCurrentPosition();
+        }
+        public int getPositionL() {
+            return slidesL.getCurrentPosition();
         }
 
         public void slidesTo(int position) {
@@ -429,9 +479,9 @@ public class Robot {
 
 
         //Variables
-        public static double up = .32;
+        public static double up = .3;
         public static double spit = .65;
-        public static double down = .8;
+        public static double down = .75;
         public static double INTAKE = 1;
 
         public static double OUTTAKE = -.3;
@@ -530,44 +580,44 @@ public class Robot {
 
         public int getAlpha(ColorSensor colorSensor) {
             return colorSensor.alpha();
-        }
+        };
 
     }
 
-    @Config
-    public static class Hang {
-        public DcMotorEx depression;
-
-        public Hang init(HardwareMap hardwareMap) {
-            this.depression = hardwareMap.get(DcMotorEx.class, "depression");
-            this.depression.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            depression.setTargetPosition(0);
-            this.depression.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            this.depression.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            return this;
-        }
-
-        public void setPosition(int pos) {
-            depression.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            depression.setTargetPosition(pos);
-            depression.setPower(1);
-            depression.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        }
-
-        public void pause() {
-            depression.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            depression.setPower(0);
-        }
-
-    }
-
+//    @Config
+//    public static class Hang {
+//        public DcMotorEx depression;
+//
+//        public Hang init(HardwareMap hardwareMap) {
+//            this.depression = hardwareMap.get(DcMotorEx.class, "depression");
+//            this.depression.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//            depression.setTargetPosition(0);
+//            this.depression.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//            this.depression.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//            return this;
+//        }
+//
+//        public void setPosition(int pos) {
+//            depression.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//            depression.setTargetPosition(pos);
+//            depression.setPower(1);
+//            depression.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//
+//        }
+//
+//        public void pause() {
+//            depression.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//            depression.setPower(0);
+//        }
+//
+//    }
+//
     //Scoring Macro
     public int bucketStep;
     public boolean AUTO = false;
     public int specStep;
     boolean bucketH;
-    public boolean AUTOSPEC = false;
+    public boolean RETURNSPEC = false;
     public boolean END = false;
 
     public scoringStates scoringState = scoringStates.IDLE;
@@ -598,8 +648,9 @@ public class Robot {
                 //switch states
                 if (Y || AUTO) { //High Bucket
                     bucketStep = 0;
-                    outtakeDelay = runtime + .75; //Delay for slides after grabbing
+                    outtakeDelay = runtime + .25; //Delay for slides after grabbing
                     claw.close();
+
                     bucketH = true;
                     scoringState = scoringStates.BUCKET;
                 } else if (X) { //Low Bucket
@@ -626,7 +677,7 @@ public class Robot {
                             } else {
                                 slides.slidesTo(Slides.SLIDELBUCKET); //slides to low bucket
                             }
-                            outtakeDelay = runtime + .25; // delay for slides to clear hopper
+                            outtakeDelay = runtime + .1; // delay for slides to clear hopper
                             bucketStep++;
                         }
                         break;
@@ -670,24 +721,24 @@ public class Robot {
 //                            arm.get
                             arm.intake();
                             wrist.intake();
-//                            outtakeDelay = runtime + .5;
+                            outtakeDelay = runtime + .75;
                             bucketStep++;
                         }
                         break;
                     case 2:
-                        if (arm.isAtTarget()) {
-                            slides.slideDown();
-                            outtakeDelay = runtime + .5;
-                            bucketStep++;
-//                            scoringState = scoringStates.IDLE;
-                        }
-                        break;
-                    case 3:
                         if (runtime > outtakeDelay) {
+                            slides.slideDown();
                             claw.openSmall();
+                            outtakeDelay = runtime + .2;
+//                            bucketStep++;
                             scoringState = scoringStates.IDLE;
                         }
                         break;
+//                    case 3:
+//                        if (runtime > outtakeDelay) {
+//                            scoringState = scoringStates.IDLE;
+//                        }
+//                        break;
                 }
                 break;
             case SPECIMENGRAB:
@@ -743,10 +794,10 @@ public class Robot {
                     case 6:
                         if (L1 || auto) {
                             slides.slidesTo(slides.getPosition() - Slides.SLIDESPECSCORE);
-                            wrist.moveWristNOW(Wrist.SCORESPECWRIST);
-                            arm.outtakeSpecimenNOW();
-                            specStep = 0;
+                            wrist.outtakeSpec();
+                            arm.outtakeSpecimen();
                             scoringState = scoringStates.SPECIMENR;
+                            specStep = 0;
                         }
                         break;
                 }
@@ -754,14 +805,239 @@ public class Robot {
             case SPECIMENR:
                 switch (specStep) {
                     case 0:
-                        if (A || AUTOSPEC) {
+                        if (A || RETURNSPEC) {
                             outtakeDelay = runtime + .051;
                             scoringState = scoringStates.SPECIMENGRAB;
                             arm.intakeSpecimen();
                             wrist.intakeSpecien();
                             claw.passiveclose();
                             specStep = 0;
-                            AUTOSPEC = false;
+                            RETURNSPEC = false;
+                        } else if (D1) {
+                            outtakeDelay = runtime + .1;
+                            scoringState = scoringStates.SPECIMENGRAB;
+                            specStep = 4;
+                        } else if (L2 || END) {
+                            claw.close();
+                            outtakeDelay = runtime + .3;
+                            specStep++;
+                        }
+                        break;
+                    case 1:
+                        if (runtime > outtakeDelay) {
+                            claw.close();
+                            arm.intake();
+                            wrist.intake();
+                            outtakeDelay = runtime + .5;
+                            specStep++;
+                        }
+                        break;
+                    case 2:
+                        if (runtime > outtakeDelay) {
+                            slides.slideDown();
+                            claw.openSmall();
+                            scoringState = scoringStates.IDLE;
+                            specStep = 0;
+                        }
+                        break;
+                }
+                break;
+
+        }
+
+    }
+
+
+    public boolean SCORESPEC = false;
+    public boolean GRABSPEC = false;
+
+    public void scoringMacroAuto(GamepadEx controller1, double runtime) {
+
+        boolean Y = controller1.wasJustPressed(GamepadKeys.Button.Y); //BUCKETH
+        boolean X = controller1.wasJustPressed(GamepadKeys.Button.X); // BUCKETL
+        boolean A = controller1.wasJustPressed(GamepadKeys.Button.A); // SPECIMENINTAKE
+        boolean D1 = controller1.wasJustPressed(GamepadKeys.Button.DPAD_UP); // SPECIMENH
+        boolean D2 = controller1.wasJustPressed(GamepadKeys.Button.DPAD_LEFT); // SPECIMENL
+        boolean L1 = controller1.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER); // RETRACT
+        boolean L2 = controller1.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > .3;
+
+        switch (scoringState) {
+            case IDLE:
+                //Idle Actions
+                slides.slideDown();
+                arm.intake();
+                claw.openSmall();
+                wrist.intake();
+//                intake.pause();
+
+                //switch states
+                if (Y || AUTO) { //High Bucket
+                    bucketStep = 0;
+                    outtakeDelay = runtime + .25; //Delay for slides after grabbing
+                    claw.close();
+
+                    bucketH = true;
+                    scoringState = scoringStates.BUCKET;
+                } else if (X) { //Low Bucket
+                    bucketStep = 0;
+                    outtakeDelay = runtime + .75; //Delay for slides after grabbing
+                    claw.close();
+                    bucketH = false;
+                    scoringState = scoringStates.BUCKET;
+                } else if (A) { //Intake Spec
+                    specStep = 0;
+                    claw.close();
+                    outtakeDelay = runtime + .3; //Delay for slides after grabbing
+                    scoringState = scoringStates.SPECIMENGRAB;
+                }
+                break;
+            case BUCKET:
+                //Actions
+                switch (bucketStep) {
+                    case 0: // Slides go somewhere
+                        if (runtime > outtakeDelay) {
+                            if (bucketH || AUTO) {
+                                slides.slideUp();//slides to high bucket
+                                claw.close();
+                            } else {
+                                slides.slidesTo(Slides.SLIDELBUCKET); //slides to low bucket
+                            }
+                            outtakeDelay = runtime + .1; // delay for slides to clear hopper
+                            bucketStep++;
+                        }
+                        break;
+                    case 1: //move arm and wrist to scoring position
+                        if (runtime > outtakeDelay) {
+                            arm.outtakeSample();
+                            wrist.outtakeSample();
+                            bucketStep++;
+                        }
+                        break;
+                    case 2:
+                        if (L1) { //open claw if open button pressed
+                            claw.openSmall();
+                            bucketStep++;
+                        } else if (Y) {
+                            bucketH = true;
+                            bucketStep = 0;
+                        } else if (X) {
+                            bucketH = false;
+                            bucketStep = 0;
+                        }
+                        break;
+                    case 3:
+                        if (L2) {
+                            scoringState = scoringStates.BUCKETR;
+                            bucketStep = 0;
+                        }
+                        break;
+
+                }
+                break;
+            case BUCKETR:
+                switch (bucketStep) {
+                    case 0:
+                        claw.close();
+                        outtakeDelay = runtime + .25;
+                        bucketStep++;
+                        break;
+                    case 1:
+                        if (runtime > outtakeDelay) {
+//                            arm.get
+                            arm.intake();
+                            wrist.intake();
+                            outtakeDelay = runtime + .75;
+                            bucketStep++;
+                        }
+                        break;
+                    case 2:
+                        if (runtime > outtakeDelay) {
+                            slides.slideDown();
+                            claw.openSmall();
+                            outtakeDelay = runtime + .2;
+//                            bucketStep++;
+                            scoringState = scoringStates.IDLE;
+                        }
+                        break;
+//                    case 3:
+//                        if (runtime > outtakeDelay) {
+//                            scoringState = scoringStates.IDLE;
+//                        }
+//                        break;
+                }
+                break;
+            case SPECIMENGRAB:
+                switch (specStep) {
+                    case 0: // Slides go somewhere
+                        if (runtime > outtakeDelay) {
+                            slides.slideRest();
+                            outtakeDelay = runtime + .4; // delay for slides to clear hopper
+                            specStep++;
+                        }
+                        break;
+                    case 1: //move arm and wrist to scoring position
+                        if (runtime > outtakeDelay) {
+                            arm.intakeSpecimen();
+                            wrist.intakeSpecien();
+                            outtakeDelay = runtime + .4;
+                            specStep++;
+                        }
+                        break;
+                    case 2:
+                        if (runtime > outtakeDelay) { //open claw if open button pressed
+                            claw.open();
+                            specStep++;
+                        }
+                        break;
+                    case 3:
+                        if (L2) {
+                            scoringState = scoringStates.SPECIMENR;
+                            specStep = 0;
+                        } else if (GRABSPEC) {
+                            outtakeDelay = runtime + .4;
+                            claw.close();
+                            specStep++;
+                            GRABSPEC = false;
+                        }
+                        break;
+                    case 4:
+                        if (runtime > outtakeDelay) {
+                            slides.slidesTo(Slides.SLIDEHSPEC);
+                            claw.close();
+                            outtakeDelay = runtime + .3;
+                            specStep++;
+                        }
+                        break;
+                    case 5:
+                        if (runtime > outtakeDelay) {
+                            arm.outtakeSpecimen();
+                            wrist.outtakeSpec();
+                            if (SCORESPEC){
+                                specStep ++;
+                                SCORESPEC = false;
+                            }
+                        }
+                        break;
+                    case 6:
+                            slides.slidesTo(slides.getPosition() - Slides.SLIDESPECSCORE);
+                            wrist.outtakeSpec();
+                            arm.outtakeSpecimen();
+                            scoringState = scoringStates.SPECIMENR;
+                            specStep = 0;
+                        break;
+                }
+                break;
+            case SPECIMENR:
+                switch (specStep) {
+                    case 0:
+                        if (A || RETURNSPEC) {
+                            outtakeDelay = runtime + .051;
+                            scoringState = scoringStates.SPECIMENGRAB;
+                            arm.intakeSpecimen();
+                            wrist.intakeSpecien();
+                            claw.passiveclose();
+                            specStep = 0;
+                            RETURNSPEC = false;
                         } else if (D1) {
                             outtakeDelay = runtime + .1;
                             scoringState = scoringStates.SPECIMENGRAB;
@@ -799,6 +1075,7 @@ public class Robot {
     //Intake Macro
     public boolean mini;
     public boolean spit = false;
+    public boolean stay = false;
 
     public intakeStates intakeState = intakeStates.IDLE;
 
@@ -844,7 +1121,7 @@ public class Robot {
                     extendo.extend();
                 }
                 //Switch States
-                if (((RT || B) && runtime > intakeDelay) || auto) {
+                if (((RT || B) && runtime > intakeDelay) || auto && !stay) {
                     intakeState = intakeStates.INTAKING;
                     intakeDelay = runtime + .25;
                 }
@@ -909,118 +1186,6 @@ public class Robot {
 
     }
 
-    public void intakeMacroTEST(GamepadEx controller1, double runtime, boolean auto) {
-
-
-        boolean RT = controller1.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > .3;
-        boolean B = controller1.wasJustPressed(GamepadKeys.Button.B);
-        boolean LB = controller1.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER);
-        boolean RIGHTSUBCOLOR = intake.subColor == Intake.colors.YELLOW || intake.subColor == getIntake().targetColor;
-        boolean RIGHTSAMPLECOLOR = intake.sampleColor == Intake.colors.YELLOW || intake.sampleColor == getIntake().targetColor;
-
-        switch (intakeState) {
-            case IDLE:
-                //Actions
-                extendo.retract();
-                intake.up();
-                if (intakeDelay > runtime && spit && runtime > intakeDelay - .5) {
-                    intake.outtake();
-                } else {
-//                    spit = false;
-                    intake.pause();
-                }
-                //Switch states
-                if (RT) {
-                    intakeState = intakeStates.EXTENDED;
-                    mini = false;
-                    intakeDelay = runtime + .5;
-//                    intake.color= Intake.colors.NULL;
-                } else if (B) {
-                    intakeState = intakeStates.EXTENDED;
-                    intakeDelay = runtime + .5;
-                    mini = true;
-//                    intake.color= Intake.colors.NULL;
-                }
-                break;
-            case EXTENDED:
-                //Actions
-                if (mini) {
-                    intake.up();
-                    extendo.mini();
-                } else {
-                    intake.up();
-                    extendo.extend();
-                }
-
-                if (intake.getAlpha(intake.sampleSensor) > Intake.ALPHASAMPLE) {
-                    intake.sampleColor = getColor(intake.sampleSensor);
-                }
-
-                //Switch States
-                if (((RT || B) && runtime > intakeDelay) || auto || RIGHTSUBCOLOR) {
-                    intakeState = intakeStates.INTAKING;
-                    intakeDelay = runtime + .5;
-                }
-                break;
-            case INTAKING:
-//                Actions
-                extendo.mini();
-                if (runtime > intakeDelay) {
-                    intake.down();
-                    intake.intake();
-                }
-
-                if (RT) {
-                    extendo.extend();
-                } else if (B) {
-                    extendo.mini();
-                }
-
-                //Switch States
-
-                if (intake.getAlpha(intake.intakeSensor) > Intake.ALPHA) {
-                    intakeState = intakeStates.DETECT;
-                    intakeDelay = runtime + .005;
-                } else if (LB) {
-                    intakeState = intakeStates.HASSAMPLE;
-                }
-                break;
-            case DETECT:
-                //Actions
-                if (runtime > intakeDelay) {
-                    //Switch States
-                    if (!RIGHTSAMPLECOLOR) {
-                        intakeState = intakeStates.OUTTAKE;
-                        intakeDelay = runtime + 1.5;
-                    } else {
-                        intakeState = intakeStates.HASSAMPLE;
-                        intakeDelay = runtime + .3;
-                    }
-                }
-                break;
-            case HASSAMPLE:
-                //Actions
-                intake.up();
-                extendo.retract();
-                //Switch States
-                if (runtime > intakeDelay) {
-                    spit = true;
-                    intakeDelay = runtime + 1;
-                    intakeState = intakeStates.IDLE;
-                }
-                break;
-            case OUTTAKE:
-                //Actions
-                intake.outtake();
-                intake.spit();
-                //Switch States
-                if (runtime > intakeDelay) {
-                    intakeState = intakeStates.INTAKING;
-                }
-                break;
-        }
-
-    }
 
 
     //Robot Update
