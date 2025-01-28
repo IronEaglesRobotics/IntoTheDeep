@@ -115,19 +115,20 @@ public class Robot {
     }
 
     public static class Arm {
-     //   private Servo Arm1;
+        private Servo Arm1;
         private Servo Arm2;
 
         public void setPosition(double position){
-     //       this.Arm1.setPosition(position-0.2);
+            this.Arm1.setPosition(position+0.02);
             this.Arm2.setPosition(position);
             // this.rightArm.setPosition(position);
         }
         public Arm(HardwareMap hardwareMap){
-        //    Arm1 = hardwareMap.servo.get("arm1");
+            Arm1 = hardwareMap.servo.get("arm1");
             Arm2 = hardwareMap.servo.get("arm2");
             //  rightArm = hardwareMap.servo.get("j3R");
-            Arm2.setDirection(Servo.Direction.REVERSE);
+            Arm2.setDirection(Servo.Direction.FORWARD);
+            Arm1.setDirection(Servo.Direction.REVERSE);
 
         }
     }

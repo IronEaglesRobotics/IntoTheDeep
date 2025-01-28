@@ -32,16 +32,16 @@ public class TeleOp extends OpMode {
     public double swingTimer = 0;
 
     public static int SLIDES_DOWN = 0;
-    public static int SLIDES_PICKUP = 400;
-    public static int SLIDES_SCORE1 = 2100;
-    public static int SLIDES_HIGH_BUCKET = 2400;
-    public static int SLIDES_SCORE2 = 2350;
-    public static double armPickUp = 0.57;
+    public static int SLIDES_PICKUP = 800;
+    public static int SLIDES_SCORE1 = 2075;
+    public static int SLIDES_SCORE2 = 1600;
+    public static int SLIDES_HIGH_BUCKET = 2500;
+    public static double armPickUp = 0.;
     public static double armFloor = 0;
     public static double armInit = 0.25;
-    public static double armBucket = 0.25;
-    public static double armScore2 = 0.03;
-    public static double armScore = 0.03;
+    public static double armBucket = 0.;
+    public static double armScore2 = 0.;
+    public static double armScore = 0.;
     public static double clawOpen = 0.75;
     public static double clawInit = 0.4;
     public static double clawClose = 0.34;
@@ -70,9 +70,7 @@ public class TeleOp extends OpMode {
         robot.drive.handleInput(gamepad1);
         //intakeMacro(controller1);
         //scoreMacro(controller1);
-        telemetry.addData("scoreStep", swingStep);
-        telemetry.addData("intakeStep", intakeSteps);
-        telemetry.update();
+        //telemetry.update();
 
         if (gamepad2.dpad_up) {
             robot.lift.setTargetPosition(SLIDES_HIGH_BUCKET, 1);
@@ -90,12 +88,15 @@ public class TeleOp extends OpMode {
         if (gamepad2.dpad_left) {
             robot.lift.setTargetPosition(SLIDES_PICKUP, 0.5);
             robot.arm.setPosition(armPickUp);
-            robot.claw.setPosition(clawClose);
         }
 
         if(gamepad2.y){
             robot.lift.setTargetPosition(SLIDES_SCORE2, 1);
             //robot.arm.setPosition(armScore2);
+        }
+
+        if(gamepad2.x){
+            robot.wrist.setPosition(0);
         }
 
 //        swingMacro(controller2);
@@ -119,7 +120,7 @@ public class TeleOp extends OpMode {
 
         if (gamepad2.right_bumper){
             robot.arm.setPosition(0.05);
-            robot.lift.setTargetPosition(SLIDES_PICKUP, 0.5);
+            robot.lift.setTargetPosition(500, 0.5);
         }
 
 //        if(gamepad1.right_trigger > 0.1){
