@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
-import com.arcrobotics.ftclib.drivebase.MecanumDrive;
+import com.arcrobotics.ftclib.controller.PDController;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -13,7 +12,7 @@ public class Robot {
     Drive drive;
     Lift lift;
     Claw claw;
-    Wrist wrist;
+    Elbow elbow;
     Arm arm;
     //Hang hang;
     public static double test = 0.0;
@@ -23,7 +22,7 @@ public class Robot {
         this.claw = new Claw(hardwareMap);
         this.lift = new Lift(hardwareMap);
         this.arm = new Arm(hardwareMap);
-        this.wrist = new Wrist(hardwareMap);
+        this.elbow = new Elbow(hardwareMap);
         //this.hang = new Hang(hardwareMap);
     }
 
@@ -37,11 +36,11 @@ public class Robot {
 
         public Lift(HardwareMap hardwareMap) {
             lift1 = hardwareMap.get(DcMotor.class, "lift1");
-            lift1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            lift1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);   //maybe take out to stop problem of lift not going all the way down
             lift1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
             lift2 = hardwareMap.get(DcMotor.class, "lift2");
-            lift2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            lift2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);   //maybe take out to stop problem of lift not going all the way down
             lift2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
             lift2.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -104,24 +103,51 @@ public class Robot {
         }
     }
 
-    public static class Wrist {
-        private Servo wrist;
+    public static class Elbow {
+        private Servo elbow;
         public void setPosition(double position){
-            this.wrist.setPosition(position);
+            this.elbow.setPosition(position);
         }
-        public Wrist(HardwareMap hardwareMap) {
-            wrist = hardwareMap.servo.get("wrist");
+        public Elbow(HardwareMap hardwareMap) {
+            elbow = hardwareMap.servo.get("elbow");
         }
     }
 
     public static class Arm {
         private Servo Arm1;
         private Servo Arm2;
+        public static double KP = .01;
+        public static double KD = 0.3;
+        public static double MAX_DELTA = .075;
+        public static double TOL = 0.05;
+        PDController armPDcontroller;
+        private double armTarget;
 
         public void setPosition(double position){
-            this.Arm1.setPosition(position+0.02);
+            this.Arm1.setPosition(position);
             this.Arm2.setPosition(position);
+            armPDcontroller.setSetPoint(position);
             // this.rightArm.setPosition(position);
+        }
+
+        public boolean isAtTarget() {
+            return armPDcontroller.atSetPoint();
+        }
+
+        public void update() {
+            armPDcontroller.setSetPoint(armTarget);
+            armPDcontroller.setTolerance(TOL);
+            armPDcontroller.setP(KP);
+            armPDcontroller.setD(KD);
+
+            if (!isAtTarget()) {
+                double delta = armPDcontroller.calculate(Arm1.getPosition());
+                if (Math.abs(armPDcontroller.getPositionError()) > .1) {
+                    delta = Math.min(Math.copySign(MAX_DELTA, delta), delta);
+                }
+                Arm1.setPosition(Arm1.getPosition() + delta);
+                Arm1.setPosition(Arm1.getPosition() + delta);
+            }
         }
         public Arm(HardwareMap hardwareMap){
             Arm1 = hardwareMap.servo.get("arm1");
@@ -129,6 +155,9 @@ public class Robot {
             //  rightArm = hardwareMap.servo.get("j3R");
             Arm2.setDirection(Servo.Direction.FORWARD);
             Arm1.setDirection(Servo.Direction.REVERSE);
+            this.armPDcontroller = new PDController(KP, KD);
+
+
 
         }
     }

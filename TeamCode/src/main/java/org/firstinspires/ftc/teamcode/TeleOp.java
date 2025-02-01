@@ -47,7 +47,9 @@ public class TeleOp extends OpMode {
     public static double clawClose = 0.34;
     public static double wristFloor;
     public static double wristScore;
-    public static double armSub;
+    public static double armSub = 0.3;
+    public static double elbowSpec = 0.15;
+    public static double elbowSub = 0.4;
 
 
     @Override
@@ -87,7 +89,7 @@ public class TeleOp extends OpMode {
 
         if (gamepad2.dpad_left) {
             robot.lift.setTargetPosition(SLIDES_PICKUP, 0.5);
-            robot.arm.setPosition(armPickUp);
+//            robot.arm.setPosition(armPickUp);
         }
 
         if(gamepad2.y){
@@ -96,7 +98,7 @@ public class TeleOp extends OpMode {
         }
 
         if(gamepad2.x){
-            robot.wrist.setPosition(0);
+            robot.elbow.setPosition(0);
         }
 
 //        swingMacro(controller2);
@@ -122,6 +124,30 @@ public class TeleOp extends OpMode {
             robot.arm.setPosition(0.05);
             robot.lift.setTargetPosition(500, 0.5);
         }
+
+        if(gamepad1.a){
+            robot.arm.setPosition(armSub);
+            robot.arm.update();
+        }
+
+        if(gamepad1.y){
+            robot.arm.setPosition(wristFloor);
+            robot.arm.update();
+        }
+
+        if (gamepad1.b){
+            robot.elbow.setPosition(elbowSpec);
+        }
+
+        if(gamepad1.x){
+
+            robot.elbow.setPosition(elbowSub);
+//            if(robot.arm.isAtTarget()){
+//
+//            }
+        }
+
+
 
 //        if(gamepad1.right_trigger > 0.1){
 //          robot.hang.hang.setDirection(DcMotorSimple.Direction.FORWARD);
