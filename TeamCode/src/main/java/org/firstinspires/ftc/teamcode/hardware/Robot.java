@@ -91,7 +91,7 @@ public class Robot {
     public Command toClip(){
         driveState = DriveState.automatic;
         getDrive().setPose(new Pose2d(0,0,0));
-        return runAction(getDrive().actionBuilder(new Pose2d(0,0,0)).splineToLinearHeading(new Pose2d(20,35,Math.toRadians(180)),Math.toRadians(-110)).build())
+        return new WaitCommand(500).andThen(runAction(getDrive().actionBuilder(new Pose2d(0,0,0)).splineToLinearHeading(new Pose2d(20,35,Math.toRadians(180)),Math.toRadians(-110)).build()))
                 .alongWith(getSlides().preclip())
                 .andThen(runAction(getDrive().actionBuilder(new Pose2d(20,35,Math.toRadians(180))).setTangent(Math.toRadians(190)).lineToX(34.5).build()));
     }

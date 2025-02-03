@@ -127,7 +127,7 @@ public class PinpointDrive extends MecanumDrive {
         pinpoint.setPosition(pose);
         lastPinpointPose = pose;
         this.pose = pose;
-        pinpoint.update();
+        updatePoseEstimate();
     }
 
 

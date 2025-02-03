@@ -38,6 +38,8 @@ public class TeleOpMain extends CommandOpMode {
         controller1.readButtons();
         controller2.readButtons();
 
+        controller1.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
+                        .whenPressed(()->robot.getDrive().setPose(new Pose2d(0,0,0)));
 //        controller1.getGamepadButton(GamepadKeys.Button.A)
 //                .whenPressed(robot.toClip());
 //        controller1.getGamepadButton(GamepadKeys.Button.B)
@@ -72,11 +74,7 @@ public class TeleOpMain extends CommandOpMode {
                                 .andThen(robot.getSlides().up())
                                 .andThen(new WaitCommand(1000))
                                 .andThen(robot.getIntakeArm().upCommand())
-                                .andThen(robot.getIntake().onIntake()
-                                .andThen(robot.getIntake().ejectIntake())));
-                // changes target color for intake
-                controller2.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
-                        .toggleWhenPressed(robot.getIntake().setBlue,robot.getIntake().setRed);
+                                .andThen(robot.getIntake().ejectIntake()));
                 break;
             case standard:
                 // controls raising slides
@@ -142,11 +140,12 @@ public class TeleOpMain extends CommandOpMode {
         telemetry.addData("color",robot.getSlides().getPos());
         telemetry.addData("speed",robot.getSlides().controller.calculate(-robot.getSlides().getPos(),robot.getSlides().getTarget()));
         telemetry.addData("mode", robot.getDriveState());
-        telemetry.addData("pose",robot.getDrive().pose);
+        telemetry.addData("pose",robot.getDrive().pose.toString());
         TelemetryPacket packet = new TelemetryPacket();
         packet.fieldOverlay().setStroke("#3F51B5");
         Drawing.drawRobot(packet.fieldOverlay(), robot.getDrive().pose);
         FtcDashboard.getInstance().sendTelemetryPacket(packet);
+        robot.getDrive().updatePoseEstimate();
         telemetry.update();
     }
 }

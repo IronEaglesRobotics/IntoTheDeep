@@ -31,7 +31,7 @@ public class commandBasketAuto extends CommandOpMode {
     }
     Command score() {
         return robot.getSlides().up()
-                .alongWith(robot.runAction(robot.getDrive().actionBuilder(robot.getDrive().pose).splineToLinearHeading(new Pose2d(26,6,Math.toRadians(139)),Math.toRadians(-90)).build()))
+                .alongWith(robot.runAction(robot.getDrive().actionBuilder(robot.getDrive().pose).splineToLinearHeading(new Pose2d(26,6,Math.toRadians(135)),Math.toRadians(-90)).build()))
                 .andThen(robot.getIntakeArm().upCommand())
                 .andThen(robot.getIntake().ejectIntake())
                 .andThen(new WaitCommand(1000))
@@ -44,9 +44,10 @@ public class commandBasketAuto extends CommandOpMode {
                 .andThen(robot.getIntakeArm().downCommand())
                 .andThen(new WaitCommand(1000))
                 .andThen(robot.getSlides().down())
-                .andThen(robot.runAction(robot.getDrive().actionBuilder(new Pose2d(0,12,Math.toRadians(90))).setTangent(Math.toRadians(0)).lineToX(14).turnTo(0).build()))
+                .andThen(robot.runAction(robot.getDrive().actionBuilder(new Pose2d(0,13,Math.toRadians(90))).setTangent(Math.toRadians(0)).lineToX(14).turnTo(0).build()))
                 .andThen(robot.getIntake().onIntake())
-                .andThen(robot.runAction(robot.getDrive().actionBuilder(new Pose2d(0,12,0)).splineToConstantHeading(new Vector2d(33,12),Math.toRadians(90)).build()))
+                .andThen(new WaitCommand(200))
+                .andThen(robot.runAction(robot.getDrive().actionBuilder(new Pose2d(0,13,0)).splineToConstantHeading(new Vector2d(33,12),Math.toRadians(90)).build()))
                 .andThen(robot.getIntake().offIntake())
                 .andThen(robot.getIntake().storeIntake())
                 .whenFinished(()->first = false);
@@ -78,6 +79,7 @@ public class commandBasketAuto extends CommandOpMode {
                 .andThen(new Intake.storeIntake(robot.getIntake()).alongWith(new WaitCommand(400)))
                 .andThen(robot.getIntakeArm().downCommand())
                 .andThen(new WaitCommand(1000))
-                .andThen(robot.getSlides().down());
+                .andThen(robot.getSlides().down())
+                .alongWith(robot.runAction(robot.getDrive().actionBuilder(new Pose2d(26,6,Math.toRadians(135))).turnTo(Math.toRadians(45)).build()));
     }
 }

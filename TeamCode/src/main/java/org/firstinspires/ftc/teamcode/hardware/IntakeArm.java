@@ -5,6 +5,7 @@ import static org.firstinspires.ftc.teamcode.lib.Config.extendhighscale2;
 import static org.firstinspires.ftc.teamcode.lib.Config.extendlowscale1;
 import static org.firstinspires.ftc.teamcode.lib.Config.extendlowscale2;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.Command;
 import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.command.SubsystemBase;
@@ -12,13 +13,14 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+@Config
 public class IntakeArm extends SubsystemBase {
     DcMotor motor;
     Servo extension1;
     Servo extension2;
     boolean up = false;
     boolean out = false;
-    double rot_save = 0;
+    public static int target = -900;
     double ex_save = 1;
     Slides slides;
 
@@ -36,7 +38,7 @@ public class IntakeArm extends SubsystemBase {
     }
 
     public void armUp() {
-        motor.setTargetPosition(-800);
+        motor.setTargetPosition(target);
         motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motor.setPower(-1);
     }
