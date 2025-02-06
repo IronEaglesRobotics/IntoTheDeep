@@ -9,6 +9,7 @@ import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.acmerobotics.roadrunner.ftc.GoBildaPinpointDriverRR;
 import com.arcrobotics.ftclib.command.Command;
+import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.command.Subsystem;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
@@ -88,10 +89,10 @@ public class Robot {
     }
     public enum activeMode {macro, standard}
     public runActionCommand runAction(Action action){return new runActionCommand(action,drive,this);}
+    public setPose setPose(Pose2d pose){return new setPose(pose,drive);}
     public Command toClip(){
         driveState = DriveState.automatic;
-        getDrive().setPose(new Pose2d(0,0,0));
-        return new WaitCommand(500).andThen(runAction(getDrive().actionBuilder(new Pose2d(0,0,0)).splineToLinearHeading(new Pose2d(20,35,Math.toRadians(180)),Math.toRadians(-110)).build()))
+        return setPose(new Pose2d(0,0,0)).whenFinished(()->driveState = DriveState.automatic).andThen(runAction(getDrive().actionBuilder(new Pose2d(0,0,0)).splineToLinearHeading(new Pose2d(20,35,Math.toRadians(180)),Math.toRadians(-110)).build()))
                 .alongWith(getSlides().preclip())
                 .andThen(runAction(getDrive().actionBuilder(new Pose2d(20,35,Math.toRadians(180))).setTangent(Math.toRadians(190)).lineToX(34.5).build()));
     }
@@ -108,6 +109,24 @@ public class Robot {
         return runAction(getDrive().actionBuilder(new Pose2d(0,0,0))
                 .setTangent(Math.toRadians(0)).lineToX(-36)
                 .setTangent(Math.toRadians(90)).lineToYLinearHeading(-48,getDrive().pose.heading.plus(Math.toRadians(135))).build());
+    }
+
+    public class setPose extends CommandBase {
+        Pose2d pose2d;
+        PinpointDrive drive;
+        double time = System.currentTimeMillis();
+        public setPose(Pose2d pose, PinpointDrive drive1){
+            pose2d = pose;
+            drive = drive1;
+        }
+        @Override
+        public void initialize() {
+            drive.setPose(pose2d);
+        }
+        @Override
+        public boolean isFinished() {
+            return time+300 > System.currentTimeMillis();
+        }
     }
 
     // drive macros

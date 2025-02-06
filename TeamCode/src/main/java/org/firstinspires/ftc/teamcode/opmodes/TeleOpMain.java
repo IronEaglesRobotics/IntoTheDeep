@@ -39,9 +39,9 @@ public class TeleOpMain extends CommandOpMode {
         controller2.readButtons();
 
         controller1.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
-                        .whenPressed(()->robot.getDrive().setPose(new Pose2d(0,0,0)));
-//        controller1.getGamepadButton(GamepadKeys.Button.A)
-//                .whenPressed(robot.toClip());
+                        .whenPressed(robot.setPose(new Pose2d(0,0,0)));
+        controller1.getGamepadButton(GamepadKeys.Button.A)
+                .whenPressed(robot.toClip());
 //        controller1.getGamepadButton(GamepadKeys.Button.B)
 //                .whenPressed(robot.toObservation());
 //        controller1.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)

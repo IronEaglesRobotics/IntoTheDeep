@@ -47,7 +47,7 @@ public class commandClipAuto extends CommandOpMode {
         }
     }
     Command move(){
-        return clip().andThen(placeBlock1()).andThen(placeBlock2()).andThen(Clip2(true)).andThen(Clip2(false).andThen(park()));
+        return clip().andThen(placeBlock1()).andThen(placeBlock2()).andThen(Clip2(true)).andThen(Clip2(false).andThen(grab()));
     }
     Command clip(){
         return new Intake.colorSet(Intake.colors.NULL,robot.getIntake())
@@ -59,7 +59,8 @@ public class commandClipAuto extends CommandOpMode {
     }
     Command placeBlock1(){
         return robot.getSlides().down()
-                .andThen(robot.runAction(robot.getDrive().actionBuilder(new Pose2d(toBar,Math.toRadians(180))).lineToX(22).setTangent(Math.toRadians(-90)).lineToYLinearHeading(-35,Math.toRadians(0)).build()))
+                .andThen(robot.runAction(robot.getDrive().actionBuilder(new Pose2d(toBar,Math.toRadians(180))).lineToX(22).build()))
+                .andThen(robot.runAction(robot.getDrive().actionBuilder(new Pose2d(22,0,Math.toRadians(180))).setTangent(Math.toRadians(-90)).lineToYLinearHeading(-35,Math.toRadians(0)).build()))
                 .andThen(robot.getPusher().activateCommand())
                 .andThen(new WaitCommand(50))
                 .andThen(robot.runAction(robot.getDrive().actionBuilder(toPickup).turn(Math.toRadians(-90),new TurnConstraints(7,-Math.PI,Math.PI)).setTangent(Math.toRadians(-162)).lineToX(-10).build()));
@@ -71,10 +72,13 @@ public class commandClipAuto extends CommandOpMode {
                 .andThen(robot.getPusher().activateCommand())
                 .andThen(robot.runAction(robot.getDrive().actionBuilder(new Pose2d(35,-45,Math.toRadians(-90))).setTangent(0).lineToX(-10).build()));
     }
-//    Command grab(){
-//        return robot.runAction(builder.splineToLinearHeading(toWall,Math.toRadians(90)).build())
-//                .andThen(robot.getClaw().adaptClaw());
-//    }
+    Command grab(){
+        return robot.runAction(robot.getDrive().actionBuilder(new Pose2d(0,-42,Math.toRadians(180))).splineToLinearHeading(toWall,Math.toRadians(50)).build())
+                .andThen(robot.getSlides().down())
+                .andThen(robot.runAction(robot.getDrive().actionBuilder(toWall).setTangent(Math.toRadians(0)).lineToX(-4).build()))
+                .andThen(robot.getPusher().offCommand())
+                .andThen(robot.getClaw().adaptClaw());
+    }
     Command Clip2(boolean first){
         return robot.runAction(robot.getDrive().actionBuilder(new Pose2d(0,-42,Math.toRadians(180))).splineToLinearHeading(toWall,Math.toRadians(50)).build())
                 .andThen(robot.getSlides().down())
