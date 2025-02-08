@@ -14,6 +14,7 @@ public class Robot {
     Claw claw;
     Elbow elbow;
     Arm arm;
+    Wrist wrist;
     //Hang hang;
     public static double test = 0.0;
 
@@ -23,6 +24,7 @@ public class Robot {
         this.lift = new Lift(hardwareMap);
         this.arm = new Arm(hardwareMap);
         this.elbow = new Elbow(hardwareMap);
+        this.wrist = new Wrist(hardwareMap);
         //this.hang = new Hang(hardwareMap);
     }
 
@@ -43,9 +45,10 @@ public class Robot {
             lift2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);   //maybe take out to stop problem of lift not going all the way down
             lift2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-            lift2.setDirection(DcMotorSimple.Direction.FORWARD);
+            lift2.setDirection(DcMotorSimple.Direction.REVERSE);
 
             lift1.setDirection(DcMotorSimple.Direction.REVERSE);
+
 
         }
 
@@ -53,15 +56,9 @@ public class Robot {
             this.lift1.setTargetPosition(pos);
             this.lift1.setPower(p);
             this.lift1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
             this.lift2.setTargetPosition(pos);
             this.lift2.setPower(p);
             this.lift2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-
-
-            //  this.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
         }
 
         public void setPower(double v) {
@@ -74,6 +71,8 @@ public class Robot {
             this.lift2.setMode(mode);
             this.lift2.setMode(mode);
         }
+
+
 
     }
 
@@ -91,7 +90,17 @@ public class Robot {
 //        }
 //
 //    }
+    public static class Wrist {
+        private Servo wrist;
+        public void setPosition(double position){
+            this.wrist.setPosition(position);
+        }
 
+        public Wrist(HardwareMap hardwareMap){
+            wrist = hardwareMap.servo.get("wrist");
+            wrist.setDirection(Servo.Direction.FORWARD);
+        }
+}
     public static class Claw {
         private Servo claw;
         public void setPosition(double position) {

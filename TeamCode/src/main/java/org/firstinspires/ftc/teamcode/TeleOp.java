@@ -32,25 +32,28 @@ public class TeleOp extends OpMode {
     public double swingTimer = 0;
 
     public static int SLIDES_DOWN = 0;
-    public static int SLIDES_PICKUP = 800;
-    public static int SLIDES_SCORE1 = 2075;
-    public static int SLIDES_SCORE2 = 1600;
+    public static int SLIDES_PICKUP = 480;
+    public static int SLIDES_SCORE1 = 2100;
+    public static int SLIDES_SCORE2 = 1000;
     public static int SLIDES_HIGH_BUCKET = 2500;
-    public static double armPickUp = 0.;
+    public static double armPickUp = 0.05;
     public static double armFloor = 0;
     public static double armInit = 0.25;
     public static double armBucket = 0.;
     public static double armScore2 = 0.;
     public static double armScore = 0.;
-    public static double clawOpen = 0.75;
+    public static double clawOpen = 0.4;
     public static double clawInit = 0.4;
-    public static double clawClose = 0.34;
-    public static double wristFloor;
-    public static double wristScore;
+    public static double clawClose = 0.0;
     public static double armSub = 0.3;
     public static double elbowSpec = 0.15;
-    public static double elbowSub = 0.4;
-
+    public static double elbowdown = 0.15;
+    public static double elbowscore = 0.5;
+    public static double elbowpickup = 0.05;
+    public static double wristNotFlipped = 0;
+    public static double wristFlipped = 0.54;
+    public static int SLIDES1 = 1000;
+    public static double elbowscore2 = .4;
 
     @Override
     public void init() {
@@ -84,21 +87,30 @@ public class TeleOp extends OpMode {
             robot.lift.setTargetPosition(SLIDES_DOWN, 1);
          //   robot.claw.setPosition(clawClose);
             robot.arm.setPosition(armFloor);
-            // robot.wrist.setPosition(wristFloor);
+             //robot.elbow.setPosition(elbowdown);
         }
 
         if (gamepad2.dpad_left) {
             robot.lift.setTargetPosition(SLIDES_PICKUP, 0.5);
-//            robot.arm.setPosition(armPickUp);
+            robot.arm.setPosition(armPickUp);
+            robot.elbow.setPosition(elbowSpec);
         }
 
         if(gamepad2.y){
             robot.lift.setTargetPosition(SLIDES_SCORE2, 1);
+            robot.elbow.setPosition(elbowscore2);
             //robot.arm.setPosition(armScore2);
         }
 
         if(gamepad2.x){
             robot.elbow.setPosition(0);
+        }
+
+        if(gamepad2.dpad_right){
+            robot.arm.setPosition(armFloor);
+            robot.elbow.setPosition(elbowscore);
+            robot.lift.setTargetPosition(SLIDES1, 1);
+            robot.wrist.setPosition(wristFlipped);
         }
 
 //        swingMacro(controller2);
@@ -109,10 +121,11 @@ public class TeleOp extends OpMode {
 //        }
 
 
-        if (gamepad2.dpad_right) {
-            robot.lift.setTargetPosition(SLIDES_SCORE1, 1);
-            robot.arm.setPosition(armScore);
-        }
+//        if (gamepad2.dpad_right) {
+//            robot.lift.setTargetPosition(SLIDES_SCORE1, 1);
+//            robot.arm.setPosition(armScore);
+//            robot.elbow.setPosition(elbowdown);
+//        }
 
         if (gamepad2.a) {
             robot.claw.setPosition(clawOpen);
@@ -124,28 +137,26 @@ public class TeleOp extends OpMode {
             robot.arm.setPosition(0.05);
             robot.lift.setTargetPosition(500, 0.5);
         }
+        if(gamepad2.left_bumper){
+            robot.elbow.setPosition(0.4);
 
-        if(gamepad1.a){
-            robot.arm.setPosition(armSub);
-            robot.arm.update();
-        }
-
-        if(gamepad1.y){
-            robot.arm.setPosition(wristFloor);
-            robot.arm.update();
         }
 
         if (gamepad1.b){
-            robot.elbow.setPosition(elbowSpec);
+            robot.wrist.setPosition(wristNotFlipped);
         }
 
-        if(gamepad1.x){
+        if(gamepad1.a){
+            robot.wrist.setPosition(wristFlipped);
+        }
 
-            robot.elbow.setPosition(elbowSub);
+//        if(gamepad1.x){
+//
+//            robot.elbow.setPosition(elbowSub);
 //            if(robot.arm.isAtTarget()){
 //
 //            }
-        }
+//        }
 
 
 
