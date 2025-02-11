@@ -135,7 +135,7 @@ public class Robot {
         public void setPosition(double position){
             this.Arm1.setPosition(position);
             this.Arm2.setPosition(position);
-            armPDcontroller.setSetPoint(position);
+           // armPDcontroller.setSetPoint(position);
             // this.rightArm.setPosition(position);
         }
 

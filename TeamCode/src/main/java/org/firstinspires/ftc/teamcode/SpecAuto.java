@@ -40,8 +40,8 @@ public class SpecAuto extends LinearOpMode {
 
 
     public static int SLIDES_DOWN = 0;
-    public static int SLIDES_PICKUP = 375;
-    public static int SLIDES_SCORE1 = 1850;
+    public static int SLIDES_PICKUP = 450   ;
+    public static int SLIDES_SCORE1 = 1900;
     public static int SLIDES_SCORE2 = 1300;
     public static double armPickUp = 0.57;
     public static double armFloor = 0;
@@ -50,25 +50,26 @@ public class SpecAuto extends LinearOpMode {
     public static double clawClose = 0;
     public static double armBucket = 0.25;
     public static double armScore2 = 0.03;
-    public static double armScore = 0.03;
+    public static double armScore = 0.07;
     public static double clawInit = 0.4;
-    public static double elbowdown = 0.15;
-    public static double elbowscore = 0.5;
-    public static double elbowSpec = 0.15;
+    public static double elbowdown = 0.4;
+    public static double elbowscore = 0.8;
+    public static double elbowSpec = 0.8;
     public static double elbowSpec2 = 0.15;
-    public static double elbowpickup = 0.08;
+    public static double elbowpickup = 0.31;
     public static double wristFlipped = 0.54;
     public static double wristNotFlipped = 0;
-    public static int SLIDES1 = 1000;
+    public static double elbowInit = 0.9;
+    public static int SLIDES1 = 1075;
 
     Vector2d barPos = new Vector2d(-37.5, -5);
-    Vector2d barPos2 = new Vector2d(-48.5, -2);
-    Vector2d barPos3 = new Vector2d(-40.5, -7);
+    Vector2d barPos2 = new Vector2d(-56.5, -6.5);
+    Vector2d barPos3 = new Vector2d(-56.5, -7.5);
     Vector2d barPos4 = new Vector2d(-37.5, -8);
     Vector2d scorePos = new Vector2d(-28.5, -5);
     Vector2d scorePos2 = new Vector2d(-41.5, -8);
-    Vector2d groundPick1 = new Vector2d(-47.5, -58.2);
-    Vector2d groundPick2 = new Vector2d(-47.5, -64.5);
+    Vector2d groundPick1 = new Vector2d(-46, -57.7);
+    Vector2d groundPick2 = new Vector2d(-46, -65.4);
     Vector2d groundPick3 = new Vector2d(-47.5, -51);
     Vector2d toWall = new Vector2d(-50, -46);
     Vector2d drop = new Vector2d(-50, -59);
@@ -82,8 +83,8 @@ public class SpecAuto extends LinearOpMode {
 
 
     protected void Spec1Score() {
-        Action ready = Drive.actionBuilder(new Pose2d(-63, -20, 0)).splineToConstantHeading(barPos2, Math.toRadians(0), null, new ProfileAccelConstraint(-40, 60)).build();
-        Action score = Drive.actionBuilder(new Pose2d(barPos2, 0)).lineToXConstantHeading(-32, null, new ProfileAccelConstraint(-40, 80)).build();
+        Action ready = Drive.actionBuilder(new Pose2d(-63, -20, 0)).splineToConstantHeading(barPos, Math.toRadians(0), null, new ProfileAccelConstraint(-40, 60)).build();
+        Action score = Drive.actionBuilder(new Pose2d(barPos, 0)).lineToXConstantHeading(-36, null, new ProfileAccelConstraint(-40, 80)).build();
         Actions.runBlocking(
                 new SequentialAction(
                     new InstantAction(() -> elbow.setPosition(elbowscore)),
@@ -100,19 +101,23 @@ public class SpecAuto extends LinearOpMode {
                             new InstantAction(() -> lift1.setPower(1)),
                             new InstantAction(() -> lift2.setPower(1))
                     ),
-                    score,
-                    new InstantAction(() -> sleep(200)),
-                    new InstantAction(()-> claw.setPosition(clawOpen))
+                    new ParallelAction(
+                            score,
+                            score,
+                            new InstantAction(() -> sleep(250)),
+                            new InstantAction(()-> claw.setPosition(clawOpen))
+                    )
+
 
                 )
         );
     }
     protected void SamplePicks(){
-        Action back1 = Drive.actionBuilder(new Pose2d(scorePos, 0)).lineToXConstantHeading(-47.5).build();
+        Action back1 = Drive.actionBuilder(new Pose2d(scorePos, 0)).lineToXConstantHeading(-46).build();
         Action sample1 = Drive.actionBuilder(new Pose2d(-46.5, -5, 0)).strafeToConstantHeading(groundPick1, null, new ProfileAccelConstraint(-40, 60)).build();
         Action sample2 = Drive.actionBuilder(new Pose2d(groundPick1, 0)).strafeToConstantHeading(groundPick2, null, new ProfileAccelConstraint(-15, 80)).build();
         Action sample3 = Drive.actionBuilder(new Pose2d(groundPick2, 0)).strafeToConstantHeading(groundPick3, null, new ProfileAccelConstraint(-30, 70)).build();
-        Action backToWall1 = Drive.actionBuilder(new Pose2d(groundPick2, 0)).lineToXConstantHeading(-55, null, new ProfileAccelConstraint(-10, 30)).build();
+        Action backToWall1 = Drive.actionBuilder(new Pose2d(groundPick2, 0)).lineToXConstantHeading(-57, null, new ProfileAccelConstraint(-10, 30)).build();
         Action backToBar = Drive.actionBuilder(new Pose2d(-57.5, -64.5, 0)).strafeToConstantHeading(barPos2, null, new ProfileAccelConstraint(-30, 60)).build();
 
         Actions.runBlocking(
@@ -126,7 +131,7 @@ public class SpecAuto extends LinearOpMode {
                                 new InstantAction(() -> lift2.setMode(DcMotor.RunMode.RUN_TO_POSITION)),
                                 new InstantAction(() -> lift1.setPower(1)),
                                 new InstantAction(() -> lift2.setPower(1)),
-                                new InstantAction(() -> elbow.setPosition(0.4))
+                                new InstantAction(() -> elbow.setPosition(0.5))
                         ),
                         new ParallelAction(
                                 sample1,
@@ -141,11 +146,10 @@ public class SpecAuto extends LinearOpMode {
                                 new InstantAction(() -> arm2.setPosition(0.1)),
                                 new InstantAction(() -> elbow.setPosition(0.5))
                         ),
-                        new InstantAction(() -> sleep(250)),
                         new InstantAction(() -> arm1.setPosition(armFloor)),
                         new InstantAction(() -> arm2.setPosition(armFloor)),
                         new InstantAction(() -> elbow.setPosition(elbowdown)),
-                        new InstantAction(() -> sleep(500)),
+                        new InstantAction(() -> sleep(300)),
                         new InstantAction(() -> claw.setPosition(clawClose)),
                         new InstantAction(() -> sleep(200)),
                         new ParallelAction(
@@ -155,20 +159,20 @@ public class SpecAuto extends LinearOpMode {
                                 new InstantAction(() -> lift2.setMode(DcMotor.RunMode.RUN_TO_POSITION)),
                                 new InstantAction(() -> lift1.setPower(1)),
                                 new InstantAction(() -> lift2.setPower(1)),
-                                new InstantAction(() -> elbow.setPosition(.3)),
+                                new InstantAction(() -> elbow.setPosition(.6)),
                                 new InstantAction(() -> sleep(500)),
                                 new InstantAction(() -> arm1.setPosition(armPickUp)),
                                 new InstantAction(() -> arm2.setPosition(armPickUp)),
-                                new InstantAction(() -> sleep(750))
+                                new InstantAction(() -> sleep(1100))
 
                         ),
                         sample2,
                         sample2,
                         new InstantAction(() -> sleep(150)),
                         new InstantAction(() -> claw.setPosition(clawOpen)),
-                        new InstantAction(() -> sleep(300)),
+                        new InstantAction(() -> sleep(250)),
                         new ParallelAction(
-                                new InstantAction(() -> elbow.setPosition(0.4)),
+                                new InstantAction(() -> elbow.setPosition(0.6)),
                                 new InstantAction(() -> lift1.setTargetPosition(SLIDES_DOWN)),
                                 new InstantAction(() -> lift1.setMode(DcMotor.RunMode.RUN_TO_POSITION)),
                                 new InstantAction(() -> lift2.setTargetPosition(SLIDES_DOWN)),
@@ -179,26 +183,36 @@ public class SpecAuto extends LinearOpMode {
                                 new InstantAction(() -> arm2.setPosition(armFloor))
 
                         ),
-                        new InstantAction(() -> sleep(1500)),
+                        new InstantAction(() -> sleep(1100)),
                         new InstantAction(() -> elbow.setPosition(elbowdown)),
-                        new InstantAction(() -> sleep(500)),
+                        new InstantAction(() -> sleep(250)),
                         new InstantAction(() -> claw.setPosition(clawClose)),
                         new InstantAction(() -> sleep(250)),
                         new ParallelAction(
-                                new InstantAction(() -> lift1.setTargetPosition(SLIDES_PICKUP)),
+                                new InstantAction(() -> lift1.setTargetPosition(640)),
                                 new InstantAction(() -> lift1.setMode(DcMotor.RunMode.RUN_TO_POSITION)),
-                                new InstantAction(() -> lift2.setTargetPosition(SLIDES_PICKUP)),
+                                new InstantAction(() -> lift2.setTargetPosition(640)),
                                 new InstantAction(() -> lift2.setMode(DcMotor.RunMode.RUN_TO_POSITION)),
                                 new InstantAction(() -> lift1.setPower(1)),
                                 new InstantAction(() -> lift2.setPower(1)),
-                                new InstantAction(() -> elbow.setPosition(.3)),
+                                new InstantAction(() -> elbow.setPosition(.5)),
                                 new InstantAction(() -> sleep(500)),
                                 new InstantAction(() -> arm1.setPosition(armPickUp)),
                                 new InstantAction(() -> arm2.setPosition(armPickUp)),
-                                new InstantAction(() -> sleep(1500)),
+                                new InstantAction(() -> sleep(1300)),
                                 new InstantAction(() -> claw.setPosition(clawOpen))
                         ),
+                        new ParallelAction(
+                                new InstantAction(() -> lift1.setTargetPosition(585)),
+                                new InstantAction(() -> lift1.setMode(DcMotor.RunMode.RUN_TO_POSITION)),
+                                new InstantAction(() -> lift2.setTargetPosition(575)),
+                                new InstantAction(() -> lift2.setMode(DcMotor.RunMode.RUN_TO_POSITION)),
+                                new InstantAction(() -> lift1.setPower(1)),
+                                new InstantAction(() -> lift2.setPower(1))
+                        ),
+                        new InstantAction(() -> sleep(750)),
                         new InstantAction(() -> elbow.setPosition(elbowpickup)),
+                        new InstantAction(() -> wrist.setPosition(wristFlipped)),
                         backToWall1,
                         backToWall1,
                         new InstantAction(() -> sleep(250)),
@@ -208,51 +222,52 @@ public class SpecAuto extends LinearOpMode {
     }
 
     protected void SpecHangs() {
-        Action backToBar = Drive.actionBuilder(new Pose2d(-56.5, -64.5, 0)).strafeToConstantHeading(barPos2, null, new ProfileAccelConstraint(-40, 60)).build();
-        Action score2 = Drive.actionBuilder(new Pose2d(barPos2, 0)).lineToXConstantHeading(-45.2, null, new ProfileAccelConstraint(-5, 40)).build();
-        Action back2 = Drive.actionBuilder(new Pose2d(-45.5, -8, 0)).lineToX(-46.5).build();
-        Action Strafe = Drive.actionBuilder(new Pose2d(-46.5, -8, 0)).strafeToConstantHeading(back3).build();
-        Action Wall = Drive.actionBuilder(new Pose2d(back3, 0 )).lineToXConstantHeading(-55.5 , null, new ProfileAccelConstraint(-5, 20)).build();
+        Action backToBar = Drive.actionBuilder(new Pose2d(-56.5, -64.5, 0)).strafeToConstantHeading(barPos2, null, new ProfileAccelConstraint(-50, 80)).build();
+        Action backToBarAGAIN = Drive.actionBuilder(new Pose2d(-56.5, -47, 0)).strafeToConstantHeading(barPos3, null, new ProfileAccelConstraint(-50, 80)).build();
+        Action score2 = Drive.actionBuilder(new Pose2d(barPos2, 0)).lineToXConstantHeading(-32, null, new ProfileAccelConstraint(-40, 80)).build();
+        Action score3 = Drive.actionBuilder(new Pose2d(barPos3, 0)).lineToXConstantHeading(-31, null, new ProfileAccelConstraint(-40, 80)).build();
+        Action back2 = Drive.actionBuilder(new Pose2d(-34, -6.5, 0)).lineToX(-46.5).build();
+        Action Back3 = Drive.actionBuilder(new Pose2d(-34, -7.5, 0)).lineToX(-46.5).build();
+        Action Strafe = Drive.actionBuilder(new Pose2d(-46.5, -6.5, 0)).strafeToConstantHeading(back3).build();
+        Action Wall = Drive.actionBuilder(new Pose2d(back3, 0 )).lineToXConstantHeading(-56, null, new ProfileAccelConstraint(-15, 30)).build();
 
         Actions.runBlocking(
                 new SequentialAction(
-                        new InstantAction(() -> sleep(500)),
-                        new InstantAction(() -> elbow.setPosition(elbowSpec)),
+                        new InstantAction(() -> sleep(250)),
+                        new InstantAction(() -> elbow.setPosition(0.85)),
                         new InstantAction(() -> arm1.setPosition(0)),
                         new InstantAction(() -> arm2.setPosition(0)),
+                        new InstantAction(() -> wrist.setPosition(0)),
+                        new InstantAction(() -> lift1.setTargetPosition(1075)),
+                        new InstantAction(() -> lift1.setMode(DcMotor.RunMode.RUN_TO_POSITION)),
+                        new InstantAction(() -> lift2.setTargetPosition(1075)),
+                        new InstantAction(() -> lift2.setMode(DcMotor.RunMode.RUN_TO_POSITION)),
+                        new InstantAction(() -> lift1.setPower(1)),
+                        new InstantAction(() -> lift2.setPower(1)),
 
                         new ParallelAction(
                                 backToBar,
                                 backToBar,
-                                new InstantAction(() -> lift1.setTargetPosition(SLIDES_SCORE1)),
-                                new InstantAction(() -> lift1.setMode(DcMotor.RunMode.RUN_TO_POSITION)),
-                                new InstantAction(() -> lift2.setTargetPosition(SLIDES_SCORE1)),
-                                new InstantAction(() -> lift2.setMode(DcMotor.RunMode.RUN_TO_POSITION)),
-                                new InstantAction(() -> lift1.setPower(1)),
-                                new InstantAction(() -> lift2.setPower(1)),
-                                new InstantAction(() -> wrist.setPosition(wristFlipped))
 
+                                new InstantAction(() -> sleep(150))
                         ),
 
-                        new InstantAction(() -> sleep(150)),
                         score2,
                         score2,
-                        new InstantAction(() -> sleep(250)),
-                        new ParallelAction(
-                                new InstantAction(() -> lift1.setTargetPosition(SLIDES_SCORE2)),
-                                new InstantAction(() -> lift1.setMode(DcMotor.RunMode.RUN_TO_POSITION)),
-                                new InstantAction(() -> lift2.setTargetPosition(SLIDES_SCORE2)),
-                                new InstantAction(() -> lift2.setMode(DcMotor.RunMode.RUN_TO_POSITION)),
-                                new InstantAction(() -> lift1.setPower(1)),
-                                new InstantAction(() -> lift2.setPower(1)),
-                                new InstantAction(() -> elbow.setPosition(0))
-                        ),
-                        new InstantAction(() -> sleep(1000)),
                         new InstantAction(()-> claw.setPosition(clawOpen)),
-                        new InstantAction(() -> sleep(750)),
                         new ParallelAction(
-                                back2,
-                                back2,
+                                new InstantAction(() -> lift1.setTargetPosition(1100)),
+                                new InstantAction(() -> lift1.setMode(DcMotor.RunMode.RUN_TO_POSITION)),
+                                new InstantAction(() -> lift2.setTargetPosition(1100)),
+                                new InstantAction(() -> lift2.setMode(DcMotor.RunMode.RUN_TO_POSITION)),
+                                new InstantAction(() -> lift1.setPower(1)),
+                                new InstantAction(() -> lift2.setPower(1)),
+                                new InstantAction(() -> elbow.setPosition(0.5))
+                        ),
+                        back2,
+                        back2,
+                        new InstantAction(() -> sleep(100)),
+                        new ParallelAction(
                                 new InstantAction(() -> lift1.setTargetPosition(SLIDES_DOWN)),
                                 new InstantAction(() -> lift1.setMode(DcMotor.RunMode.RUN_TO_POSITION)),
                                 new InstantAction(() -> lift2.setTargetPosition(SLIDES_DOWN)),
@@ -273,15 +288,59 @@ public class SpecAuto extends LinearOpMode {
                             new InstantAction(() -> lift2.setPower(1)),
                             new InstantAction(() -> arm1.setPosition(armPickUp)),
                             new InstantAction(() -> arm2.setPosition(armPickUp)),
-                            new InstantAction(() -> elbow.setPosition(elbowpickup)),
-                            new InstantAction(() -> wrist.setPosition(wristNotFlipped))
+                            new InstantAction(() -> elbow.setPosition(0.6)),
+                            new InstantAction(() -> wrist.setPosition(wristFlipped))
                         ),
-                        new InstantAction(() -> sleep(100)),
-                        Wall,
-                        Wall,
+                        new ParallelAction(
+                            new InstantAction(() -> elbow.setPosition(0.35)),
+                            new InstantAction(() -> lift1.setTargetPosition(575)),
+                            new InstantAction(() -> lift1.setMode(DcMotor.RunMode.RUN_TO_POSITION)),
+                            new InstantAction(() -> lift2.setTargetPosition(575)),
+                            new InstantAction(() -> lift2.setMode(DcMotor.RunMode.RUN_TO_POSITION)),
+                            new InstantAction(() -> lift1.setPower(1)),
+                            new InstantAction(() -> lift2.setPower(1)),
+                            Wall,
+                            Wall
+                        ),
                         new InstantAction(() -> sleep(500)),
-                        new InstantAction(() -> claw.setPosition(clawClose))
+                        new InstantAction(() -> claw.setPosition(clawClose)),
+                        new InstantAction(() -> sleep(250)),
+                        new InstantAction(() -> elbow.setPosition(0.85)),
+                        new InstantAction(() -> arm1.setPosition(0)),
+                        new InstantAction(() -> arm2.setPosition(0)),
+                        new InstantAction(() -> wrist.setPosition(0)),
+                        new InstantAction(() -> lift1.setTargetPosition(1075)),
+                        new InstantAction(() -> lift1.setMode(DcMotor.RunMode.RUN_TO_POSITION)),
+                        new InstantAction(() -> lift2.setTargetPosition(1075)),
+                        new InstantAction(() -> lift2.setMode(DcMotor.RunMode.RUN_TO_POSITION)),
+                        new InstantAction(() -> lift1.setPower(1)),
+                        new InstantAction(() -> lift2.setPower(1)),
+
+                        new ParallelAction(
+                        backToBarAGAIN,
+                        backToBarAGAIN,
+
+                        new InstantAction(() -> sleep(150))
+                ),
+
+                score3,
+                new InstantAction(() -> sleep(250)),
+                new InstantAction(()-> claw.setPosition(clawOpen)),
+                new InstantAction(() -> sleep(100)),
+                new ParallelAction(
+                        Back3,
+                        Back3,
+                        new InstantAction(() -> elbow.setPosition(0.7)),
+                        new InstantAction(() -> lift1.setTargetPosition(SLIDES_DOWN)),
+                        new InstantAction(() -> lift1.setMode(DcMotor.RunMode.RUN_TO_POSITION)),
+                        new InstantAction(() -> lift2.setTargetPosition(SLIDES_DOWN)),
+                        new InstantAction(() -> lift2.setMode(DcMotor.RunMode.RUN_TO_POSITION)),
+                        new InstantAction(() -> lift1.setPower(1)),
+                        new InstantAction(() -> lift2.setPower(1))
                 )
+                )
+
+
         );
     }
 
@@ -329,7 +388,7 @@ public class SpecAuto extends LinearOpMode {
 //        Action pickfromWitt = Drive.actionBuilder(new Pose2d(drop, 0)).strafeToConstantHeading(toWall).build();
 
         claw.setPosition(clawClose);
-        elbow.setPosition(0.6);
+        elbow.setPosition(elbowInit);
         arm1.setPosition(armInit);
         arm2.setPosition(armInit);
         wrist.setPosition(wristNotFlipped);
@@ -341,7 +400,7 @@ public class SpecAuto extends LinearOpMode {
         Spec1Score();
 
         SamplePicks();
-
+//
         SpecHangs();
 
 //        Actions.runBlocking(wall);
