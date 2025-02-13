@@ -103,7 +103,6 @@ public class SpecAuto extends LinearOpMode {
                     ),
                     new ParallelAction(
                             score,
-                            score,
                             new InstantAction(() -> sleep(250)),
                             new InstantAction(()-> claw.setPosition(clawOpen))
                     )
@@ -149,9 +148,9 @@ public class SpecAuto extends LinearOpMode {
                         new InstantAction(() -> arm1.setPosition(armFloor)),
                         new InstantAction(() -> arm2.setPosition(armFloor)),
                         new InstantAction(() -> elbow.setPosition(elbowdown)),
-                        new InstantAction(() -> sleep(300)),
+                        new InstantAction(() -> sleep(250)),
                         new InstantAction(() -> claw.setPosition(clawClose)),
-                        new InstantAction(() -> sleep(200)),
+                        new InstantAction(() -> sleep(150)),
                         new ParallelAction(
                                 new InstantAction(() -> lift1.setTargetPosition(SLIDES_PICKUP)),
                                 new InstantAction(() -> lift1.setMode(DcMotor.RunMode.RUN_TO_POSITION)),
@@ -163,14 +162,13 @@ public class SpecAuto extends LinearOpMode {
                                 new InstantAction(() -> sleep(500)),
                                 new InstantAction(() -> arm1.setPosition(armPickUp)),
                                 new InstantAction(() -> arm2.setPosition(armPickUp)),
-                                new InstantAction(() -> sleep(1100))
+                                new InstantAction(() -> sleep(750))
 
                         ),
                         sample2,
                         sample2,
-                        new InstantAction(() -> sleep(150)),
                         new InstantAction(() -> claw.setPosition(clawOpen)),
-                        new InstantAction(() -> sleep(250)),
+                        new InstantAction(() -> sleep(150)),
                         new ParallelAction(
                                 new InstantAction(() -> elbow.setPosition(0.6)),
                                 new InstantAction(() -> lift1.setTargetPosition(SLIDES_DOWN)),
@@ -183,11 +181,11 @@ public class SpecAuto extends LinearOpMode {
                                 new InstantAction(() -> arm2.setPosition(armFloor))
 
                         ),
-                        new InstantAction(() -> sleep(1100)),
+                        new InstantAction(() -> sleep(400)),
                         new InstantAction(() -> elbow.setPosition(elbowdown)),
-                        new InstantAction(() -> sleep(250)),
+                        new InstantAction(() -> sleep(350)),
                         new InstantAction(() -> claw.setPosition(clawClose)),
-                        new InstantAction(() -> sleep(250)),
+                        new InstantAction(() -> sleep(150)),
                         new ParallelAction(
                                 new InstantAction(() -> lift1.setTargetPosition(640)),
                                 new InstantAction(() -> lift1.setMode(DcMotor.RunMode.RUN_TO_POSITION)),
@@ -195,11 +193,11 @@ public class SpecAuto extends LinearOpMode {
                                 new InstantAction(() -> lift2.setMode(DcMotor.RunMode.RUN_TO_POSITION)),
                                 new InstantAction(() -> lift1.setPower(1)),
                                 new InstantAction(() -> lift2.setPower(1)),
-                                new InstantAction(() -> elbow.setPosition(.5)),
+                                new InstantAction(() -> elbow.setPosition(.7)),
                                 new InstantAction(() -> sleep(500)),
                                 new InstantAction(() -> arm1.setPosition(armPickUp)),
                                 new InstantAction(() -> arm2.setPosition(armPickUp)),
-                                new InstantAction(() -> sleep(1300)),
+                                new InstantAction(() -> sleep(900)),
                                 new InstantAction(() -> claw.setPosition(clawOpen))
                         ),
                         new ParallelAction(
@@ -210,13 +208,15 @@ public class SpecAuto extends LinearOpMode {
                                 new InstantAction(() -> lift1.setPower(1)),
                                 new InstantAction(() -> lift2.setPower(1))
                         ),
-                        new InstantAction(() -> sleep(750)),
+                        new InstantAction(() -> sleep(100)),
                         new InstantAction(() -> elbow.setPosition(elbowpickup)),
                         new InstantAction(() -> wrist.setPosition(wristFlipped)),
-                        backToWall1,
-                        backToWall1,
-                        new InstantAction(() -> sleep(250)),
-                        new InstantAction(() -> claw.setPosition(clawClose))
+                        new ParallelAction(
+                                backToWall1,
+                                new InstantAction(() -> sleep(900)),
+                                new InstantAction(() -> claw.setPosition(clawClose))
+                        )
+
                 )
         );
     }
@@ -229,11 +229,10 @@ public class SpecAuto extends LinearOpMode {
         Action back2 = Drive.actionBuilder(new Pose2d(-34, -6.5, 0)).lineToX(-46.5).build();
         Action Back3 = Drive.actionBuilder(new Pose2d(-34, -7.5, 0)).lineToX(-46.5).build();
         Action Strafe = Drive.actionBuilder(new Pose2d(-46.5, -6.5, 0)).strafeToConstantHeading(back3).build();
-        Action Wall = Drive.actionBuilder(new Pose2d(back3, 0 )).lineToXConstantHeading(-56, null, new ProfileAccelConstraint(-15, 30)).build();
+        Action Wall = Drive.actionBuilder(new Pose2d(back3, 0 )).lineToXConstantHeading(-56.5, null, new ProfileAccelConstraint(-15, 30)).build();
 
         Actions.runBlocking(
                 new SequentialAction(
-                        new InstantAction(() -> sleep(250)),
                         new InstantAction(() -> elbow.setPosition(0.85)),
                         new InstantAction(() -> arm1.setPosition(0)),
                         new InstantAction(() -> arm2.setPosition(0)),
@@ -247,14 +246,14 @@ public class SpecAuto extends LinearOpMode {
 
                         new ParallelAction(
                                 backToBar,
-                                backToBar,
-
-                                new InstantAction(() -> sleep(150))
+                                backToBar
                         ),
 
-                        score2,
-                        score2,
-                        new InstantAction(()-> claw.setPosition(clawOpen)),
+                        new ParallelAction(
+                                score2,
+                                new InstantAction(() -> sleep(950)),
+                                new InstantAction(()-> claw.setPosition(clawOpen))
+                        ),
                         new ParallelAction(
                                 new InstantAction(() -> lift1.setTargetPosition(1100)),
                                 new InstantAction(() -> lift1.setMode(DcMotor.RunMode.RUN_TO_POSITION)),
@@ -264,7 +263,6 @@ public class SpecAuto extends LinearOpMode {
                                 new InstantAction(() -> lift2.setPower(1)),
                                 new InstantAction(() -> elbow.setPosition(0.5))
                         ),
-                        back2,
                         back2,
                         new InstantAction(() -> sleep(100)),
                         new ParallelAction(
@@ -276,9 +274,7 @@ public class SpecAuto extends LinearOpMode {
                                 new InstantAction(() -> lift2.setPower(1)),
                                 new InstantAction(() -> elbow.setPosition(0.6))
                         ),
-                        new InstantAction(() -> sleep(100)),
                         new ParallelAction(
-                            Strafe,
                             Strafe,
                             new InstantAction(() -> lift1.setTargetPosition(SLIDES_PICKUP)),
                             new InstantAction(() -> lift1.setMode(DcMotor.RunMode.RUN_TO_POSITION)),
@@ -299,10 +295,8 @@ public class SpecAuto extends LinearOpMode {
                             new InstantAction(() -> lift2.setMode(DcMotor.RunMode.RUN_TO_POSITION)),
                             new InstantAction(() -> lift1.setPower(1)),
                             new InstantAction(() -> lift2.setPower(1)),
-                            Wall,
                             Wall
                         ),
-                        new InstantAction(() -> sleep(500)),
                         new InstantAction(() -> claw.setPosition(clawClose)),
                         new InstantAction(() -> sleep(250)),
                         new InstantAction(() -> elbow.setPosition(0.85)),
@@ -323,12 +317,12 @@ public class SpecAuto extends LinearOpMode {
                         new InstantAction(() -> sleep(150))
                 ),
 
-                score3,
-                new InstantAction(() -> sleep(250)),
-                new InstantAction(()-> claw.setPosition(clawOpen)),
-                new InstantAction(() -> sleep(100)),
+                        new ParallelAction(
+                                score3,
+                                new InstantAction(() -> sleep(950)),
+                                new InstantAction(()-> claw.setPosition(clawOpen))
+                        ),
                 new ParallelAction(
-                        Back3,
                         Back3,
                         new InstantAction(() -> elbow.setPosition(0.7)),
                         new InstantAction(() -> lift1.setTargetPosition(SLIDES_DOWN)),

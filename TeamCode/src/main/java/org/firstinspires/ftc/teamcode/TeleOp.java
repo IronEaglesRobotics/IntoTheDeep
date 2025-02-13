@@ -32,7 +32,7 @@ public class TeleOp extends OpMode {
     public double swingTimer = 0;
 
     public static int SLIDES_DOWN = 0;
-    public static int SLIDES_PICKUP = 480;
+    public static int SLIDES_PICKUP = 750;
     public static int SLIDES_SCORE1 = 2100;
     public static int SLIDES_SCORE2 = 500;
     public static int SLIDES_HIGH_BUCKET = 2750;
@@ -52,7 +52,7 @@ public class TeleOp extends OpMode {
     public static double elbowpickup = 0.05;
     public static double wristNotFlipped = 0;
     public static double wristFlipped = 0.54;
-    public static int SLIDES1 = 1100;
+    public static int SLIDES1 = 1050;
     public static double elbowscore2 = .4;
 
     @Override
@@ -94,9 +94,9 @@ public class TeleOp extends OpMode {
         }
 
         if (gamepad2.dpad_left) {
-            robot.lift.setTargetPosition(625, 0.5);
+            robot.lift.setTargetPosition(SLIDES_PICKUP, 0.5);
             robot.arm.setPosition(armPickUp);
-            robot.elbow.setPosition(0.3);
+            robot.elbow.setPosition(0.41);
             robot.wrist.setPosition(wristFlipped);
         }
 
