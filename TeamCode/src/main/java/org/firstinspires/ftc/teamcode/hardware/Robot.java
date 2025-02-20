@@ -41,7 +41,7 @@ public class Robot {
         intakeArm = new IntakeArm(hardwareMap);
         claw = new Claw(hardwareMap);
         hang = new Hang(hardwareMap);
-        slides = intakeArm.slides;
+        slides = new Slides(hardwareMap);
         pusher = new pusher(hardwareMap);
         odo = hardwareMap.get(GoBildaPinpointDriverRR.class,"odo");
         clipMovement = drive.actionBuilder(odo.getPositionRR())

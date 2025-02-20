@@ -37,6 +37,7 @@ public class TeleOpMain extends CommandOpMode {
         robot = new Robot().init(hardwareMap,new Pose2d(0,0,0));
         controller1.readButtons();
         controller2.readButtons();
+        new WaitCommand(90000).andThen(robot.getHang().hangDeploy());
 
         controller1.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
                         .whenPressed(robot.setPose(new Pose2d(0,0,0)));
@@ -56,6 +57,8 @@ public class TeleOpMain extends CommandOpMode {
                 controller2.getGamepadButton(GamepadKeys.Button.A)
                         .toggleWhenPressed(robot.getClaw().adaptClaw().andThen(new WaitCommand(250)).andThen(robot.getSlides().preclip())
                                 ,robot.getClaw().closeCommand());
+                controller2.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
+                                .whenPressed(robot.getHang().hangDeploy());
                 // automates clip process
                 controller2.getGamepadButton(GamepadKeys.Button.RIGHT_STICK_BUTTON)
                         .whenPressed(robot.getSlides().postclip()
@@ -75,6 +78,8 @@ public class TeleOpMain extends CommandOpMode {
                                 .andThen(new WaitCommand(1000))
                                 .andThen(robot.getIntakeArm().upCommand())
                                 .andThen(robot.getIntake().ejectIntake()));
+                controller2.getGamepadButton(GamepadKeys.Button.LEFT_STICK_BUTTON)
+                        .whenPressed(robot.getHang().hangRetract());
                 break;
             case standard:
                 // controls raising slides
@@ -99,20 +104,20 @@ public class TeleOpMain extends CommandOpMode {
         }
         // macros rotating arm up and extending intake
         controller2.getGamepadButton(GamepadKeys.Button.X)
-                .toggleWhenPressed(robot.getIntake().reverseIntake(),robot.getIntake().offIntake());
+                .toggleWhenPressed(robot.getIntake().reverseIntake(),robot.getIntake().offEject());
         // puts intake all the way up
         controller2.getGamepadButton(GamepadKeys.Button.Y)
                 .whenPressed(new Intake.storeIntake(robot.getIntake()));
         // turns intake on and off
         controller2.getGamepadButton(GamepadKeys.Button.B)
-                .toggleWhenPressed(robot.getIntake().runIntake(),robot.getIntake().offIntake());
+                .toggleWhenPressed(robot.getIntake().runIntake().andThen(new WaitCommand(500)).andThen(robot.getIntakeArm().inCommand()),robot.getIntake().offIntake());
         // controls pusher
         controller1.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
                 .whenPressed(robot.getPusher().activateCommand())
                 .whenReleased(robot.getPusher().offCommand());
         // extends and retracts intake
         controller2.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
-                .toggleWhenPressed(robot.getIntakeArm().inCommand(),robot.getIntakeArm().outCommand());
+                .toggleWhenPressed(robot.getIntakeArm().outCommand(),robot.getIntakeArm().inCommand());
         // controls lowering slides
         controller2.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
                 .whenPressed(new Intake.storeIntake(robot.getIntake())

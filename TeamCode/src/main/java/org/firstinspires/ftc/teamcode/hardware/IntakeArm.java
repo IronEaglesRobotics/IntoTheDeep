@@ -5,6 +5,8 @@ import static org.firstinspires.ftc.teamcode.lib.Config.extendhighscale2;
 import static org.firstinspires.ftc.teamcode.lib.Config.extendlowscale1;
 import static org.firstinspires.ftc.teamcode.lib.Config.extendlowscale2;
 
+import static java.lang.Thread.sleep;
+
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.Command;
 import com.arcrobotics.ftclib.command.CommandBase;
@@ -12,6 +14,7 @@ import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 
 @Config
 public class IntakeArm extends SubsystemBase {
@@ -22,7 +25,7 @@ public class IntakeArm extends SubsystemBase {
     boolean out = false;
     public static int target = -900;
     double ex_save = 1;
-    Slides slides;
+    TouchSensor touchSensor;
 
 
     public IntakeArm(HardwareMap HardwareMap) {
@@ -33,7 +36,7 @@ public class IntakeArm extends SubsystemBase {
         extension2.setDirection(Servo.Direction.REVERSE);
         extension1.scaleRange(extendlowscale1,extendhighscale1);
         extension2.scaleRange(extendlowscale2,extendhighscale2);
-        slides = new Slides(HardwareMap);
+        touchSensor = HardwareMap.get(TouchSensor.class,"arm_sensor");
         periodic();
     }
 
@@ -71,7 +74,7 @@ public class IntakeArm extends SubsystemBase {
     public static class RotateCommand extends CommandBase {
         private final IntakeArm arm;
         private boolean target;
-
+//        private boolean adapt = true;
         public RotateCommand(IntakeArm intakeArm,boolean up) {
             arm = intakeArm;
             addRequirements(intakeArm);
@@ -85,8 +88,20 @@ public class IntakeArm extends SubsystemBase {
             } else {
                 arm.armDown();
                 arm.armIn();
+//                adapt = false;
             }
         }
+
+//        @Override
+//        public void execute() {
+//            try {
+//                sleep(500);
+//            } catch (InterruptedException e) {
+//                throw new RuntimeException(e);
+//            }
+//            IntakeArm.target -= 500;
+//        }
+
         public boolean isFinished(){
             return arm.isBusy();
         }

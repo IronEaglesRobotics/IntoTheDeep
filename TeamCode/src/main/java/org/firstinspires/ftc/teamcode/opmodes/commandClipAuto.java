@@ -47,15 +47,13 @@ public class commandClipAuto extends CommandOpMode {
         }
     }
     Command move(){
-        return clip().andThen(placeBlock1()).andThen(placeBlock2()).andThen(Clip2(true)).andThen(Clip2(false).andThen(grab()));
+        return robot.getClaw().closeCommand().andThen(clip()).andThen(placeBlock1()).andThen(placeBlock2()).andThen(Clip2(true)).andThen(Clip3(false).andThen(grab()));
     }
     Command clip(){
-        return new Intake.colorSet(Intake.colors.NULL,robot.getIntake())
-                .andThen(robot.getSlides().preclip()
-                .alongWith(robot.runAction(builder.lineToX(34).build())))
+        return robot.getSlides().preclip()
+                .alongWith(robot.runAction(builder.lineToX(34).build()))
                 .andThen(robot.getSlides().postclip())
-                .alongWith(new WaitCommand(200)
-                .andThen(robot.getClaw().openCommand()));
+                .andThen(robot.getClaw().openCommand());
     }
     Command placeBlock1(){
         return robot.getSlides().down()
@@ -81,7 +79,7 @@ public class commandClipAuto extends CommandOpMode {
     }
     Command Clip2(boolean first){
         return robot.runAction(robot.getDrive().actionBuilder(new Pose2d(0,-42,Math.toRadians(180))).splineToLinearHeading(toWall,Math.toRadians(50)).build())
-                .andThen(robot.getSlides().down())
+                .alongWith(robot.getSlides().down())
                 .andThen(robot.runAction(robot.getDrive().actionBuilder(toWall).setTangent(Math.toRadians(0)).lineToX(-4).build()))
                 .andThen(robot.getPusher().offCommand())
                 .andThen(robot.getClaw().adaptClaw())
@@ -90,9 +88,22 @@ public class commandClipAuto extends CommandOpMode {
                 .alongWith(robot.runAction(robot.getDrive().actionBuilder(toWall).splineToLinearHeading(toBar2.plus(new Twist2d(new Vector2d(0,first ? 0 : 4),0)),Math.toRadians(-110)).build())))
                 .andThen(robot.getSlides().preclip())
                 .andThen(robot.runAction(robot.getDrive().actionBuilder(toBar2).setTangent(Math.toRadians(190)).lineToX(34.5).build()))
-                .andThen(robot.getSlides().postclip()
-                .alongWith(new WaitCommand(200)
-                .andThen(robot.getClaw().openCommand())));
+                .andThen(robot.getSlides().postclip())
+                .andThen(robot.getClaw().openCommand());
+    }
+    Command Clip3(boolean first){
+        return robot.runAction(robot.getDrive().actionBuilder(toBar2).splineToLinearHeading(toWall,Math.toRadians(-50)).build())
+                .alongWith(robot.getSlides().down())
+                .andThen(robot.runAction(robot.getDrive().actionBuilder(toWall).setTangent(Math.toRadians(0)).lineToX(-4).build()))
+                .andThen(robot.getPusher().offCommand())
+                .andThen(robot.getClaw().adaptClaw())
+                .andThen(new WaitCommand(600))
+                .andThen(robot.getSlides().preclip()
+                        .alongWith(robot.runAction(robot.getDrive().actionBuilder(toWall).splineToLinearHeading(toBar2.plus(new Twist2d(new Vector2d(0,first ? 0 : 4),0)),Math.toRadians(-110)).build())))
+                .andThen(robot.getSlides().preclip())
+                .andThen(robot.runAction(robot.getDrive().actionBuilder(toBar2).setTangent(Math.toRadians(190)).lineToX(34.5).build()))
+                .andThen(robot.getSlides().postclip())
+                .andThen(robot.getClaw().openCommand());
     }
     Command park(){
         return robot.runAction(builder.splineToConstantHeading(toPark,Math.toRadians(90)).build())

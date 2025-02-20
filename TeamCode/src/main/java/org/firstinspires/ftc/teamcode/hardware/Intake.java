@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
 import static org.firstinspires.ftc.teamcode.lib.Config.wristFloorlowscale1;
-import static org.firstinspires.ftc.teamcode.lib.Config.wristFullLowscale;
 import static org.firstinspires.ftc.teamcode.lib.Config.wristFullhighscale;
 import static org.firstinspires.ftc.teamcode.lib.Config.wristMedianhighscale1;
 
@@ -9,16 +8,12 @@ import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.Command;
 import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.command.InstantCommand;
-import com.arcrobotics.ftclib.command.SelectCommand;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-
-import java.util.HashMap;
-import java.util.function.BooleanSupplier;
 
 @Config
 public class Intake extends SubsystemBase {
@@ -53,7 +48,7 @@ public class Intake extends SubsystemBase {
         beatBar.setPower(0);
     }
     public void reverseBeatBar(){
-        beatBar.setPower(-.5);
+        beatBar.setPower(-.3);
     }
     public void wristUp(){
         Wrist.scaleRange(wristFloorlowscale1,wristMedianhighscale1);
@@ -104,7 +99,7 @@ public class Intake extends SubsystemBase {
     public colorSet setRed = new colorSet(colors.RED,this);
     public colorSet setBlue = new colorSet(colors.BLUE,this);
     public runIntake runIntake() {return new runIntake(this);}
-    public adaptEject adaptEject() {return new adaptEject(this);}
+    public offEject offEject() {return new offEject(this);}
     public static class onIntake extends InstantCommand{
         Intake intake;
         public onIntake(Intake tempIntake){
@@ -186,9 +181,9 @@ public class Intake extends SubsystemBase {
             output = intake.offIntake()
                     .andThen(intake.reverseIntake())
                     .andThen(new WaitCommand(750))
-                    .andThen(intake.onIntake());
+                    .whenFinished(this::stopBeatBar);
         } else {
-            output = new offIntake(this);
+            output = new offIntake(this).andThen(storeIntake());
         }
         return output;
     }
@@ -204,31 +199,22 @@ public class Intake extends SubsystemBase {
         }
         @Override
         public boolean isFinished(){
-            return (intake.getColor() == intake.target);
+            return (intake.getColor() != colors.NULL);
         }
         @Override
         public void end(boolean i){
             intake.actionChoice().schedule();
         }
     }
-    public class adaptEject extends CommandBase{
+    public class offEject extends CommandBase{
         Intake intake;
-        public adaptEject(Intake tintake){
+        public offEject(Intake tintake){
             intake = tintake;
             addRequirements(intake);
         }
         @Override
         public void initialize() {
-            intake.reverseBeatBar();
-        }
-        @Override
-        public boolean isFinished() {
-            return intake.getColor() == colors.NULL;
-        }
-
-        @Override
-        public void end(boolean interrupted) {
-            intake.offIntake().schedule();
+            intake.stopBeatBar();
         }
     }
 }
