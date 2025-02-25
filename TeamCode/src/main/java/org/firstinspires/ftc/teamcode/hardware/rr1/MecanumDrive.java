@@ -512,12 +512,12 @@ public final class MecanumDrive {
         }
 
         double speedScale = slowmo ? .5 : 1;
-        double turnScale = slowmo ? .15 : .5;
+        double turnScale = slowmo ? .4 : .8;
 
         this.setDrivePowers(
                 new PoseVelocity2d(
                         new Vector2d(
-                                controller1.getLeftY() * speedScale,
+                                controller1.getLeftY() * 1.2 * speedScale,
                                 -controller1.getLeftX() * speedScale),
                                 -controller1.getRightX() * turnScale
                 ));

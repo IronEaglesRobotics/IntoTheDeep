@@ -23,6 +23,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.hardware.Robot;
 import org.firstinspires.ftc.teamcode.hardware.Robot.scoringStates;
 import org.firstinspires.ftc.teamcode.hardware.pedroPathing.constants.FConstants;
+import org.firstinspires.ftc.teamcode.hardware.pedroPathing.constants.FConstantsOld;
 import org.firstinspires.ftc.teamcode.hardware.pedroPathing.constants.LConstants;
 
 
@@ -57,24 +58,24 @@ public class specAuto extends OpMode {
 
     private final Pose initialPosition = new Pose(84, 12, Math.toRadians(-90));
     //    private final Pose control1 = new Pose(30, 24,P);
-    private final Pose specPreload = new Pose(80, 44, Math.toRadians(-90));
+    private final Pose specPreload = new Pose(80, 43.75, Math.toRadians(-90));
     private final Pose plow1 = new Pose(120, 60, Math.toRadians(-90));
     private final Pose plowcontrol1 = new Pose(130, 24, Math.toRadians(-90));
     private final Pose plowcontrol2 = new Pose(100, 60, Math.toRadians(-90));
     private final Pose plow2 = new Pose(120, 20, Math.toRadians(-90)); // line 3
-    private final Pose plow3control1 = new Pose(140, 65); // line 5
-    private final Pose plow3 = new Pose(135, 20); // line 5
+    private final Pose plow3control1 = new Pose(144, 65); // line 5
+    private final Pose plow3 = new Pose(140, 9); // line 5
     private final Pose plow4 = new Pose(135, 60);
-    private final Pose plow5 = new Pose(140, 60);
-    private final Pose plow6 = new Pose(140, 11.4); //pickup
-    private final Pose spec2 = new Pose(80, 43);
+    private final Pose plow5 = new Pose(145, 60);
+    private final Pose plow6 = new Pose(140, 13); //pickup
+    private final Pose spec2 = new Pose(80, 43.2);
     private final Pose spec2Control = new Pose(80, 30);
-    private final Pose specPickup = new Pose(124, 12);
+    private final Pose specPickup = new Pose(124, 11.3);
     private final Pose specPickupControl1 = new Pose(80, 30);
     private final Pose specPickupControl2 = new Pose(124, 40);
-    private final Pose specScore = new Pose(80, 43);
+    private final Pose specScore = new Pose(80, 43.5);
     private final Pose specScoreControl1 = new Pose(120, 40);
-    private final Pose specScoreControl2 = new Pose(80, 20);
+    private final Pose specScoreControl2 = new Pose(70, 25);
 
 
 
@@ -130,7 +131,7 @@ public class specAuto extends OpMode {
         ));
 
         scoreSpec1 = new Path(new BezierCurve(
-                new Point(plow6),
+                new Point(plow3),
                 new Point (spec2Control),
                 new Point(spec2)
         ));
@@ -174,14 +175,14 @@ public class specAuto extends OpMode {
                 .addPath(plowPath2) // Second path
                 .setConstantHeadingInterpolation(Math.toRadians(-90))
 
-                .addPath(plowPath3) // Second path
-                .setConstantHeadingInterpolation(Math.toRadians(-90))
+//                .addPath(plowPath3) // Second path
+//                .setConstantHeadingInterpolation(Math.toRadians(-90))
 
-                .addPath(plowPath4) // Second path
-                .setConstantHeadingInterpolation(Math.toRadians(-90))
-
-                .addPath(plowPath5) // Second path
-                .setConstantHeadingInterpolation(Math.toRadians(-90))
+//                .addPath(plowPath4) // Second path
+//                .setConstantHeadingInterpolation(Math.toRadians(-90))
+//
+//                .addPath(plowPath5) // Second path
+//                .setConstantHeadingInterpolation(Math.toRadians(-90))
 
                 .build();
 
@@ -254,6 +255,7 @@ public class specAuto extends OpMode {
                     robot.GRABSPEC = true;
                     if (robot.slides.getPosition() > 300) {
                         setPathState(7); // End the autonomous routine
+                        step = 0;
                     }
                 }
                 break;
@@ -286,6 +288,7 @@ public class specAuto extends OpMode {
             case 9:
                 if (!follower.isBusy()) {
                     robot.GRABSPEC = true;
+                    robot.SCORESPEC = false;
                     if (robot.slides.getPosition() > 300) {
                         setPathState(10); // End the autonomous routine
                     }
@@ -294,291 +297,21 @@ public class specAuto extends OpMode {
             case 10:
                 switch (step){
                     case 0:
-                        follower.followPath(specScorePath);
-                        step ++;
+                        if (!follower.isBusy()) {
+                            follower.followPath(specScorePath);
+                            timer = getRuntime();
+                            step++;
+                        }
                         break;
                     case 1:
-                        if(!follower.isBusy()){
+                        if(!follower.isBusy() && timer + 2.2 < getRuntime()){
                             robot.SCORESPEC = true;
                             setPathState(-1); // End the autonomous routine
-                            timer = getRuntime();
+//                            timer = getRuntime();
                         }
                         break;
                 }
                 break;
-//            case 4:
-//                if (!follower.isBusy()) {
-//                    robot.AUTO = false;
-//                    robot.claw.open();
-//                    if (getRuntime() > timer + 1.75) {
-//                        robot.mini = true;
-//                        robot.intakeState = Robot.intakeStates.EXTENDED;
-//                        setPathState(5); // End the autonomous routine
-//                        robot.claw.close();
-//                    }
-//                }
-//                break;
-//            case 5: //LSDFSFLKLKSFKLSFJKLSKLF
-//                if (!follower.isBusy()) {
-//                    follower.followPath(getSample2);
-//
-//                    if (!foo) {
-//                        robot.bucketStep = 0;
-//                        foo = true;
-//                    }
-//
-//                    if (getRuntime() > timer + .2) {
-//                        robot.scoringState = scoringStates.BUCKETR;
-//                        setPathState(6); // End the autonomous routine
-//                        foo = false;
-//                        step = 0;
-//                    }
-//                }
-//                break;
-//            case 6:
-//                switch (step) {
-//                    case 0:
-//                        if (!follower.isBusy() && robot.intakeState == Robot.intakeStates.IDLE && robot.slides.getPosition() < 70) {
-//                            if (!foo) {
-//                                robot.bucketStep = 0;
-//                                foo = true;
-//                                timer = getRuntime();
-//                            }
-//                            if (getRuntime() > timer + .3) {
-//                                robot.AUTO = true;
-//                                step++;
-//                            }
-//                        }
-//                        break;
-//                    case 1:
-//                        robot.claw.close();
-//                        robot.scoringState = scoringStates.BUCKET;
-//                        if (robot.slides.getPosition() > 300) {
-//                            follower.followPath(scoreBucket2);
-//                            setPathState(7); // End the autonomous routine
-//                            timer = getRuntime();
-//                            foo = false;
-//                        }
-//                        break;
-//                }
-//                break;
-//            case 7:
-//                if (!follower.isBusy()) {
-//                    robot.AUTO = false;
-//                    robot.claw.open();
-//                    if (getRuntime() > timer + 1.75) {
-//                        robot.mini = true;
-//                        robot.intakeState = Robot.intakeStates.EXTENDED;
-//                        setPathState(8); // End the autonomous routine
-//                        robot.claw.close();
-//                        timer = getRuntime();
-//                    }
-//                }
-//                break;
-//            case 8: //LKSDKLJSDJKLKLSDFKLJSDF
-//                if (!follower.isBusy()) {
-//                    robot.claw.close();
-//                    follower.followPath(getSample3);
-//
-////                    if(getRuntime() > timer + .125){
-//                    if (!foo) {
-//                        robot.bucketStep = 0;
-//                        foo = true;
-//                    }
-//                    robot.scoringState = scoringStates.BUCKETR;
-//                    setPathState(9); // End the autonomous routine
-//                    foo = false;
-//                    step = 0;
-//                }
-//                break;
-////                if (follower.atParametricEnd()){
-////                }
-//            case 9:
-//                switch (step) {
-//                    case 0:
-//                        if (!follower.isBusy() && robot.intakeState == Robot.intakeStates.IDLE && robot.slides.getPosition() < 70) {
-//                            if (!foo) {
-//                                robot.bucketStep = 0;
-//                                foo = true;
-//                                timer = getRuntime();
-//                            }
-//                            if (getRuntime() > timer + .3) {
-//                                robot.AUTO = true;
-//                                step++;
-//                            }
-//                        }
-//                        break;
-//                    case 1:
-////                        robot.claw.close();
-//                        robot.scoringState = scoringStates.BUCKET;
-////                        follower.setXOffset();
-//                        if (robot.slides.getPosition() > 300) {
-//                            follower.followPath(scoreBucket3);
-//                            timer = getRuntime();
-//                            foo = false;
-//                            setPathState(10); // End the autonomous routine
-//                        }
-//                        break;
-//                }
-//                break;
-//            case 10:
-//                if (!follower.isBusy()) {
-//                    robot.claw.open();
-//                    robot.AUTO = false;
-//                    robot.mini = false;
-//                    robot.intakeState = Robot.intakeStates.EXTENDED;
-//                    if (getRuntime() > timer + 2) {
-////                        robot.mini = true;
-////                        robot.intakeState = Robot.intakeStates.EXTENDED;
-//                        setPathState(11); // End the autonomous routine
-////                        robot.claw.close();
-//                        timer = getRuntime();
-//
-//                    }
-//                }
-//                break;
-//            case 11:
-//                if (!follower.isBusy()) {
-//                    robot.claw.close();
-//                    follower.followPath(getPreloadPath);
-//                }
-//                if (getRuntime() > timer + .5) {
-//                    if (!foo) {
-//                        robot.bucketStep = 0;
-//                        foo = true;
-//                    }
-//                    robot.scoringState = scoringStates.BUCKETR;
-//                    setPathState(12); // End the autonomous routine
-//                    foo = false;
-//                    step = 0;
-//                }
-//
-////                follower.followPath(
-////                        new Path(new BezierLine(
-////                                new Point(getSub),
-////                                new Point(MathFunctions.addPoses(getSub, robot.calcCorrection(robot.limelight.getSampleTx(), robot.limelight.getSampleTY())))
-////                        )));
-//                break;
-//            case 12:
-//                switch (step) {
-//                    case 0:
-//                        if (!follower.isBusy() && robot.intakeState == Robot.intakeStates.IDLE && robot.slides.getPosition() < 80) {
-//                            if (!foo) {
-//                                robot.bucketStep = 0;
-//                                foo = true;
-//                                timer = getRuntime();
-//                            }
-//                            if (getRuntime() > timer + .3) {
-//                                robot.AUTO = true;
-//                                follower.followPath(scoreBucket4);
-//                                step++;
-//                            }
-//                        }
-//                        break;
-//                    case 1:
-//                        robot.scoringState = scoringStates.BUCKET;
-//                        if (robot.slides.getPosition() > 300) {
-//                            timer = getRuntime();
-//                            foo = false;
-//                            setPathState(13); // End the autonomous routine
-//                        }
-//                        break;
-//                }
-//                break;
-//            case 13:
-//                if (!follower.isBusy()) {
-//                    robot.claw.open();
-//                    robot.AUTO = false;
-//                    robot.mini = false;
-//                    robot.stay   = true;
-//                    if (getRuntime() > timer + 2.3) {
-//                        setPathState(14); // End the autonomous routine
-//                        timer = getRuntime();
-//
-//                    }
-//                }
-//                break;
-//            case 14:
-//                if (!follower.isBusy()) {
-//                    robot.claw.close();
-//                    follower.followPath(getFromSub);
-//                }
-//                if (getRuntime() > timer + 2) {
-//                    robot.intakeState = Robot.intakeStates.EXTENDED;
-//                    setPathState(15); // End the autonomous routine
-//                    foo = false;
-//                    step = 0;
-//                }
-//                if (getRuntime() > timer + .5) {
-//                    if (!foo) {
-//                        robot.bucketStep = 0;
-//                        foo = true;
-//                    }
-//                    robot.scoringState = scoringStates.BUCKETR;
-//
-//                }
-//
-////                follower.followPath(
-////                        new Path(new BezierLine(
-////                                new Point(getSub),
-////                                new Point(MathFunctions.addPoses(getSub, robot.calcCorrection(robot.limelight.getSampleTx(), robot.limelight.getSampleTY())))
-////                        )));
-//                break;
-//            case 15:
-//                switch (step) {
-//                    case 0 :
-//                        if (!follower.isBusy()){
-//                            robot.stay = false;
-//                            if (getRuntime() > timer +3) {
-//                                Path temp = new Path(new BezierLine(
-//                                        new Point(getSub),
-//                                        new Point(MathFunctions.addPoses(getSub, new Pose(12, 0)))
-//                                ));
-//                                temp.setConstantHeadingInterpolation(180);
-//                                temp.setReversed(true);
-//                                follower.followPath(temp);
-//                                foo = false;
-//                                step++;
-//                            }
-//                        }
-//                        break;
-//                    case 1:
-//                        if (robot.intakeState == Robot.intakeStates.IDLE && robot.slides.getPosition() < 100) {
-//
-//                            if (!foo) {
-//                                robot.bucketStep = 0;
-//                                foo = true;
-//                                timer = getRuntime();
-//                            }
-//                            if (getRuntime() > timer + .5) {
-//                                robot.AUTO = true;
-//                                step++;
-//                            }
-//                        }
-//                        break;
-//                    case 2:
-//                        robot.scoringState = scoringStates.BUCKET;
-//                        if (robot.slides.getPosition() > 300) {
-//                            follower.followPath(scoreBucket5);
-//                            timer = getRuntime();
-//                            foo = false;
-//                            setPathState(16); // End the autonomous routine
-//                        }
-//                        break;
-//                }
-//                break;
-//            case 16:
-//                if (!follower.isBusy()) {
-//                    robot.claw.open();
-//                    robot.AUTO = false;
-//                    if (getRuntime() > timer + 2) {
-//                        setPathState(-1); // End the autonomous routine
-//                        timer = getRuntime();
-//
-//                    }
-//                }
-//                break;
-
         }
 
     }
@@ -606,6 +339,8 @@ public class specAuto extends OpMode {
         telemetryA.update();
         telemetry.update();
 
+//        follower.startTeleopDrive();
+
 
     }
 
@@ -618,19 +353,17 @@ public class specAuto extends OpMode {
         opmodeTimer.resetTimer();
         controller1 = new GamepadEx(gamepad1);
 
-        Constants.setConstants(FConstants.class, LConstants.class);
+        Constants.setConstants(FConstantsOld.class, LConstants.class);
         follower = new Follower(hardwareMap);
         follower.setStartingPose(initialPosition);
         buildPaths();
 
         robot.specStep = 4;
-//        robot.scoringState = scoringStates.SPECIMENGRAB;
     }
 
     @Override
     public void init_loop() {
         robot.getClaw().close();
-//        this.telemetry.update();
     }
 
 

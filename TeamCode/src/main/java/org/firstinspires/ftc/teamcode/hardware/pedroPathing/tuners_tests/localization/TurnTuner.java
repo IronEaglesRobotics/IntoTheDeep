@@ -29,7 +29,7 @@ import org.firstinspires.ftc.teamcode.hardware.pedroPathing.constants.LConstants
  * @vers
  * on 1.0, 5/6/2024
  */
-@Disabled
+//@Disabled
 
 @Config
 @Autonomous(name = "Turn Localizer Tuner", group = ".Localization")

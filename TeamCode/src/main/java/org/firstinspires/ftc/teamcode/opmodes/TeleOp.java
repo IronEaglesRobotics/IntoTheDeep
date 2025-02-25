@@ -9,6 +9,7 @@ import com.pedropathing.util.Constants;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.hardware.Robot;
 import org.firstinspires.ftc.teamcode.hardware.pedroPathing.constants.FConstants;
 import org.firstinspires.ftc.teamcode.hardware.pedroPathing.constants.LConstants;
@@ -32,11 +33,13 @@ public class TeleOp extends LinearOpMode {
         this.robot = new Robot().init(hardwareMap,true);
         controller1 = new GamepadEx(gamepad1);
         controller2 = new GamepadEx(gamepad2);
+        robot.getFollower().startTeleopDrive();
 
         while (opModeInInit()) {
             controller1.readButtons();
             controller2.readButtons();
             getTeam();
+            robot.wrist.intake();
             telemetry.addData("Team:", robot.team);
             telemetry.update();
             Constants.setConstants(FConstants.class, LConstants.class);
@@ -45,8 +48,11 @@ public class TeleOp extends LinearOpMode {
 
         while (opModeIsActive()){
             //drive
-            robot.mecDrive.setInput(controller1);
-            robot.limelight.enableLimeligh();
+//            robot.mecDrive.setInput(controller1);
+//            robot.limelight.enableLimeligh();
+//            robot.getFollower().startTeleopDrive();
+            robot.getFollower().setTeleOpMovementVectors(gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, true);
+            robot.getFollower().update();
 //            robot.mecDrive.up
             controller1.readButtons();
             controller2.readButtons();
@@ -68,30 +74,37 @@ public class TeleOp extends LinearOpMode {
             }
             robot.update();
 
-//            if(controller2.isDown(GamepadKeys.Button.DPAD_UP)) {
-//                robot.hang.setPosition(HANGUP);
-//            } else if (controller2.isDown(GamepadKeys.Button.DPAD_DOWN)){
-//                robot.hang.setPosition(HANGDOWN);
-//            } else {
-//                robot.hang.pause();
-//            }
+            if(controller1.isDown(GamepadKeys.Button.DPAD_LEFT)) {
+                robot.intake.sweep();
+            } else {
+                robot.intake.stow();
+            }
 
             //Telemetry
             int PositionLeft = this.robot.getSlides().slidesL.getCurrentPosition();
             telemetry.addData("Slide Pos L", (PositionLeft));
             int PositionRight = this.robot.getSlides().slidesR.getCurrentPosition();
             telemetry.addData("Slide Pos R", (PositionRight));
-            telemetry.addData("alpha:", robot.intake.getAlpha(robot.intake.sampleSensor));
+            telemetry.addData("alpha:", robot.intake.getAlpha(robot.intake.intakeSensor));
+            telemetry.addData("COLOR:", robot.getIntake().sampleColor);
             telemetry.addData("INTAKEMACRO:", robot.intakeState);
             telemetry.addData("SCORING STATE: ", robot.scoringState);
             telemetry.addData("SpecStates: ", robot.specStep);
-            telemetry.addData("R", (robot.getIntake().getR()));
-            telemetry.addData("G", (robot.getIntake().getG()));
-            telemetry.addData("B", (robot.getIntake().getB()));
+            telemetry.addData("R", (robot.getIntake().intakeSensor.red()));
+            telemetry.addData("G", (robot.getIntake().intakeSensor.green()));
+            telemetry.addData("B", (robot.getIntake().intakeSensor.blue()));
+            telemetry.addData("LF", (robot.getMecDrive().leftFront.getCurrent(CurrentUnit.AMPS)));
+            telemetry.addData("RF", (robot.getMecDrive().rightFront.getCurrent(CurrentUnit.AMPS)));
+            telemetry.addData("LB", (robot.getMecDrive().leftBack.getCurrent(CurrentUnit.AMPS)));
+            telemetry.addData("RB", (robot.getMecDrive().rightBack.getCurrent(CurrentUnit.AMPS)));
+            telemetry.addData("LS", (robot.slides.slidesL.getCurrent(CurrentUnit.AMPS)));
+            telemetry.addData("RS", (robot.slides.slidesR.getCurrent(CurrentUnit.AMPS)));
+
+//            telemetry.addData("color", (robot.getIntake().getColor(robot.getIntake().intakeSensor));
 //            telemetry.addData("hang", (robot.getHang().depression.getCurrentPosition()));
-            telemetry.addData("Tx",(robot.limelight.getSampleTx()));
-            telemetry.addData("Ty",robot.limelight.getSampleTY());
-            telemetry.addData("Corrected Pose",robot.calcCorrection(robot.limelight.getSampleTx(),robot.limelight.getSampleTY()));
+//            telemetry.addData("Tx",(robot.limelight.getSampleTx()));
+//            telemetry.addData("Ty",robot.limelight.getSampleTY());
+//            telemetry.addData("Corrected Pose",robot.calcCorrection(robot.limelight.getSampleTx(),robot.limelight.getSampleTY()));
 
             telemetry.update();
 

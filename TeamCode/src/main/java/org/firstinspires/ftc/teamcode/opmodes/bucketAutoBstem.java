@@ -6,6 +6,7 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.localization.Pose;
 import com.pedropathing.pathgen.BezierCurve;
@@ -40,16 +41,15 @@ public class bucketAutoBstem extends OpMode {
     int step = 0;
 
     private final Pose initialPosition = new Pose(36, 12, Math.toRadians(180));
-    //    private final Pose control1 = new Pose(30, 24,P);
     private final Pose bucket = new Pose(16, 24, Math.toRadians(-135));
     private final Pose bucket2 = new Pose(18, 26, Math.toRadians(-135));
     private final Pose bucket3 = new Pose(14, 27, Math.toRadians(-135));
     private final Pose get1 = new Pose(21, 48, Math.toRadians(-100));
-    private final Pose get2 = new Pose(13.5, 48, Math.toRadians(-90));
-    private final Pose get3 = new Pose(11.3, 50, Math.toRadians(-45));
+    private final Pose get2 = new Pose(12, 48, Math.toRadians(-90));
+    private final Pose get3 = new Pose(11.3, 50, Math.toRadians(-40));
     private final Pose getSubControl = new Pose(24, 68, Point.CARTESIAN);
     private final Pose getSubControl2 = new Pose(32, 40, Point.CARTESIAN);
-    private final Pose getSub = new Pose(43, 68, Math.toRadians(180));
+    private final Pose getSub = new Pose(42, 68, Math.toRadians(180));
     private final Pose getPreload = new Pose(67, 16, Math.toRadians(120));
 
     private Path scorePreload;
@@ -63,6 +63,18 @@ public class bucketAutoBstem extends OpMode {
     private Path getPreloadPath;
     private Path scoreBucket4;
     private Path scoreBucket5;
+
+    public void getTeam(){
+        if (controller1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)){
+            robot.team = "blue";
+            robot.intake.targetColor = Robot.Intake.colors.BLUE;
+            gamepad1.setLedColor(0,0,255,100000);
+        } else if (controller1.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)){
+            robot.team = "red";
+            robot.intake.targetColor = Robot.Intake.colors.RED;
+            gamepad1.setLedColor(255,0,0,100000);
+        }
+    }
 
     public void buildPaths() {
         scorePreload = new Path(new BezierLine(
@@ -559,7 +571,7 @@ public class bucketAutoBstem extends OpMode {
     @Override
     public void init_loop() {
         robot.getClaw().close();
-//        this.telemetry.update();
+        getTeam();
     }
 
 

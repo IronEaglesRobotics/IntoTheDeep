@@ -18,6 +18,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.hardware.rr1.MecanumDrive;
 
 import lombok.Getter;
@@ -42,7 +43,7 @@ public class Robot {
 //    public Hang hang;
 //    @Getter
     public MecanumDrive mecDrive;
-//    @Getter
+    //    @Getter
     public Limelight limelight;
 
     public double intakeDelay;
@@ -52,7 +53,7 @@ public class Robot {
 
     //Init Hardwaremap
     public Robot init(HardwareMap hardwareMap, Boolean drive) {
-        this.mecDrive = new MecanumDrive(hardwareMap,new Pose2d(0,0,0));
+        this.mecDrive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
         this.follower = new Follower(hardwareMap);
         this.wrist = new Wrist().init(hardwareMap);
         this.arm = new Arm().init(hardwareMap);
@@ -61,12 +62,12 @@ public class Robot {
         this.extendo = new Extendo().init(hardwareMap);
         this.intake = new Intake().init(hardwareMap);
 //        this.hang = new Hang().init(hardwareMap);
-        this.limelight = new Limelight().init(hardwareMap);
+//        this.limelight = new Limelight().init(hardwareMap);
         return this;
     }
 
     public Robot init(HardwareMap hardwareMap) {
-//        this.drive = new MecanumDrive(hardwareMap, startPos);
+        this.mecDrive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
         this.wrist = new Wrist().init(hardwareMap);
         this.arm = new Arm().init(hardwareMap);
         this.claw = new Claw().init(hardwareMap);
@@ -84,7 +85,7 @@ public class Robot {
 //        return this.drive.actionBuilder(this.getDrive().localizer.getPose());
 //    }
 
-    public Pose calcCorrection(double x, double y){
+    public Pose calcCorrection(double x, double y) {
         final double H = 1;
         final double L = 1;
         final double multiplier = .2;
@@ -92,10 +93,10 @@ public class Robot {
         //move X this many inches: L/x * multiplier
         //move Y this many: inches: H/y * multiplier
 
-        return new Pose(L*y*multiplier, H*-x*multiplier);
+        return new Pose(L * y * multiplier, H * -x * multiplier);
     }
 
-    public static class Limelight{
+    public static class Limelight {
 
         private Limelight3A limelight;
 
@@ -123,17 +124,15 @@ public class Robot {
         }
 
 
-
-
-
     }
 
     @Config
     public static class Claw {
         //Variables
         public static double OPEN = 7;
-        public static double OPENSMALL = .7;
-        public static double CLOSE = .45;
+        public static double OPENSMALL = .56;
+        public static double CLOSE = .36
+                ;
         //Servo
         public ServoImplEx claw;
 
@@ -174,7 +173,7 @@ public class Robot {
         public static double INTAKE = .7;
         public static double INTAKESPEC = .6;
         public static double OUTTAKESPEC = .87;
-        public static double OUTTAKESAMPLE = .05;
+        public static double OUTTAKESAMPLE = .1;
         public static double SCORESPEC = .85;
         //PController
         public static double KP = 1.2;
@@ -251,7 +250,7 @@ public class Robot {
     @Config
     public static class Wrist {
         //variables
-        public static double INTAKE = .41;
+        public static double INTAKE = .42;
         public static double OUTTAKESAMPLE = .58;
         public static double INTAKESPEC = .2;
         public static double SCORESPECWRIST = .6;
@@ -334,12 +333,12 @@ public class Robot {
         public DcMotorEx slidesR;
         //Variables
 //        public static int SLIDESPOWER = 1;
-        public static int SLIDEUP = 800;
+        public static int SLIDEUP = 830;
         public static int SLIDEHSPEC = 340;
         //        public static int SLIDELSPEC = 300;
         public static int SLIDELBUCKET = 300;
         public static int SLIDEDOWN = 0;
-        public static int SLIDEREST = 65;
+        public static int SLIDEREST = 55;
         public static int SLIDESPECSCORE = -350;
         //PID
 //        private static int TARGET = 20;
@@ -360,10 +359,12 @@ public class Robot {
             slidesL.setTargetPosition(10);
             this.slidesL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             this.slidesR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            this.slidesL.setDirection(DcMotorSimple.Direction.REVERSE);
+//            this.slidesL.setDirection(DcMotorSimple.Direction.REVERSE);
             this.slidesR.setDirection(DcMotorSimple.Direction.REVERSE);
             this.slidesL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             this.slidesR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            this.slidesR.setCurrentAlert(4, CurrentUnit.AMPS);
+            this.slidesL.setCurrentAlert(4, CurrentUnit.AMPS);
 //            this.slidesR.
             return this;
 
@@ -392,6 +393,7 @@ public class Robot {
         public int getPosition() {
             return slidesR.getCurrentPosition();
         }
+
         public int getPositionL() {
             return slidesL.getCurrentPosition();
         }
@@ -404,7 +406,7 @@ public class Robot {
             slidesL.setPower(1);
         }
 
-        public void slidesReset(){
+        public void slidesReset() {
             this.slidesR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             this.slidesL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         }
@@ -424,6 +426,7 @@ public class Robot {
 //        }
     }
 
+    // nigaggot
     //Extendo Class
     @Config
     public static class Extendo {
@@ -434,7 +437,7 @@ public class Robot {
         //Variables
         public static double retract = .52;
         public static double extend = .22;
-        public static double mini = .425;
+        public static double mini = .4;
 
 
         public Extendo init(HardwareMap hardwareMap) {
@@ -473,22 +476,25 @@ public class Robot {
         //Servos
         private Servo intakeL;
         private Servo intakeR;
-        private CRServo beater;
+        private DcMotorEx beater;
         public ColorSensor intakeSensor;
         public ColorSensor sampleSensor;
+        public ServoImplEx sweeper;
 
 
         //Variables
-        public static double up = .3;
-        public static double spit = .65;
-        public static double down = .75;
-        public static double INTAKE = 1;
+        public static double up = .24;
+        public static double spit = .48;
+        public static double down = .65;
+        public static double INTAKE = .8;
+        public static double SWEEP = .05;
+        public static double STOW = .098;
 
-        public static double OUTTAKE = -.3;
+        public static double OUTTAKE = -1;
 
-        public static int ALPHA = 100;
-        public static int ALPHASAMPLE = 100;
-
+        public static int ALPHA = 130;
+        public static double DELAY = 0;
+// Im an alpha wolf
 
         @Getter
         private int b;
@@ -511,7 +517,10 @@ public class Robot {
         public Intake init(HardwareMap hardwareMap) {
             this.intakeL = hardwareMap.get(Servo.class, "intakeL");
             this.intakeR = hardwareMap.get(Servo.class, "intakeR");
-            this.beater = hardwareMap.get(CRServo.class, "beater");
+            this.sweeper = hardwareMap.get(ServoImplEx.class, "sweeper");
+            this.beater = hardwareMap.get(DcMotorEx.class, "beater");
+            this.beater.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            this.beater.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
             this.intakeL.setDirection(Servo.Direction.REVERSE);
             this.intakeSensor = hardwareMap.colorSensor.get("colorSensor");
             this.intakeSensor.enableLed(true);
@@ -519,6 +528,7 @@ public class Robot {
             this.sampleSensor.enableLed(true);
             this.intakeL.setPosition(up);
             this.intakeR.setPosition(up);
+            this.sweeper.setPosition(STOW);
             return this;
         }
 
@@ -542,10 +552,20 @@ public class Robot {
         }
 
         public void outtake() {
+//            beater.setPower(OUTTAKE);
             beater.setPower(OUTTAKE);
         }
 
+        public void sweep() {
+            sweeper.setPosition(SWEEP);
+        }
+
+        public void stow() {
+            sweeper.setPosition(STOW);
+        }
+
         public void pause() {
+//            beater.setVelocity(0);
             beater.setPower(0);
         }
 
@@ -564,54 +584,27 @@ public class Robot {
                 r += colorSensor.red();
             }
 
-            if (r + b + g < 190) {
+            if (r + b + g < 60) {
                 color = colors.NULL;
-            } else if (b > g + 10 && b > r + 10) {
+            } else if (b > g + 30 && b > r + 30) {
                 color = colors.BLUE;
-            } else if (g > b + 25 && g > r + 25) {
+            } else if (g > b + 20 && g > r + 30) {
                 color = colors.YELLOW;
-            } else if (r > b + 20 && r > g + 20) {
+            } else if (r > b + 30 && r > g + 30) {
                 color = colors.RED;
             } else {
                 color = colors.NULL;
             }
+            sampleColor = color;
             return color;
         }
 
         public int getAlpha(ColorSensor colorSensor) {
             return colorSensor.alpha();
-        };
+        }
 
     }
 
-//    @Config
-//    public static class Hang {
-//        public DcMotorEx depression;
-//
-//        public Hang init(HardwareMap hardwareMap) {
-//            this.depression = hardwareMap.get(DcMotorEx.class, "depression");
-//            this.depression.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//            depression.setTargetPosition(0);
-//            this.depression.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//            this.depression.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-//            return this;
-//        }
-//
-//        public void setPosition(int pos) {
-//            depression.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//            depression.setTargetPosition(pos);
-//            depression.setPower(1);
-//            depression.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-//
-//        }
-//
-//        public void pause() {
-//            depression.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-//            depression.setPower(0);
-//        }
-//
-//    }
-//
     //Scoring Macro
     public int bucketStep;
     public boolean AUTO = false;
@@ -873,14 +866,14 @@ public class Robot {
                 //switch states
                 if (Y || AUTO) { //High Bucket
                     bucketStep = 0;
-                    outtakeDelay = runtime + .25; //Delay for slides after grabbing
+                    outtakeDelay = runtime + .2; //Delay for slides after grabbing
                     claw.close();
 
                     bucketH = true;
                     scoringState = scoringStates.BUCKET;
                 } else if (X) { //Low Bucket
                     bucketStep = 0;
-                    outtakeDelay = runtime + .75; //Delay for slides after grabbing
+                    outtakeDelay = runtime + .3; //Delay for slides after grabbing
                     claw.close();
                     bucketH = false;
                     scoringState = scoringStates.BUCKET;
@@ -971,7 +964,7 @@ public class Robot {
                     case 0: // Slides go somewhere
                         if (runtime > outtakeDelay) {
                             slides.slideRest();
-                            outtakeDelay = runtime + .4; // delay for slides to clear hopper
+                            outtakeDelay = runtime + 1; // delay for slides to clear hopper
                             specStep++;
                         }
                         break;
@@ -1012,18 +1005,18 @@ public class Robot {
                         if (runtime > outtakeDelay) {
                             arm.outtakeSpecimen();
                             wrist.outtakeSpec();
-                            if (SCORESPEC){
-                                specStep ++;
+                            if (SCORESPEC) {
+                                specStep++;
                                 SCORESPEC = false;
                             }
                         }
                         break;
                     case 6:
-                            slides.slidesTo(slides.getPosition() - Slides.SLIDESPECSCORE);
-                            wrist.outtakeSpec();
-                            arm.outtakeSpecimen();
-                            scoringState = scoringStates.SPECIMENR;
-                            specStep = 0;
+                        slides.slidesTo(slides.getPosition() - Slides.SLIDESPECSCORE);
+                        wrist.outtakeSpec();
+                        arm.outtakeSpecimen();
+                        scoringState = scoringStates.SPECIMENR;
+                        specStep = 0;
                         break;
                 }
                 break;
@@ -1076,6 +1069,8 @@ public class Robot {
     public boolean mini;
     public boolean spit = false;
     public boolean stay = false;
+    public boolean once = true;
+    public Intake.colors color = Intake.colors.NULL;
 
     public intakeStates intakeState = intakeStates.IDLE;
 
@@ -1088,13 +1083,18 @@ public class Robot {
         boolean RT = controller1.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > .3;
         boolean B = controller1.wasJustPressed(GamepadKeys.Button.B);
         boolean LB = controller1.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER);
+        boolean DR = controller1.isDown(GamepadKeys.Button.DPAD_RIGHT);
 
         switch (intakeState) {
             case IDLE:
-                //Actions
+                //Actionsrrrfdre
                 extendo.retract();
                 intake.up();
-                if (intakeDelay > runtime && spit && runtime > intakeDelay - .5) {
+                if (runtime < intakeDelay + .5) {
+                    intake.intake();
+                } else if (runtime < intakeDelay + 1) {
+//                    spit = false;
+//                    intake.beater.setPower(1);
                     intake.outtake();
                 } else {
 //                    spit = false;
@@ -1113,7 +1113,10 @@ public class Robot {
                 break;
             case EXTENDED:
                 //Actions
-                if (mini) {
+                if (DR) {
+                    intake.spit();
+                    intake.outtake();
+                } else if (mini) {
                     intake.up();
                     extendo.mini();
                 } else {
@@ -1123,7 +1126,10 @@ public class Robot {
                 //Switch States
                 if (((RT || B) && runtime > intakeDelay) || auto && !stay) {
                     intakeState = intakeStates.INTAKING;
-                    intakeDelay = runtime + .25;
+                    intakeDelay = runtime + .1;
+                }
+                if (LB) {
+                    intakeState = intakeStates.HASSAMPLE;
                 }
                 break;
             case INTAKING:
@@ -1142,8 +1148,9 @@ public class Robot {
                 //Switch States
 
                 if (intake.getAlpha(intake.intakeSensor) > Intake.ALPHA) {
-                    intakeState = intakeStates.DETECT;
-                    intakeDelay = runtime + .005;
+                        intakeState = intakeStates.DETECT;
+                        once = true;
+                        intakeDelay = runtime + Intake.DELAY;
                 } else if (LB) {
                     intakeState = intakeStates.HASSAMPLE;
                 }
@@ -1151,9 +1158,12 @@ public class Robot {
             case DETECT:
                 //Actions
                 if (runtime > intakeDelay) {
+                    if (once){
+                        color = getColor(intake.intakeSensor);
+                    }
 //                    intake.color = intake.getColor(intake.intakeSensor);
                     //Switch States
-                    if (getColor(intake.intakeSensor) != Intake.colors.YELLOW && getColor(intake.intakeSensor) != getIntake().targetColor) {
+                    if (color != Intake.colors.YELLOW && color != getIntake().targetColor) {
                         intakeState = intakeStates.OUTTAKE;
                         intakeDelay = runtime + 1.5;
                     } else {
@@ -1169,7 +1179,7 @@ public class Robot {
                 //Switch States
                 if (runtime > intakeDelay) {
                     spit = true;
-                    intakeDelay = runtime + 1;
+                    intakeDelay = runtime;
                     intakeState = intakeStates.IDLE;
                 }
                 break;
@@ -1187,7 +1197,6 @@ public class Robot {
     }
 
 
-
     //Robot Update
     public void update() {
         wrist.update();
@@ -1198,7 +1207,7 @@ public class Robot {
     public Intake.colors getColor(ColorSensor sensor) {
 
         Intake.colors color = null;
-        if (intake.getAlpha(sensor) > Intake.ALPHASAMPLE) {
+        if (intake.getAlpha(sensor) > Intake.ALPHA) {
             color = intake.getColor(sensor);
         }
         return color;
