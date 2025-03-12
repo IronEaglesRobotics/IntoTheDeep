@@ -30,6 +30,9 @@ repositories {
     maven {
         url = 'https://jitpack.io'
     }
+    maven {
+        url= 'https://maven.pedropathing.com/'
+    }
 }
 
 dependencies {
@@ -40,4 +43,6 @@ dependencies {
     implementation "com.acmerobotics.dashboard:dashboard:0.4.16"
     implementation "com.github.jdhs-ftc:road-runner-ftc-otos:8e83c17ff7"
     implementation 'org.ftclib.ftclib:core:2.1.1' // core
+    implementation 'com.pedropathing:pedro:1.0.8'
+    implementation 'com.acmerobotics.dashboard:dashboard:0.4.16'
 }

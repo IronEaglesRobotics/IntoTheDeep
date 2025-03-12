@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.Rotation2d;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.TurnConstraints;
 import com.acmerobotics.roadrunner.Twist2d;
@@ -31,14 +32,15 @@ public class commandClipAuto extends CommandOpMode {
     @Override
     public void initialize() {
         CommandScheduler.getInstance().reset();
-        robot = new Robot().init(hardwareMap,new Pose2d(0,0,Math.toRadians(180)));
-        builder = robot.getDrive().actionBuilder(start);
+        robot = new Robot().init(hardwareMap,new Pose2d(0,0,Math.toRadians(-90)));
+        builder = robot.getDrive().actionBuilder(robot.getDrive().pose);
     }
     @Override
     public void runOpMode(){
         initialize();
         waitForStart();
-        move().schedule();
+        foo().schedule();
+//        move().schedule();
         while (opModeIsActive() && !isStopRequested()){
             CommandScheduler.getInstance().run();
             telemetry.addData("target",robot.getSlides().getTarget());
@@ -56,13 +58,27 @@ public class commandClipAuto extends CommandOpMode {
                 .andThen(robot.getClaw().openCommand());
     }
     Command placeBlock1(){
-        return robot.getSlides().down()
-                .andThen(robot.runAction(robot.getDrive().actionBuilder(new Pose2d(toBar,Math.toRadians(180))).lineToX(22).build()))
-                .andThen(robot.runAction(robot.getDrive().actionBuilder(new Pose2d(22,0,Math.toRadians(180))).setTangent(Math.toRadians(-90)).lineToYLinearHeading(-35,Math.toRadians(0)).build()))
-                .andThen(robot.getPusher().activateCommand())
-                .andThen(new WaitCommand(50))
-                .andThen(robot.runAction(robot.getDrive().actionBuilder(toPickup).turn(Math.toRadians(-90),new TurnConstraints(7,-Math.PI,Math.PI)).setTangent(Math.toRadians(-162)).lineToX(-10).build()));
+//        return robot.getSlides().down()
+                //.alongWith(
+        return robot.runAction(robot.getDrive().actionBuilder(
+                new Pose2d(toBar,Math.toRadians(180)))
+                .lineToX(22).setTangent(Math.toRadians(-90))
+                .lineToYLinearHeading(-35,Math.toRadians(0))
+                .build());
+        //)
+//                .andThen(robot.runAction(robot.getDrive().actionBuilder(new Pose2d(22,0,Math.toRadians(180))).build()));
+//                .andThen(robot.getPusher().activateCommand())
+//                .andThen(new WaitCommand(50))
+//                .andThen(robot.runAction(robot.getDrive().actionBuilder(toPickup).turn(Math.toRadians(-90),new TurnConstraints(7,-Math.PI,Math.PI)).setTangent(Math.toRadians(-162)).lineToX(-10).build()));
     }
+
+    Command foo() {
+        return robot.runAction(robot.getDrive().actionBuilder(
+                new Pose2d(0,-38, Math.toRadians(-90)))
+                        .splineToSplineHeading(new Pose2d(35, -50, Math.toRadians(90)), Math.toRadians(-90))
+                .build());
+    }
+
     Command placeBlock2(){
         return robot.runAction(robot.getDrive().actionBuilder(new Pose2d(-10,-45,Math.toRadians(-90))).setTangent(0).lineToX(55).build())
                 .alongWith(new WaitCommand(600)
