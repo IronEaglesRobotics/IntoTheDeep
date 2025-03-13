@@ -1,11 +1,10 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
-import com.acmerobotics.roadrunner.Pose2d;
-import com.acmerobotics.roadrunner.Vector2d;
 import com.arcrobotics.ftclib.command.Command;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.WaitCommand;
+import com.pedropathing.localization.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.hardware.Intake;
@@ -18,7 +17,7 @@ public class commandBasketAuto extends CommandOpMode {
     @Override
     public void initialize() {
         CommandScheduler.getInstance().reset();
-        robot = new Robot().init(hardwareMap,new Pose2d(0,0,Math.toRadians(90)));
+        robot = new Robot().init(hardwareMap,null,new Pose(0,0,Math.toRadians(90)));
     }
     @Override
     public void runOpMode(){
@@ -31,7 +30,7 @@ public class commandBasketAuto extends CommandOpMode {
     }
     Command score() {
         return robot.getSlides().up()
-                .alongWith(robot.runAction(robot.getDrive().actionBuilder(robot.getDrive().pose).splineToLinearHeading(new Pose2d(26,6,Math.toRadians(135)),Math.toRadians(-90)).build()))
+                .andThen(robot.follow(robot.EZ().moveToWithHeading(26,6,Math.toRadians(135))))
                 .andThen(robot.getIntakeArm().upCommand())
                 .andThen(robot.getIntake().ejectIntake())
                 .andThen(new WaitCommand(1000))
@@ -42,15 +41,14 @@ public class commandBasketAuto extends CommandOpMode {
         return robot.getIntake().offIntake()
                 .andThen(new Intake.storeIntake(robot.getIntake()).alongWith(new WaitCommand(400)))
                 .andThen(robot.getIntakeArm().downCommand())
-                .andThen(new WaitCommand(1000))
+                .andThen(new WaitCommand(500))
                 .andThen(robot.getSlides().down())
-                .andThen(robot.runAction(robot.getDrive().actionBuilder(new Pose2d(0,13,Math.toRadians(90))).setTangent(Math.toRadians(0)).lineToX(14).turnTo(0).build()))
+                .alongWith(robot.follow(robot.EZ().moveToWithHeading(14,13,0)))
                 .andThen(robot.getIntake().onIntake())
                 .andThen(new WaitCommand(200))
-                .andThen(robot.runAction(robot.getDrive().actionBuilder(new Pose2d(0,13,0)).splineToConstantHeading(new Vector2d(33,12),Math.toRadians(90)).build()))
+                .andThen(robot.follow(robot.EZ().moveTo(24,13)))
                 .andThen(robot.getIntake().offIntake())
-                .andThen(robot.getIntake().storeIntake())
-                .whenFinished(()->first = false);
+                .andThen(robot.getIntake().storeIntake());
     }
     Command pickUp2(){
         return robot.getIntake().offIntake()
@@ -58,21 +56,19 @@ public class commandBasketAuto extends CommandOpMode {
                 .andThen(robot.getIntakeArm().downCommand())
                 .andThen(new WaitCommand(500))
                 .andThen(robot.getSlides().down())
-                .andThen(robot.runAction(robot.getDrive().actionBuilder(new Pose2d(0,12,Math.toRadians(90))).setTangent(Math.toRadians(0)).splineToConstantHeading(new Vector2d(8,22),Math.toRadians(0)).turnTo(0).build()))
+                .alongWith(robot.follow(robot.EZ().moveToWithHeading(14,23,0)))
                 .andThen(robot.getIntake().onIntake())
-                .andThen(robot.runAction(robot.getDrive().actionBuilder(new Pose2d(0,12,0)).splineToConstantHeading(new Vector2d(33,22.5),Math.toRadians(20)).build()))
+                .andThen(robot.follow(robot.EZ().moveTo(24,23)))
                 .andThen(robot.getIntake().offIntake())
-                .andThen(robot.getIntake().storeIntake())
-                .whenFinished(()->first = false);
+                .andThen(robot.getIntake().storeIntake());
     }
     Command pickup3(){
         return robot.getIntake().offIntake()
                 .andThen(robot.getIntakeArm().downCommand())
                 .andThen(robot.getSlides().down())
-                .alongWith(robot.runAction(robot.getDrive().actionBuilder(new Pose2d(0,12,Math.toRadians(45))).lineToX(10).turnTo(0).build()))
-                .andThen(robot.getIntake().runIntake()
-                .raceWith(robot.runAction(robot.getDrive().actionBuilder(new Pose2d(0,12,0)).splineToConstantHeading(new Vector2d(20,22),Math.toRadians(60)).setTangent(Math.toRadians(45)).lineToY(26).build())))
-                .andThen(robot.runAction(robot.getDrive().actionBuilder(new Pose2d(24,26,0)).splineToLinearHeading(new Pose2d(0,0,Math.toRadians(90)),Math.toRadians(210)).build()));
+                //movement
+                .andThen(robot.getIntake().runIntake());
+                //movement
     }
     Command park(){
         return robot.getIntake().offIntake()
@@ -80,6 +76,6 @@ public class commandBasketAuto extends CommandOpMode {
                 .andThen(robot.getIntakeArm().downCommand())
                 .andThen(new WaitCommand(1000))
                 .andThen(robot.getSlides().down())
-                .alongWith(robot.runAction(robot.getDrive().actionBuilder(new Pose2d(26,6,Math.toRadians(135))).turnTo(Math.toRadians(45)).build()));
+                .andThen(robot.follow(robot.EZ().turn(Math.toRadians(215))));
     }
 }

@@ -3,13 +3,7 @@ package org.firstinspires.ftc.teamcode.opmodes;
 import org.firstinspires.ftc.teamcode.hardware.Claw;
 import org.firstinspires.ftc.teamcode.hardware.Intake;
 import org.firstinspires.ftc.teamcode.hardware.Robot;
-import org.firstinspires.ftc.teamcode.roadrunner.Drawing;
 
-import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.acmerobotics.roadrunner.Pose2d;
-import com.acmerobotics.roadrunner.PoseVelocity2d;
-import com.acmerobotics.roadrunner.Vector2d;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.WaitCommand;
@@ -23,7 +17,7 @@ public class TeleOpMain extends CommandOpMode {
     private GamepadEx controller1;
     private GamepadEx controller2;
     private double speed = 1;
-    private Robot.activeMode mode = Robot.activeMode.macro;
+    private Robot.activeMode mode = Robot.activeMode.MACRO;
     @Override
     public void initialize() {
         boolean first = true;
@@ -34,15 +28,11 @@ public class TeleOpMain extends CommandOpMode {
         }
         controller1 = new GamepadEx(gamepad1);
         controller2 = new GamepadEx(gamepad2);
-        robot = new Robot().init(hardwareMap,new Pose2d(0,0,0));
+        robot = new Robot().init(hardwareMap,controller1);
         controller1.readButtons();
         controller2.readButtons();
         new WaitCommand(90000).andThen(robot.getHang().hangDeploy());
 
-        controller1.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
-                        .whenPressed(robot.setPose(new Pose2d(0,0,0)));
-        controller1.getGamepadButton(GamepadKeys.Button.A)
-                .whenPressed(robot.toClip());
 //        controller1.getGamepadButton(GamepadKeys.Button.B)
 //                .whenPressed(robot.toObservation());
 //        controller1.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
@@ -53,7 +43,7 @@ public class TeleOpMain extends CommandOpMode {
                 .whenPressed(()-> Robot.driveState = Robot.DriveState.manuel);
 
         switch (mode) {
-            case macro:
+            case MACRO:
                 controller2.getGamepadButton(GamepadKeys.Button.A)
                         .toggleWhenPressed(robot.getClaw().adaptClaw().andThen(new WaitCommand(250)).andThen(robot.getSlides().preclip())
                                 ,robot.getClaw().closeCommand());
@@ -81,7 +71,7 @@ public class TeleOpMain extends CommandOpMode {
                 controller2.getGamepadButton(GamepadKeys.Button.LEFT_STICK_BUTTON)
                         .whenPressed(robot.getHang().hangRetract());
                 break;
-            case standard:
+            case STANDARD:
                 // controls raising slides
                 controller2.getGamepadButton(GamepadKeys.Button.DPAD_UP)
                         .whenPressed(robot.getSlides().up());
@@ -126,31 +116,19 @@ public class TeleOpMain extends CommandOpMode {
                         .andThen(new WaitCommand(750))
                         .andThen(robot.getSlides().down()));
         controller2.getGamepadButton(GamepadKeys.Button.START)
-                .toggleWhenPressed(()-> mode = Robot.activeMode.standard,()-> mode = Robot.activeMode.macro);
+                .toggleWhenPressed(()-> mode = Robot.activeMode.STANDARD,()-> mode = Robot.activeMode.MACRO);
     }
     @Override
     public void run(){
         CommandScheduler.getInstance().run();
-        robot.getDrive().updatePoseEstimate();
         // drive controls
-        if (robot.getDriveState() == Robot.DriveState.manuel) {
-            robot.getDrive().setDrivePowers(new PoseVelocity2d(
-                    new Vector2d(-controller1.getLeftY() * speed, controller1.getLeftX() * speed)
-                    , -controller1.getRightX()*speed
-            ));
-        }
+        robot.setSpeed(speed);
         telemetry.addData("target color",robot.getIntake().target);
         telemetry.addData("color",robot.getIntake().getColor());
         telemetry.addData("target",robot.getSlides().getTarget());
         telemetry.addData("color",robot.getSlides().getPos());
         telemetry.addData("speed",robot.getSlides().controller.calculate(-robot.getSlides().getPos(),robot.getSlides().getTarget()));
         telemetry.addData("mode", robot.getDriveState());
-        telemetry.addData("pose",robot.getDrive().pose.toString());
-        TelemetryPacket packet = new TelemetryPacket();
-        packet.fieldOverlay().setStroke("#3F51B5");
-        Drawing.drawRobot(packet.fieldOverlay(), robot.getDrive().pose);
-        FtcDashboard.getInstance().sendTelemetryPacket(packet);
-        robot.getDrive().updatePoseEstimate();
         telemetry.update();
     }
 }
