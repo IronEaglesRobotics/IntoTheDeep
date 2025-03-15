@@ -9,6 +9,7 @@ import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.pedropathing.localization.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 @TeleOp(name="Main Teleop", group="TeleOp")
@@ -28,7 +29,7 @@ public class TeleOpMain extends CommandOpMode {
         }
         controller1 = new GamepadEx(gamepad1);
         controller2 = new GamepadEx(gamepad2);
-        robot = new Robot().init(hardwareMap,controller1);
+        robot = new Robot().init(hardwareMap,controller1,new Pose(0,0,0));
         controller1.readButtons();
         controller2.readButtons();
         new WaitCommand(90000).andThen(robot.getHang().hangDeploy());
@@ -121,6 +122,7 @@ public class TeleOpMain extends CommandOpMode {
     @Override
     public void run(){
         CommandScheduler.getInstance().run();
+        robot.drive.schedule();
         // drive controls
         robot.setSpeed(speed);
         telemetry.addData("target color",robot.getIntake().target);

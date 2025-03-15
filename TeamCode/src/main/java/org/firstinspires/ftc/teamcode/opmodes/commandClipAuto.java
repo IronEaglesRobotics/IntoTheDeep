@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.Command;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
@@ -12,39 +14,77 @@ import org.firstinspires.ftc.teamcode.hardware.Robot;
 @Autonomous(name = "clipAutoCommand", preselectTeleOp = "Main Teleop")
 public class commandClipAuto extends CommandOpMode {
     Robot robot;
-
-    Pose start = new Pose(0,0,0,true);
+    int stage = 0;
+    Pose start = new Pose(0,0,0);
 
     @Override
     public void initialize() {
         CommandScheduler.getInstance().reset();
-        robot = new Robot().init(hardwareMap,null);
+        robot = new Robot().init(hardwareMap,null,new Pose(0,0,Math.toRadians(180)));
     }
     @Override
     public void runOpMode(){
         initialize();
         waitForStart();
-        move().schedule();
+        robot.getFollower().update();
+        clip().schedule();
         while (opModeIsActive() && !isStopRequested()){
             CommandScheduler.getInstance().run();
-            telemetry.addData("target",robot.getSlides().getTarget());
-            telemetry.addData("current pos",robot.getSlides().getPos());
-            telemetry.update();
+            robot.getFollower().update();
+//            switch (stage){
+//                case 0:
+//                    if (!robot.getFollower().isBusy()){
+//                        placeBlock1().schedule();
+//                    }
+//                    break;
+//
+//                case 1:
+//                    if (!robot.getFollower().isBusy()){
+//                        placeBlock2().schedule();
+//                    }
+//                    break;
+//
+//                case 2:
+//                    if (!robot.getFollower().isBusy()){
+//                        Clip2().schedule();
+//                    }
+//                    break;
+//
+//                case 3:
+//                    if (!robot.getFollower().isBusy()){
+//                        Clip3().schedule();
+//                    }
+//                    break;
+//
+//                case 4:
+//                    if (!robot.getFollower().isBusy()){
+//                        grab().schedule();
+//                    }
+//                    break;
+//
+//            }
+            MultipleTelemetry telemetryA = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
+            telemetryA.addData("target",robot.getSlides().getTarget());
+            telemetryA.addData("current pos",robot.getSlides().getPos());
+            telemetryA.update();
+            robot.getFollower().telemetryDebug(telemetryA);
         }
+
     }
-    Command move(){
-        return robot.getClaw().closeCommand()
-                .andThen(clip())
-                .andThen(placeBlock1())
-                .andThen(placeBlock2())
-                .andThen(Clip2())
-                .andThen(Clip3())
-                .andThen(grab());
-    }
+//    Command move(){
+//        return robot.getClaw().closeCommand()
+//                .andThen(clip())
+//                .andThen(placeBlock1())
+//                .andThen(placeBlock2())
+//                .andThen(Clip2())
+//                .andThen(Clip3())
+//                .andThen(grab());
+//    }
     Command clip(){
         return robot.getSlides().preclip()
-                .alongWith(robot.follow(robot.EZ().moveTo(34,0)))
+                .alongWith(robot.follow(robot.EZ().moveToWithHeading(34,0,Math.toRadians(180))))
                 .andThen(robot.getSlides().postclip())
+                .andThen(new WaitCommand(200))
                 .andThen(robot.getClaw().openCommand());
     }
     Command placeBlock1(){

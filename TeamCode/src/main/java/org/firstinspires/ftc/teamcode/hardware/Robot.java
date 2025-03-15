@@ -21,7 +21,7 @@ public class Robot {
     private Hang hang;
     private static Slides slides;
     private pusher pusher;
-    private TeleopMovement drive;
+    public TeleopMovement drive;
     private EZpathing EZ;
 
     public enum DriveState {manuel, automatic}
@@ -35,9 +35,10 @@ public class Robot {
         hang = new Hang(hardwareMap);
         slides = new Slides(hardwareMap);
         pusher = new pusher(hardwareMap);
-        drive = new TeleopMovement(new Follower(hardwareMap),true,driveGamepad,1);
-        drive.getFollower().setStartingPose(start);
         Constants.setConstants(FConstants.class, LConstants.class);
+        drive = new TeleopMovement(new Follower(hardwareMap),true,driveGamepad,1);
+        drive.getFollower().setPose(start);
+        EZ = new EZpathing(drive.getFollower());
         return this;
     }
 
