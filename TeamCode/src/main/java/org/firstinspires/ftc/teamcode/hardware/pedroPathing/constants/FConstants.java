@@ -16,6 +16,7 @@ public class FConstants {
 
         FollowerConstants.useBrakeModeInTeleOp = true;
         FollowerConstants.useVoltageCompensationInTeleOp = true;
+        FollowerConstants.useVoltageCompensationInAuto = true;
         FollowerConstants.leftFrontMotorDirection = DcMotorSimple.Direction.REVERSE;
         FollowerConstants.leftRearMotorDirection = DcMotorSimple.Direction.FORWARD;
         FollowerConstants.rightFrontMotorDirection = DcMotorSimple.Direction.FORWARD;

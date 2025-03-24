@@ -131,8 +131,7 @@ public class Robot {
         //Variables
         public static double OPEN = 7;
         public static double OPENSMALL = .56;
-        public static double CLOSE = .36
-                ;
+        public static double CLOSE = .3;
         //Servo
         public ServoImplEx claw;
 
@@ -170,11 +169,12 @@ public class Robot {
     @Config
     public static class Arm {
         //variables
-        public static double INTAKE = .7;
-        public static double INTAKESPEC = .6;
-        public static double OUTTAKESPEC = .87;
-        public static double OUTTAKESAMPLE = .1;
+        public static double INTAKE = .36;
+        public static double INTAKESPEC = .23;
+        public static double OUTTAKESPEC = .6;
+        public static double OUTTAKESAMPLE = .89;
         public static double SCORESPEC = .85;
+        public static double OFFSET = .01;
         //PController
         public static double KP = 1.2;
         public static double KD = 0;
@@ -185,8 +185,8 @@ public class Robot {
 
 
         //servos
-        private Servo armL;
-        private Servo armR;
+        public Servo armL;
+        public Servo armR;
 
         public Arm init(HardwareMap hardwareMap) {
             this.armL = hardwareMap.get(Servo.class, "armL");
@@ -240,6 +240,7 @@ public class Robot {
                 if (Math.abs(armPDcontroller.getPositionError()) > .1) {
                     delta = Math.min(Math.copySign(MAX_DELTA, delta), delta);
                 }
+
                 armR.setPosition(armR.getPosition() + delta);
                 armL.setPosition(armL.getPosition() + delta);
             }
@@ -250,11 +251,11 @@ public class Robot {
     @Config
     public static class Wrist {
         //variables
-        public static double INTAKE = .42;
-        public static double OUTTAKESAMPLE = .58;
-        public static double INTAKESPEC = .2;
+        public static double INTAKE = .41;
+        public static double OUTTAKESAMPLE = .395;
+        public static double INTAKESPEC = .46;
         public static double SCORESPECWRIST = .6;
-        public static double OUTTAKESPEC = .57;
+        public static double OUTTAKESPEC = .4;
         //PController
         public static double KP = 1.2;
         public static double KD = 0;
@@ -333,8 +334,8 @@ public class Robot {
         public DcMotorEx slidesR;
         //Variables
 //        public static int SLIDESPOWER = 1;
-        public static int SLIDEUP = 830;
-        public static int SLIDEHSPEC = 340;
+        public static int SLIDEUP = 800;
+        public static int SLIDEHSPEC = 300;
         //        public static int SLIDELSPEC = 300;
         public static int SLIDELBUCKET = 300;
         public static int SLIDEDOWN = 0;
@@ -404,6 +405,7 @@ public class Robot {
 
             slidesL.setTargetPosition(position);
             slidesL.setPower(1);
+
         }
 
         public void slidesReset() {
@@ -411,19 +413,6 @@ public class Robot {
             this.slidesL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         }
 
-//        public void update(){
-//            double pid,ff;
-//            slidesPID.setPID(KP,KI,KD);
-//            slidesPID.setTolerance(TOL);
-//
-//            pid = slidesPID.calculate(slidesL.getCurrentPosition(),TARGET);
-//            ff = FF;
-//            slidesL.setPower(pid+ff);
-//
-//            pid = slidesPID.calculate(slidesR.getCurrentPosition(),TARGET);
-//            ff = FF;
-//            slidesR.setPower(pid+ff);
-//        }
     }
 
     // nigaggot
@@ -435,9 +424,10 @@ public class Robot {
         private ServoImplEx extendoR;
 
         //Variables
-        public static double retract = .52;
-        public static double extend = .22;
-        public static double mini = .4;
+        public static double retract = .55;
+        public static double extend = .28;
+        public static double mini = .49;
+        public static double offset = 0.02;
 
 
         public Extendo init(HardwareMap hardwareMap) {
@@ -445,28 +435,28 @@ public class Robot {
             this.extendoL.setDirection(Servo.Direction.REVERSE);
             this.extendoR = hardwareMap.get(ServoImplEx.class, "extendoR");
             this.extendoL.setPosition(retract);
-            this.extendoR.setPosition(retract);
+            this.extendoR.setPosition(retract + 0.025);
             return this;
         }
 
         public void extend() {
             extendoL.setPosition(extend);
-            extendoR.setPosition(extend);
+            extendoR.setPosition(extend + offset);
         }
 
         public void adjust() {
-            extendoR.setPosition(mini);
+            extendoR.setPosition(mini + offset);
             extendoL.setPosition(mini);
         }
 
 
         public void mini() {
             extendoL.setPosition(mini);
-            extendoR.setPosition(mini);
+            extendoR.setPosition(mini + offset);
         }
 
         public void retract() {
-            extendoR.setPosition(retract);
+            extendoR.setPosition(retract + offset);
             extendoL.setPosition(retract);
         }
     }
@@ -483,12 +473,12 @@ public class Robot {
 
 
         //Variables
-        public static double up = .24;
-        public static double spit = .48;
-        public static double down = .65;
+        public static double up = .28;
+        public static double spit = .5;
+        public static double down = .64;
         public static double INTAKE = .8;
-        public static double SWEEP = .05;
-        public static double STOW = .098;
+        public static double SWEEP = .5;
+        public static double STOW = .22;
 
         public static double OUTTAKE = -1;
 
@@ -670,16 +660,15 @@ public class Robot {
                             } else {
                                 slides.slidesTo(Slides.SLIDELBUCKET); //slides to low bucket
                             }
-                            outtakeDelay = runtime + .1; // delay for slides to clear hopper
                             bucketStep++;
                         }
                         break;
                     case 1: //move arm and wrist to scoring position
-                        if (runtime > outtakeDelay) {
-                            arm.outtakeSample();
-                            wrist.outtakeSample();
-                            bucketStep++;
-                        }
+                            if (slides.slidesR.getCurrentPosition() >= slides.slidesR.getTargetPosition()-200) {
+                                arm.outtakeSample();
+                                wrist.outtakeSample();
+                                bucketStep++;
+                            }
                         break;
                     case 2:
                         if (L1) { //open claw if open button pressed
@@ -705,8 +694,9 @@ public class Robot {
             case BUCKETR:
                 switch (bucketStep) {
                     case 0:
-                        claw.close();
-                        outtakeDelay = runtime + .25;
+//                        claw.close();
+//                        outtakeDelay = runtime + .25;
+                        claw.openSmall();
                         bucketStep++;
                         break;
                     case 1:
@@ -714,7 +704,7 @@ public class Robot {
 //                            arm.get
                             arm.intake();
                             wrist.intake();
-                            outtakeDelay = runtime + .75;
+                            outtakeDelay = runtime + .5;
                             bucketStep++;
                         }
                         break;
@@ -900,7 +890,7 @@ public class Robot {
                         }
                         break;
                     case 1: //move arm and wrist to scoring position
-                        if (runtime > outtakeDelay) {
+                        if (slides.slidesR.getCurrentPosition() >= slides.slidesR.getTargetPosition()) {
                             arm.outtakeSample();
                             wrist.outtakeSample();
                             bucketStep++;
@@ -930,8 +920,8 @@ public class Robot {
             case BUCKETR:
                 switch (bucketStep) {
                     case 0:
-                        claw.close();
-                        outtakeDelay = runtime + .25;
+//                        claw.close();
+//                        outtakeDelay = runtime + .25;
                         bucketStep++;
                         break;
                     case 1:
@@ -946,8 +936,8 @@ public class Robot {
                     case 2:
                         if (runtime > outtakeDelay) {
                             slides.slideDown();
-                            claw.openSmall();
-                            outtakeDelay = runtime + .2;
+//                            claw.openSmall();
+//                            outtakeDelay = runtime + .2;
 //                            bucketStep++;
                             scoringState = scoringStates.IDLE;
                         }
@@ -1148,9 +1138,9 @@ public class Robot {
                 //Switch States
 
                 if (intake.getAlpha(intake.intakeSensor) > Intake.ALPHA) {
-                        intakeState = intakeStates.DETECT;
-                        once = true;
-                        intakeDelay = runtime + Intake.DELAY;
+                    intakeState = intakeStates.DETECT;
+                    once = true;
+                    intakeDelay = runtime + Intake.DELAY;
                 } else if (LB) {
                     intakeState = intakeStates.HASSAMPLE;
                 }
@@ -1158,7 +1148,7 @@ public class Robot {
             case DETECT:
                 //Actions
                 if (runtime > intakeDelay) {
-                    if (once){
+                    if (once) {
                         color = getColor(intake.intakeSensor);
                     }
 //                    intake.color = intake.getColor(intake.intakeSensor);

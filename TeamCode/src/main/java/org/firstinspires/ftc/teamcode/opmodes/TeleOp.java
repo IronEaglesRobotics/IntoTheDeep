@@ -47,13 +47,8 @@ public class TeleOp extends LinearOpMode {
         }
 
         while (opModeIsActive()){
-            //drive
-//            robot.mecDrive.setInput(controller1);
-//            robot.limelight.enableLimeligh();
-//            robot.getFollower().startTeleopDrive();
-            robot.getFollower().setTeleOpMovementVectors(gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, true);
+            robot.getFollower().setTeleOpMovementVectors(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x*.75, true);
             robot.getFollower().update();
-//            robot.mecDrive.up
             controller1.readButtons();
             controller2.readButtons();
 
@@ -73,6 +68,7 @@ public class TeleOp extends LinearOpMode {
                 robot.scoringMacro(controller1, getRuntime(), false);
             }
             robot.update();
+
 
             if(controller1.isDown(GamepadKeys.Button.DPAD_LEFT)) {
                 robot.intake.sweep();

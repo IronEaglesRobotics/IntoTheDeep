@@ -13,6 +13,8 @@ public class FConstantsOld {
         FollowerConstants.rightFrontMotorName = "rightFront";
         FollowerConstants.rightRearMotorName = "rightRear";
 
+        FollowerConstants.useVoltageCompensationInTeleOp = true;
+        FollowerConstants.useVoltageCompensationInAuto = true;
         FollowerConstants.leftFrontMotorDirection = DcMotorSimple.Direction.REVERSE;
         FollowerConstants.leftRearMotorDirection = DcMotorSimple.Direction.FORWARD;
         FollowerConstants.rightFrontMotorDirection = DcMotorSimple.Direction.FORWARD;
