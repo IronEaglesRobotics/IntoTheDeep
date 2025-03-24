@@ -12,6 +12,7 @@ import com.arcrobotics.ftclib.command.Command;
 import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
@@ -31,6 +32,7 @@ public class IntakeArm extends SubsystemBase {
     public IntakeArm(HardwareMap HardwareMap) {
         motor = HardwareMap.get(DcMotor.class,"motor");
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motor.setDirection(DcMotorSimple.Direction.REVERSE);
         extension1 = HardwareMap.get(Servo.class, "extension1");
         extension2 = HardwareMap.get(Servo.class, "extension2");
         extension2.setDirection(Servo.Direction.REVERSE);
