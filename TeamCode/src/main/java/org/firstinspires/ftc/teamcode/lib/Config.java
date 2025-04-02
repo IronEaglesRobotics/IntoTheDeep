@@ -61,8 +61,8 @@ public class Config {
 
     public static double wristFullLowscale = 0.03;
     public static double wristFullhighscale = .82;
-    public static double wristFloorlowscale1 = .15;
-    public static double wristMedianhighscale1 = .4;
+    public static double wristFloorlowscale = .15;
+    public static double wristMedianhighscale = .4;
 
     // keybinds
 

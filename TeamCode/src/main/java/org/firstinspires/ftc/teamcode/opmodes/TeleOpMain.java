@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.hardware.Claw;
 import org.firstinspires.ftc.teamcode.hardware.Intake;
 import org.firstinspires.ftc.teamcode.hardware.Robot;
@@ -29,10 +30,12 @@ public class TeleOpMain extends CommandOpMode {
         }
         controller1 = new GamepadEx(gamepad1);
         controller2 = new GamepadEx(gamepad2);
-        robot = new Robot().init(hardwareMap,controller1,new Pose(0,0,0));
+        robot = new Robot().init(hardwareMap,controller1,new Pose(0,0,-90));
         controller1.readButtons();
         controller2.readButtons();
-        new WaitCommand(90000).andThen(robot.getHang().hangDeploy());
+//        new WaitCommand(90000).andThen(robot.getHang().hangDeploy());
+        robot.drive.schedule();
+//        robot.getFollower().startTeleopDrive();
 
 //        controller1.getGamepadButton(GamepadKeys.Button.B)
 //                .whenPressed(robot.toObservation());
@@ -40,8 +43,6 @@ public class TeleOpMain extends CommandOpMode {
 //                .whenPressed(robot.toBasket());
         controller1.getGamepadButton(GamepadKeys.Button.Y)
                 .toggleWhenPressed(()->speed = 1,()->speed = .5);
-        controller1.getGamepadButton(GamepadKeys.Button.X)
-                .whenPressed(()-> Robot.driveState = Robot.DriveState.manuel);
 
         switch (mode) {
             case MACRO:
@@ -66,7 +67,7 @@ public class TeleOpMain extends CommandOpMode {
                 controller2.getGamepadButton(GamepadKeys.Button.DPAD_UP)
                         .whenPressed(robot.getIntake().storeIntake()
                                 .andThen(robot.getSlides().up())
-                                .andThen(new WaitCommand(1000))
+                                .andThen(new WaitCommand(500))
                                 .andThen(robot.getIntakeArm().upCommand())
                                 .andThen(robot.getIntake().ejectIntake()));
                 controller2.getGamepadButton(GamepadKeys.Button.LEFT_STICK_BUTTON)
@@ -108,7 +109,7 @@ public class TeleOpMain extends CommandOpMode {
                 .whenReleased(robot.getPusher().offCommand());
         // extends and retracts intake
         controller2.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
-                .toggleWhenPressed(robot.getIntakeArm().outCommand(),robot.getIntakeArm().inCommand());
+                .whenPressed(robot.getIntakeArm().toggle());
         // controls lowering slides
         controller2.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
                 .whenPressed(new Intake.storeIntake(robot.getIntake())
@@ -122,15 +123,16 @@ public class TeleOpMain extends CommandOpMode {
     @Override
     public void run(){
         CommandScheduler.getInstance().run();
-        robot.drive.schedule();
         // drive controls
-        robot.setSpeed(speed);
+//        robot.getFollower().setTeleOpMovementVectors(controller1.getLeftX(), controller1.getLeftY(),
+//                controller1.getRightY(),true);
         telemetry.addData("target color",robot.getIntake().target);
         telemetry.addData("color",robot.getIntake().getColor());
         telemetry.addData("target",robot.getSlides().getTarget());
         telemetry.addData("color",robot.getSlides().getPos());
         telemetry.addData("speed",robot.getSlides().controller.calculate(-robot.getSlides().getPos(),robot.getSlides().getTarget()));
         telemetry.addData("mode", robot.getDriveState());
+        telemetry.addData("dsensor",robot.getClaw().dSensor.getDistance(DistanceUnit.INCH));
         telemetry.update();
     }
 }

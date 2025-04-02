@@ -134,7 +134,7 @@ public class Slides extends SubsystemBase {
 
         @Override
         public boolean isFinished() {
-            return slides.atTarget() && (System.currentTimeMillis() > time + 500);
+            return slides.atTarget();
         }
 
         @Override

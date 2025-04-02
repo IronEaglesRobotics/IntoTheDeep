@@ -55,6 +55,6 @@ public class EZpathing {
         return this.moveToViaWithHeading(new Pose(targetX,targetY,targetH),new Pose(viaX,viaY));
     }
     public PathChain turn(double tHeading){
-        return follower.pathBuilder().setLinearHeadingInterpolation(follower.getPose().getHeading(),tHeading).build();
+        return follower.pathBuilder().addBezierLine(new Point(follower.getPose()),new Point(follower.getPose())).setLinearHeadingInterpolation(follower.getPose().getHeading(),tHeading).build();
     }
 }

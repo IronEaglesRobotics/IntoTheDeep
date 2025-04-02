@@ -72,6 +72,14 @@ public class IntakeArm extends SubsystemBase {
 
     public final ExtendCommand outCommand(){return new ExtendCommand(this,true);}
     public final ExtendCommand inCommand(){return new ExtendCommand(this,false);}
+    public final ExtendCommand toggle(){
+        if (ex_save == 1){
+            return new ExtendCommand(this,true);
+        }
+        else {
+            return new ExtendCommand(this,false);
+        }
+    }
 
     public static class RotateCommand extends CommandBase {
         private final IntakeArm arm;

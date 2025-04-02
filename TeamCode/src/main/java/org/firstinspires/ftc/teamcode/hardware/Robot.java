@@ -36,7 +36,8 @@ public class Robot {
         slides = new Slides(hardwareMap);
         pusher = new pusher(hardwareMap);
         Constants.setConstants(FConstants.class, LConstants.class);
-        drive = new TeleopMovement(new Follower(hardwareMap),true,driveGamepad,1);
+        drive = new TeleopMovement(new Follower(hardwareMap),true,driveGamepad,1,
+                1,-1,-1);
         drive.getFollower().setPose(start);
         EZ = new EZpathing(drive.getFollower());
         return this;

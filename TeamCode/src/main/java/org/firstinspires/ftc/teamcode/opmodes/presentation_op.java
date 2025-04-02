@@ -47,10 +47,19 @@ public class presentation_op extends OpMode {
     @Override
     public void loop(){
         //drive.setDrive(controller,System.currentTimeMillis());
-        target_pos = Math.max(Math.min(target_pos,60000),0);
-
-        Motor1.setPower(gamepad1.left_stick_y);
-        Motor2.setPower(gamepad1.left_stick_y);
+        if (gamepad1.dpad_up){
+            slides.setTarget(Slides.Position.SCORE_LOW);
+        }
+        else if (gamepad1.dpad_down){
+            slides.setTarget(Slides.Position.DOWN);
+        }
+        else if (gamepad1.dpad_left){
+            slides.setTarget(Slides.Position.PRECLIP);
+        }
+        else if (gamepad1.dpad_right){
+            slides.setTarget(Slides.Position.POSTCLIP);
+        }
+        slides.periodic();
 
         telemetry.addData("encoder",Motor2.getCurrentPosition());
         telemetry.addData("target",slides.getTarget());

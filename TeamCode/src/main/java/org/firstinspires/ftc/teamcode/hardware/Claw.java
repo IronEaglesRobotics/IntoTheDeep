@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.lib.Config;
 public class Claw extends SubsystemBase {
     Servo Claw;
     double claw;
-    Rev2mDistanceSensor dSensor;
+    public Rev2mDistanceSensor dSensor;
 
     public Claw(HardwareMap hardwareMap) {
         Claw = hardwareMap.get(Servo.class,BLOCK_CLAW);

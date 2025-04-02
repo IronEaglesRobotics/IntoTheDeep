@@ -10,7 +10,7 @@ public class TeleopMovement extends CommandBase {
     private final Follower follower;
     private GamepadEx gamepad;
     private double speed = 1;
-    private int leftYDirection = 1, leftXDirection = 1, rightXDirection = 1;
+    private int leftYDirection = -1, leftXDirection = -1, rightXDirection = -1;
     private boolean robotCentric = true;
 
     public TeleopMovement(Follower follower, boolean robotCentric, GamepadEx gamepad, double speed, int forwardMovementDirection, int lateralMovementDirection, int angularMovementDirection) {
@@ -78,6 +78,7 @@ public class TeleopMovement extends CommandBase {
     public void execute() {
         if (gamepad != null){
             follower.setTeleOpMovementVectors(leftYDirection * speed * gamepad.getLeftY(), leftXDirection * speed * gamepad.getLeftX(), rightXDirection * speed * gamepad.getRightX(), robotCentric);
+            follower.update();
         }
     }
 

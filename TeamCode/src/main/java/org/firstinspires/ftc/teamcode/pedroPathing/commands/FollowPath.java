@@ -82,6 +82,10 @@ public class FollowPath extends CommandBase {
         follower.setMaxPower(this.maxPower);
         follower.followPath(path, holdEnd);
     }
+    @Override
+    public void execute(){
+        follower.update();
+    }
 
     @Override
     public boolean isFinished() {
