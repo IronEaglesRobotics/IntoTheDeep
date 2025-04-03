@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.hardware.Robot;
 @Autonomous(name = "clipAutoCommand", preselectTeleOp = "Main Teleop")
 public class commandClipAuto extends CommandOpMode {
     Robot robot;
-    int stage = 3;
+    int stage = 0;
     @Override
     public void initialize() {
         CommandScheduler.getInstance().reset();
@@ -26,45 +26,45 @@ public class commandClipAuto extends CommandOpMode {
         initialize();
         waitForStart();
         robot.getFollower().update();
-        //clip().schedule();
+        clip().schedule();
         while (opModeIsActive() && !isStopRequested()){
             CommandScheduler.getInstance().run();
             robot.getFollower().update();
             switch (stage) {
-//                case 0:
-//                    if (!robot.getFollower().isBusy()) {
-//                        placeBlock1().schedule();
-//                        stage = -1;
-//                    }
-//                    break;
-//                case 1:
-//                    placeBlock2().whenFinished(() -> stage = 3).schedule();
-//                    stage = -1;
-//                    break;
+                case 0:
+                    if (!robot.getFollower().isBusy()) {
+                        placeBlock1().schedule();
+                        stage = -1;
+                    }
+                    break;
+                case 1:
+                    placeBlock2().whenFinished(() -> stage = 3).schedule();
+                    stage = -1;
+                    break;
                 case 3:
                     grab().whenFinished(()->stage = 4).schedule();
                     stage = -1;
                     break;
-//                case 4:
-//                    clip3(3).whenFinished(()->stage = 5).schedule();
-//                    stage = -1;
-//                    break;
-//                case 5:
-//                    grab().whenFinished(()->stage = 6).schedule();
-//                    stage = -1;
-//                    break;
-//                case 6:
-//                    clip3(0).whenFinished(()->stage = 7).schedule();
-//                    stage = -1;
-//                    break;
-//                case 7:
-//                    grab().whenFinished(()->stage = 8).schedule();
-//                    stage = -1;
-//                    break;
-//                case 8:
-//                    clip3(-2).whenFinished(()->stage = 9).schedule();
-//                    stage = -1;
-//                    break;
+                case 4:
+                    clip3(3).whenFinished(()->stage = 5).schedule();
+                    stage = -1;
+                    break;
+                case 5:
+                    grab().whenFinished(()->stage = 6).schedule();
+                    stage = -1;
+                    break;
+                case 6:
+                    clip3(0).whenFinished(()->stage = 7).schedule();
+                    stage = -1;
+                    break;
+                case 7:
+                    grab().whenFinished(()->stage = 8).schedule();
+                    stage = -1;
+                    break;
+                case 8:
+                    clip3(-2).whenFinished(()->stage = 9).schedule();
+                    stage = -1;
+                    break;
                 default:
                     sleep(20);
                     break;
@@ -134,21 +134,20 @@ public class commandClipAuto extends CommandOpMode {
                                 .setLinearHeadingInterpolation(robot.getFollower().getPose().getHeading(),
                                 0)
                         .build()))
-                .andThen(new WaitCommand(200))
                 .andThen(robot.follow(robot.getFollower().pathBuilder().addBezierLine(
-                        new Point(robot.getFollower().getPose()),new Point(0,-36))
+                        new Point(robot.getFollower().getPose()),new Point(-0.5,-36))
                                 .setConstantHeadingInterpolation(0)
-                        .build()))
+                        .build(),.6))
                 .andThen(new WaitCommand(700))
                 .andThen(robot.getClaw().adaptClaw())
                 .andThen(new WaitCommand(300));
     }
 
     Command clip3(double y){
-        return robot.follow(robot.getFollower().pathBuilder().addBezierLine(new Point(robot.getFollower().getPose()),
+        return robot.follow(robot.getFollower().pathBuilder().addBezierLine(new Point(-.5,-36),
                                 new Point(18,y))
                         .setLinearHeadingInterpolation(robot.getFollower().getPose().getHeading(),Math.toRadians(180))
-                        .addBezierLine(new Point(robot.getFollower().getPose()),new Point(32,y))
+                        .addBezierLine(new Point(robot.getFollower().getPose()),new Point(31.7,y))
                         .setConstantHeadingInterpolation(Math.toRadians(180))
                         .build())
                 .alongWith(robot.getSlides().preclip())

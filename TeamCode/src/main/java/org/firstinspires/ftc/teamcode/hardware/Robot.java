@@ -69,7 +69,8 @@ public class Robot {
     public DriveState getDriveState() {
         return driveState;
     }
-    public FollowPath follow(PathChain path){return new FollowPath(drive.getFollower(),path);}
+    public FollowPath follow(PathChain path){return new FollowPath(getFollower(),path);}
+    public FollowPath follow(PathChain path,double maxPower) {return new FollowPath(getFollower(),path,maxPower);}
     public EZpathing EZ(){return EZ;}
 
     public void update() {

@@ -7,24 +7,25 @@ import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SubsystemBase;
+import com.arcrobotics.ftclib.controller.PController;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 @Config
 public class Slides extends SubsystemBase {
-    private final DcMotor slide;
-    private final DcMotor slide2;
+    public final DcMotor slide;
+    public final DcMotor slide2;
     public PIDController controller = new PIDController(KP, KI, KD);
     private int target = 0;
 
     public static double KP = 0.0006;
     public static double KI = 0.0009;
     public static double KD = 0;
-    public static double TOLERANCE = 400;
+    public static double TOLERANCE = 4430;
     // p:.001, I:0.000005, D:0.000035
 
-    public static int POSITION_MIN = 0;
+    public static int POSITION_MIN = -50000;
     public static int POSITION_MAX = 50000;
     
     public static int POSITION_DOWN = 1500;

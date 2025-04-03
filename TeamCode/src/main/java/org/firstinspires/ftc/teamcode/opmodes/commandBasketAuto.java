@@ -73,7 +73,7 @@ public class commandBasketAuto extends CommandOpMode {
         }
     }
     Command score() {
-        return robot.follow(robot.EZ().moveToWithHeading(18,7,Math.toRadians(125)))
+        return robot.follow(robot.EZ().moveToWithHeading(18,7,Math.toRadians(126)))
                 .alongWith(robot.getSlides().up())
                 .andThen(robot.getIntakeArm().upCommand())
                 .andThen(robot.getIntake().ejectIntake())
@@ -106,6 +106,7 @@ public class commandBasketAuto extends CommandOpMode {
                 .andThen(robot.getSlides().down())
                 .alongWith(robot.follow(robot.EZ().moveToWithHeading(12,21,0)))
                 .andThen(robot.getIntake().onIntake())
+                .andThen(new WaitCommand(200))
                 .andThen(robot.follow(robot.getFollower().pathBuilder()
                         .addBezierLine(new Point(12,21),
                             new Point(26,21))

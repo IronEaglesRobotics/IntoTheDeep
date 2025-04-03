@@ -12,7 +12,7 @@ public class FollowPath extends CommandBase {
     private final PathChain path;
     private boolean holdEnd = true;
     private double maxPower = 1;
-    private double completionThreshold = 0.99;
+    private double completionThreshold = 0.94;
 
     public FollowPath(Follower follower, PathChain pathChain) {
         this.follower = follower;
